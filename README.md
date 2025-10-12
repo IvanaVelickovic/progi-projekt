@@ -5,13 +5,13 @@ Cilj nam je napraviti funkcionalnu platformu, jednostavnu za uporabu, koja svoji
 # Funkcijski zahtjevi
 # Tehnologije
 # Članovi tima
-Ivana Veličković, [github](https://github.com/IvanaVelickovic)
-Petar Blatančić-Vuković, [github](https://github.com/PetarBV)
-Klara Bilać, 
-Mia Grahovac, [github](https://github.com/Mia-Grahovac)
-Ivan Miloš, [github](https://github.com/ivan-milos)
-Marin Denić, [github](https://github.com/denabena)
-Ive Šarić, [github](https://github.com/Ive-Saric)
+Ivana Veličković, [github](https://github.com/IvanaVelickovic)  
+Petar Blatančić-Vuković, [github](https://github.com/PetarBV)  
+Klara Bilać,   
+Mia Grahovac, [github](https://github.com/Mia-Grahovac)  
+Ivan Miloš, [github](https://github.com/ivan-milos)  
+Marin Denić, [github](https://github.com/denabena)  
+Ive Šarić, [github](https://github.com/Ive-Saric)  
 # Kontribucije
 # Licenca
 Ovaj repozitorij je licenciran pod [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
