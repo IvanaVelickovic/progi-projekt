@@ -7,7 +7,7 @@ Cilj nam je napraviti funkcionalnu platformu, jednostavnu za uporabu, koja svoji
 ## Članovi tima
 Ivana Veličković, [github](https://github.com/IvanaVelickovic)  
 Petar Blatančić-Vuković, [github](https://github.com/PetarBV)  
-Klara Bilać,   
+Klara Bilać, [github](https://github.com/klarabilac)      
 Mia Grahovac, [github](https://github.com/Mia-Grahovac)  
 Ivan Miloš, [github](https://github.com/ivan-milos)  
 Marin Denić, [github](https://github.com/denabena)  
