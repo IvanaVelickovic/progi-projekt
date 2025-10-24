@@ -1,0 +1,30 @@
+@startuml dijagram23
+
+title uc Platforma za online poduke - Pretraživanje instruktora
+
+left to right direction
+together{
+    :Učenik: as ucenik
+}
+
+together{
+    database "Baza podataka" as bp
+    :Mape API: as mape
+}
+
+rectangle Sustav{
+    usecase "U4: Pretraživanje instruktora" as u4
+    ucenik --> u4
+    u4 --> bp
+    
+    usecase "U4.1: Filtriranje" as u41
+    u41 .right.> u4 : extends
+
+    usecase "U4.2: Filtriranje po geolokaciji" as u42
+    u42 .right.> u41 : extends
+    u42 --> mape
+    
+
+}
+
+@enduml

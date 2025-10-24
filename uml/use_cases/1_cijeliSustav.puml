@@ -1,0 +1,74 @@
+@startuml dijagram1
+
+title uc Platforma za online poduke - cjeloukupni pogled
+
+left to right direction
+
+together{
+    :Korisnik: as korisnik
+    :Administrator: as admin
+}
+
+:Učenik: as ucenik
+:Instruktor: as instruktor
+
+korisnik <|-right- ucenik
+korisnik <|-- instruktor
+
+together{
+    database "Baza podataka" as bp
+    :Video API: as video
+}
+
+rectangle Sustav{
+    (U1: Registracija i\nprijava korisnika) as u1
+    korisnik --> u1
+    u1 --> bp
+
+    (U2: Uređivanje profila) as u2
+    korisnik --> u2
+    u2 --> bp
+
+    (U3: Oglašavanje termina) as u3
+    instruktor --> u3
+    u3 --> bp
+
+    (U4: Pretraživanje\ninstruktora) as u4
+    ucenik --> u4
+    u4 --> bp
+    
+    
+
+    (U5: Pregledavanje\nprofila instruktora) as u5
+    ucenik --> u5
+    u5 --> bp
+
+    (U6: Rezerviranje\ntermina instruktora) as u6
+    ucenik --> u6
+    u6 --> bp
+
+    (U7: Sudjelovanje u\nonline sesijama) as u7
+    korisnik --> u7
+    u7 --> video
+
+    (U8: Kreiranje kvizova\ni zadataka) as u8
+    instruktor --> u8
+    u8 --> bp
+
+    (U9: Ostavljanje\nrecenzija instruktoru) as u9
+    ucenik --> u9
+    u9 --> bp
+    
+    (U10: Uklanjanje\nlažnih recenzija) as u10
+    admin --> u10
+    u10 --> bp
+
+    (U11: Upravljanje\nkorisnicima) as u11
+    admin --> u11
+    u11 --> bp
+
+}
+
+
+
+@enduml

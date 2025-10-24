@@ -1,0 +1,30 @@
+@startuml dijagram25
+
+title uc Platforma za online poduke - Održavanje online sesija
+
+left to right direction
+
+:Korisnik: as korisnik
+
+together{
+    :Video API: as video
+    :S3 sustav za pohranu: as s3
+}
+
+rectangle Sustav{
+    usecase "U7: Sudjelovanje u online sesijama" as u7
+    korisnik --> u7
+    u7 --> video
+
+    usecase "U7.1: Korištenje interaktivne ploče" as u71
+    u71 .right.> u7 : extends
+
+    usecase "U7.2: Generiranje sažetka sesije\ni popisa zadataka" as u72
+    u7 .right.> u72 : includes
+    u72 --> s3
+    
+
+
+}
+
+@enduml

@@ -1,0 +1,37 @@
+@startuml dijagram31
+
+title uc Platforma za online poduke - Funkcionalnosti administratora
+
+left to right direction
+together{
+    :Administrator: as admin
+}
+
+together{
+    database "Baza podataka" as bp
+}
+
+rectangle Sustav{
+    usecase "U10: Uklanjanje lažnih recenzija" as u10
+    admin --> u10
+    u10 --> bp
+
+    usecase "U11: Upravljanje korisnicima" as u11
+    admin --> u11
+    u11 --> bp
+
+    usecase "U11.1: Upravljanje minimalnim\nstandardima profila instruktora" as u111
+    u111 .right.> u11 : extends
+
+    usecase "U12: Pristup statistici" as u12
+    admin --> u12
+    u12 --> bp
+
+    usecase "U13: Uređivanje predmeta" as u13
+    admin --> u13
+    u13 --> bp
+
+
+}
+
+@enduml

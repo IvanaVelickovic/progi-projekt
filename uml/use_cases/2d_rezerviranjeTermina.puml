@@ -1,0 +1,33 @@
+@startuml dijagram24
+
+title uc Platforma za online poduke - Rezerviranje termina instruktora
+
+left to right direction
+together{
+    :Učenik: as ucenik
+}
+
+together{
+    database "Baza podataka" as bp
+    :Email servis: as email
+}
+
+rectangle Sustav{
+    usecase "U6: Rezerviranje termina instruktora" as u6
+    ucenik --> u6
+    u6 --> bp
+    u6 --> email
+
+    usecase "U6.1: Biranje formata" as u61
+    note top of u61: Online ili uživo
+    u6 .left.> u61 : includes
+
+    usecase "U6.2: Online plaćanje" as u62
+    u6 .right.> u62 : includes
+
+    
+
+
+}
+
+@enduml

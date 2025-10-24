@@ -1,0 +1,47 @@
+@startuml dijagram31
+
+title uc Platforma za online poduke - Funkcionalnosti instruktora
+
+left to right direction
+together{
+    :Instruktor: as instruktor
+}
+
+together{
+    database "Baza podataka" as bp
+    :Mape API: as mape
+    :Kalendar API: as kalendar
+    :Video API: as video
+}
+
+rectangle Sustav{
+    usecase "U1: Registracija i\nprijava" as u1
+    instruktor --> u1
+    u1 --> bp
+
+    usecase "U2: Uređivanje profila" as u2
+    instruktor --> u2
+    u2 --> bp
+    
+    usecase "U2.3: Dodavanje geolokacije" as u23
+    u23 .right.> u2 : extends
+    u23 --> mape
+
+    usecase "U3: Oglašavanje termina" as u3
+    instruktor --> u3
+    u3 --> bp
+    u3 --> kalendar
+
+    usecase "U7: Sudjelovanje u online sesijama" as u7
+    instruktor --> u7
+    u7 --> video
+
+    usecase "U7.1: Korištenje interaktivne ploče" as u71
+    u71 .right.> u7 : extends
+
+    usecase "U8: Kreiranje kvizova i zadataka" as u8
+    instruktor --> u8
+    u8 --> bp
+}
+
+@enduml

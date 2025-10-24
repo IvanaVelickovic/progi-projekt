@@ -1,0 +1,49 @@
+@startuml dijagram21
+
+title uc Platforma za online poduke - Registracija i prijava korisnika
+
+left to right direction
+together{
+    :Korisnik: as korisnik
+}
+
+together{
+    database "Baza podataka" as bp
+    :OAuth servis: as oauth
+}
+
+rectangle Sustav{
+    usecase "U1.1: Registracija" as u11
+    korisnik --> u11
+
+    usecase "U1.1.1: Registracija\nputem emaila" as u111
+    usecase "U1.1.2: Registracija\nputem OAuth" as u112
+
+    u11 <|-- u111
+    u11 <|-- u112
+
+    u111 --> bp
+    u112 --> oauth
+
+    usecase "U1.1.3: Mijenjanje\ninicijalne lozinke" as u113
+    u113 ..> u111 : extends
+
+    usecase "U1.2: Prijava" as u12
+    usecase "U1.2.1: Prijava\nputem emaila\ni lozinke" as u121
+    usecase "U1.2.2: Prijava\nputem OAuth" as u122
+
+    korisnik --> u12
+    u12 <|-- u121
+    u12 <|-- u122
+
+    u121 --> bp
+    u122 --> oauth
+
+    usecase "U1.3: Povezivanje\ndodatnih\n OAuth identiteta" as u13
+    korisnik --> u13
+    u13 --> oauth
+
+
+}
+
+@enduml

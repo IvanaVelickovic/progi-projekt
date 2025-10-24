@@ -1,0 +1,77 @@
+@startuml dijagram31
+
+title uc Platforma za online poduke - Funkcionalnosti učenika
+
+left to right direction
+together{
+    :Učenik: as ucenik
+}
+
+together{
+    database "Baza podataka" as bp
+    :Mape API: as mape
+    :Email servis: as email
+    :Video API: as video
+}
+
+rectangle Sustav{
+    together{
+        usecase "U1: Registracija i\nprijava" as u1
+        ucenik --> u1
+        u1 --> bp
+
+        usecase "U2: Uređivanje profila" as u2
+        ucenik --> u2
+        u2 --> bp
+
+        usecase "U4: Pretraživanje\ninstruktora" as u4
+        ucenik --> u4
+        u4 --> bp
+
+        usecase "U5: Pregledavanje profila instruktora" as u5
+        ucenik --> u5
+        u5 --> bp
+
+        usecase "U9: Ostavljanje recenzija instruktoru" as u9
+        ucenik --> u9
+        u9 --> bp
+    }
+
+
+    usecase "U2.1: Postavljanje obavijesti za nove\nslobodne termine" as u21
+    ucenik --> u21
+    u21 --> bp
+    u21 --> email
+    u21 .right.> u2 : extends
+
+    
+    usecase "U4.2: Filtriranje po geolokaciji" as u42
+    u42 .left.> u4 : extends
+    u42 --> mape
+
+    
+    usecase "U7: Sudjelovanje u online sesijama" as u7
+    ucenik --> u7
+    u7 --> video
+
+    usecase "U7.1: Korištenje interaktivne ploče" as u71
+    u71 .right.> u7 : extends
+
+    usecase "U6: Rezerviranje termina instruktora" as u6
+    ucenik --> u6
+    u6 --> bp
+    u6 --> email
+
+    usecase "U8.1: Rješavanje kvizova i zadataka" as u81
+    ucenik --> u81
+    u81 --> bp
+
+    usecase "U8.1.1: Adaptivno preporučivanje" as u811
+    u811 .right.> u81 : extends
+    
+
+    
+
+}
+
+@enduml
