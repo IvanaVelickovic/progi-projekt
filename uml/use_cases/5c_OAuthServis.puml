@@ -1,0 +1,30 @@
+@startuml
+title uc Platforma za online poduke - OAuth servis 
+
+left to right direction
+
+:Korisnik: as korisnik
+:OAuth servis: as oauth
+
+rectangle Sustav {
+  usecase "U1.1: Registracija" as u11
+    korisnik --> u11
+
+  usecase "U1.1.2: Registracija\nputem OAuth" as u112
+
+   u11 <|-- u112
+   u112 --> oauth
+
+  usecase "U1.2: Prijava" as u12
+
+  usecase "U1.2.2: Prijava\nputem OAuth" as u122
+  korisnik --> u12
+  u12 <|-- u122
+
+  u122 --> oauth
+
+  usecase "U1.3: Povezivanje\ndodatnih\n OAuth identiteta" as u13
+    korisnik --> u13
+    u13 --> oauth
+
+}

@@ -1,0 +1,24 @@
+@startuml
+title uc Platforma za online poduke - Analitika poslovanja 
+
+left to right direction
+
+:Administrator: as ad
+
+database "Baza podataka" as bp
+rectangle Sustav {
+  usecase "U12: Pristup statistici" as u12
+  usecase "U12.1: Pregled broja rezervacija" as u121
+  usecase "U12.2: Pregled stope otkaza" as u122
+  usecase "U12.3: Pregled zadovoljstva korisnika" as u123
+
+  ad --> u12
+  u12 -->bp
+
+  u121 .right.> u12 : extends
+  u122 .right.> u12 : extends
+  u123 .left.> u12 : extends
+
+}
+
+@enduml

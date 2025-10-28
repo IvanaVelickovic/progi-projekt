@@ -1,0 +1,28 @@
+@startuml
+title uc Platforma za online poduke - Email servis 
+
+left to right direction
+
+:Učenik: as ucenik
+:Instruktor: as instruktor
+:Email servis: as email
+
+database "Baza podataka" as bp
+rectangle Sustav {
+  usecase "U6: Rezerviranje termina instruktora" as u6
+    ucenik --> u6
+    u6 --> bp
+    u6 --> email
+
+  usecase "U2: Uređivanje profila" as u2
+    ucenik --> u2
+    instruktor --> u2
+    u2 --> bp
+
+  usecase "U2.1: Postavljanje obavijesti za nove\nslobodne termine" as u21
+    ucenik --> u21
+    u21 --> bp
+    u21 --> email
+    u21 .right.> u2 : extends
+
+}

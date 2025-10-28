@@ -1,0 +1,30 @@
+@startuml
+title uc Platforma za online poduke - Mape API
+
+left to right direction
+
+:Učenik: as ucenik
+:Instruktor: as instruktor
+:Mape API: as mape
+
+database "Baza podataka" as bp
+rectangle Sustav {
+  usecase "U4: Pretraživanje instruktora" as u4
+    ucenik --> u4
+    u4 --> bp
+  usecase "U4.1: Filtriranje" as u41
+    u41 .right.> u4 : extends
+
+  usecase "U4.2: Filtriranje po geolokaciji" as u42
+    u42 .right.> u41 : extends
+    u42 --> mape
+
+  usecase "U2: Uređivanje profila" as u2
+    instruktor --> u2
+    u2 --> bp
+
+  usecase "U2.3: Dodavanje geolokacije" as u23
+    u23 .left.> u2 : extends
+    u23 --> mape
+
+}

@@ -1,0 +1,21 @@
+@startuml
+title uc Platforma za online poduke - Upravljanje recenzijama i kvalitetom
+
+left to right direction
+together{
+  :Učenik: as uc
+  :Administrator: as ad
+}
+
+database "Baza podataka" as bp
+rectangle Sustav {
+  usecase "U9: Ostavljanje recenzija instruktoru" as u9
+  usecase "U10: Uklanjanje lažnih recenzija" as u10
+  uc --> u9
+  u9 --> bp
+  ad -right-> u10
+  u10 -right->bp
+
+}
+
+@enduml
