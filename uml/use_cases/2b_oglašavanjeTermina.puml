@@ -1,0 +1,28 @@
+@startuml
+title uc Platforma za online poduke - Oglašavanje termina instruktora
+
+left to right direction
+
+:Instruktor: as in
+database "Baza podataka" as bp
+:kalendar API: as ka
+
+rectangle Sustav {
+  usecase "U3: oglašavanje i upravljanje terminima" as u3
+
+  usecase "U3.1: brisanje termina" as u31
+  usecase "U3.2: dodavanje termina" as u32
+  usecase "U3.3: promjena termina" as u33
+
+  in --> u3
+  u3 --> ka
+  u3 --> bp
+
+  u31 .right.> u3 : extends
+  u32 .right.> u3 : extends
+  u33 .left.> u3 : extends
+
+
+}
+
+@enduml
