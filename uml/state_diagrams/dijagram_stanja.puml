@@ -1,4 +1,9 @@
 @startuml dijagram_stanja
+
+left header
+Dijagram stanja - učenik
+end header
+
 [*] --> Neregistriran
 
 Neregistriran --> AktivniKorisnik : prijava()
@@ -67,3 +72,4 @@ Recenzija : exit / azuriraj_ocjenu()
 Recenzija --> AktivniKorisnik : natrag()
 
 @enduml
+
