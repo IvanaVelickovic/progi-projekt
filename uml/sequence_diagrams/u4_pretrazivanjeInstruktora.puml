@@ -1,0 +1,43 @@
+@startuml
+left header
+sd UC4 – Pretraživanje instruktora
+end header
+
+actor Učenik
+participant "Sustav" as Sustav
+participant "Mape API" as MapeAPI
+database "Baza podataka" as Baza
+
+== Osnovni tijek ==
+
+Učenik -> Sustav: Otvara stranicu pretraživanja instruktora (F-009)
+Sustav -> Učenik: Prikazuje sučelje s filterima (predmet, cijena, udaljenost)
+Učenik -> Sustav: Unosi kriterije pretrage
+Sustav -> Baza: Dohvaća podatke instruktora (F-010)
+Baza --> Sustav: Vraća rezultate pretrage
+Sustav -> MapeAPI: Prosljeđuje lokacije instruktora
+MapeAPI --> Sustav: Vraća prikaz lokacija
+Sustav -> Učenik: Prikazuje rezultate pretrage i kartu
+Učenik -> Sustav: Odabire instruktora
+Sustav -> Učenik: Prikazuje profil odabranog instruktora
+
+== Alternativni tokovi ==
+
+alt Nema rezultata za kriterije
+    Baza --> Sustav: Nema rezultata
+    Sustav -> Učenik: Poruka\n"Nema instruktora koji odgovaraju pretrazi."
+end
+
+alt Greška u bazi podataka
+    Sustav -> Baza: Dohvat podataka
+    Baza --> Sustav: Greška pri dohvaćanju
+    Sustav -> Učenik: Poruka o grešci\n"Trenutno nije moguće dohvatiti podatke instruktora."
+end
+
+alt Greška u Mape API
+    Sustav -> MapeAPI: Slanje lokacija instruktora
+    MapeAPI --> Sustav: Greška u prikazu karte
+    Sustav -> Učenik: Poruka o grešci\n"Prikaz lokacija instruktora trenutno nije dostupan."
+end
+
+@enduml
