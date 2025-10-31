@@ -1,0 +1,58 @@
+@startuml dijagram_aktivnosti1
+
+left header
+Dijagram aktivnosti - rezervacija termina
+end header  
+
+|Korisnik|
+start
+:Otvara profil instruktora;
+:Odabire termin i format (online/u živo);
+
+|Web-aplikacija|
+:Prikaz obrasca za rezervaciju;
+:Slanje upita za provjeru dostupnosti;
+
+|Baza podataka|
+:Provjera dostupnosti termina;
+note right
+Provjera je li termin još slobodan,
+te da li instruktor nije prebukiran.
+end note
+--> Web-aplikacija
+
+|Web-aplikacija|
+if (Termin je slobodan?) then (DA)
+  :Prikaz podataka o plaćanju;
+else (NE)
+  |Korisnik|
+  :Prikaz poruke "Termin nije dostupan";
+  stop
+endif
+
+|Korisnik|
+:Unos podataka za plaćanje i potvrda;
+
+|Web-aplikacija|
+:Slanje zahtjeva za naplatu;
+
+|Baza podataka|
+:Validacija i naplata (Payment Service);
+--> Web-aplikacija
+
+|Web-aplikacija|
+if (Plaćanje uspješno?) then (DA)
+  :Spremanje rezervacije u sustav;
+  |Baza podataka|
+  :Upis rezervacije u kalendar instruktora i učenika;
+  --> Web-aplikacija
+  |Korisnik|
+  :Prikaz potvrde rezervacije;
+  stop
+else (NE)
+  |Korisnik|
+  :Prikaz poruke o neuspješnom plaćanju;
+  stop
+endif
+
+@enduml
