@@ -1,0 +1,46 @@
+@startuml dijagram25_seq
+
+title U7 - Sudjelovanje u online sesijama
+
+actor Instruktor
+actor Učenik
+participant "Sustav" as System
+participant "Video API" as Video
+participant "S3 servis" as S3
+
+== Osnovni tijek ==
+
+Instruktor -> System : Otvara poveznicu za sesiju (F-014)
+Učenik -> System : Pridružuje se sesiji (F-014)
+System -> Video : Uspostavlja video vezu
+Video --> System : Potvrda uspostavljene veze
+
+Instruktor <-> Učenik : Održavaju video sesiju
+Instruktor -> System : Koristi interaktivnu ploču (F-015)
+System --> Instruktor : Sinkronizacija ploče
+Učenik -> System : Prati ploču (F-015)
+System --> Učenik : Ažuriranje prikaza
+
+== Kraj sesije ==
+
+Instruktor -> System : Završi sesiju
+System -> System : Generira sažetak i popis zadataka (F-016)
+System -> S3 : Pohrani sažetak i zadatke (F-026)
+S3 --> System : Potvrda pohrane
+
+System --> Instruktor : Prikaz potvrde o uspješnom završetku
+
+== Moguća odstupanja ==
+
+alt Prekid veze s Video API-jem
+    Video --> System : Greška u vezi
+    System --> Instruktor : Obavijest o prekidu sesije
+end
+
+alt Greška u pohrani na S3 servis
+    System -> S3 : Pokušaj pohrane
+    S3 --> System : Greška pohrane
+    System --> Instruktor : Obavijest o neuspjeloj pohrani
+end
+
+@enduml
