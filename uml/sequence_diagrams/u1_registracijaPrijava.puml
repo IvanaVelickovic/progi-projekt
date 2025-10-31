@@ -1,0 +1,58 @@
+@startuml
+left header 
+sd U1 - Registracija i prijava korisnika
+end header
+
+actor Korisnik
+participant "Sustav" as Sustav
+participant "OAuth sustav" as OAuth
+database "Baza podataka" as Baza
+
+== Osnovni tijek ==
+
+Korisnik -> Sustav: Odabire opciju Prijava/Registracija (F-001)
+Sustav -> Korisnik: Prikazuje opcije\n- Prijava (Log-in)\n- Registracija (Sign-up)\n- Povezivanje OAuth računa
+
+== Tok A: Prijava ==
+Korisnik -> Sustav: Odabire prijavu i unosi korisničko ime i lozinku (F-001)
+Sustav -> Baza: Provjerava podatke korisnika
+Baza --> Sustav: Rezultat provjere
+Sustav -> OAuth: Provjera autentifikacije
+OAuth --> Sustav: Potvrda identiteta
+Sustav -> Korisnik: Pristup sustavu omogućen
+
+== Tok B: Registracija ==
+Korisnik -> Sustav: Odabire registraciju i unosi korisničko ime, lozinku i e-poštu (F-002)
+Sustav -> Baza: Sprema podatke o novom korisniku
+Baza --> Sustav: Potvrda spremanja
+Sustav -> Korisnik: Potvrda uspješne registracije
+Sustav -> Korisnik: Automatska prijava korisnika
+
+== Tok C: Povezivanje OAuth računa ==
+Korisnik -> Sustav: Odabire povezivanje dodatnih OAuth identiteta
+Sustav -> OAuth: Preusmjeravanje korisnika na OAuth servis
+OAuth --> Sustav: Potvrda identiteta
+Sustav -> Baza: Povezuje dodatni račun s postojećim korisničkim računom
+Baza --> Sustav: Potvrda povezivanja
+Sustav -> Korisnik: Obavijest o uspješnom povezivanju OAuth računa
+
+== Alternativni tokovi ==
+
+alt Pogrešno korisničko ime ili lozinka
+    Baza --> Sustav: Neispravni podaci
+    Sustav -> Korisnik: Poruka o pogrešnim podacima\n"Netočno korisničko ime ili lozinka. Pokušajte ponovno."
+end
+
+alt Greška u bazi ili OAuth sustavu prilikom registracije
+    Sustav -> Baza: Pokušaj spremanja podataka
+    Baza --> Sustav: Greška pri spremanju
+    Sustav -> Korisnik: Poruka o grešci\n"Trenutno nije moguće kreirati novi račun."
+end
+
+alt OAuth servis ne odgovara
+    Sustav -> OAuth: Povezivanje dodatnog računa
+    OAuth --> Sustav: Nema odgovora
+    Sustav -> Korisnik: Poruka o grešci\n"Povezivanje s OAuth servisom trenutno nije moguće."
+end
+
+@enduml
