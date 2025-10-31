@@ -1,0 +1,69 @@
+@startuml dijagram_stanja
+[*] --> Neregistriran
+
+Neregistriran --> AktivniKorisnik : prijava()
+Neregistriran --> Registracija : kreiraj_racun()
+
+Registracija : entry / otvori_formu()
+Registracija : exit / inicijaliziraj_profil()
+Registracija --> ProfilNeispunjen : registracija_uspjesna()
+
+ProfilNeispunjen : entry / prikazi_formu_profila()
+ProfilNeispunjen : exit / profil_spremljen()
+ProfilNeispunjen --> AktivniKorisnik : spremi()
+
+' ------- Home -------
+AktivniKorisnik : entry / prikazi_dashboard()
+AktivniKorisnik --> PregledInstruktora : pregled_instruktora()
+AktivniKorisnik --> PregledProfila : profil()
+AktivniKorisnik --> SesijaUTijeku : vrijeme_termina()
+AktivniKorisnik --> [*] : logout()
+
+' ------- Pregled profila -------
+PregledProfila : entry / prikazi_profil()
+PregledProfila --> UredjivanjeProfila : uredi()
+PregledProfila --> PregledBiljeski : biljeske()
+PregledProfila --> [*] : deaktiviraj_profil()
+PregledProfila --> AktivniKorisnik : natrag()
+
+UredjivanjeProfila : entry / prikazi_formu_uredivanja()
+UredjivanjeProfila : exit / spremi_promjene()
+UredjivanjeProfila --> PregledProfila : spremi()
+
+PregledBiljeski : entry / prikazi_biljeske()
+PregledBiljeski --> PregledProfila : natrag()
+
+' ------- Instruktori i rezervacije -------
+PregledInstruktora : entry / ucitaj_instruktore()
+PregledInstruktora --> PregledTermina : odaberi_instruktora()
+
+PregledTermina : entry / ucitaj_termin()
+PregledTermina --> RezervacijaUTijeku : odaberi_termin()
+
+RezervacijaUTijeku : entry / pripremi_rezervaciju()
+RezervacijaUTijeku --> Placanje : potvrdi()
+
+Placanje : entry / obradi_transakciju()
+Placanje --> TerminZakazan : uspjeh()
+Placanje --> PregledTermina : neuspjeh()
+
+TerminZakazan : entry / dodaj_u_kalendar()
+TerminZakazan --> AktivniKorisnik : natrag()
+
+' ------- Sesija + kviz -------
+SesijaUTijeku : entry / otvori_videokonferenciju()
+SesijaUTijeku : exit / generiraj_sazetak()
+SesijaUTijeku --> SesijaZavrsena : kraj()
+
+SesijaZavrsena : entry / prikazi_materijale()
+SesijaZavrsena --> Kviz : pokreni_kviz()
+
+Kviz : entry / prikazi_pitanja()
+Kviz : exit / spremi_rezultate()
+Kviz --> Recenzija : nastavi()
+
+Recenzija : entry / prikazi_formu_recenzije()
+Recenzija : exit / azuriraj_ocjenu()
+Recenzija --> AktivniKorisnik : natrag()
+
+@enduml
