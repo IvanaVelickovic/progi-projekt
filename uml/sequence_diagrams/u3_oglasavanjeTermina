@@ -1,0 +1,40 @@
+@startuml
+left header
+sd U3 - Oglašavanje termina
+end header
+
+actor Instruktor
+participant "Sustav" as Sustav
+participant "Kalendar API" as KalendarAPI
+database "Baza podataka" as Baza
+
+== Osnovni tijek ==
+
+Instruktor -> Sustav: Otvara modul za oglašavanje termina (F-004)
+Sustav -> Instruktor: Prikazuje sučelje povezano s Kalendar API-jem (F-005)
+Instruktor -> Sustav: Unosi podatke o terminu (F-006)
+Sustav -> KalendarAPI: Sinkronizira podatke o terminu
+KalendarAPI --> Sustav: Potvrda sinkronizacije
+Sustav -> Baza: Sprema podatke o terminu
+Baza --> Sustav: Potvrda spremanja
+Sustav -> Instruktor: Prikazuje potvrdu o objavi termina
+
+== Alternativni tokovi ==
+
+alt Kalendar API ne odgovara
+    Sustav <-x KalendarAPI: Nema odgovora
+    Sustav -> Instruktor: Poruka o grešci\n"Termin nije moguće objaviti – problem s Kalendar API-jem"
+end
+
+alt Greška u bazi podataka
+    Sustav -> Baza: Pokušaj spremanja termina
+    Baza --> Sustav: Greška pri spremanju
+    Sustav -> Instruktor: Poruka o grešci\n"Došlo je do pogreške pri spremanju termina"
+end
+
+alt Nisu uneseni svi podaci
+    Instruktor -> Sustav: Nepotpuni podaci o terminu
+    Sustav -> Instruktor: Upozorenje\n"Molimo unesite sve obavezne podatke o terminu"
+end
+
+@enduml
