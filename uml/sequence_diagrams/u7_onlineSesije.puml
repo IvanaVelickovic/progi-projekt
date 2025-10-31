@@ -1,6 +1,7 @@
 @startuml dijagram25_seq
-
-title U7 - Sudjelovanje u online sesijama
+left header
+sd U7 - Sudjelovanje u online sesijama
+end header
 
 actor Instruktor
 actor Učenik
