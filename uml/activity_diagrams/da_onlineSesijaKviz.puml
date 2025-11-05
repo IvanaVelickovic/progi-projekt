@@ -1,0 +1,90 @@
+@startuml
+left header
+Dijagram aktivnosti - online sesija i kviz
+end header
+
+|Učenik|
+start
+:Prijava u sustav i otvaranje zakazanog termina;
+:Klik "Pridruži se sesiji";
+
+|Instruktor|
+:Klik "Pokreni sesiju";
+
+|Web-aplikacija|
+:Uspostavljanje video konekcije (Jitsi/Zoom API);
+:Prikaz sučelja za sesiju;
+
+|Učenik|
+:Sudjeluje u online sesiji (chat, bijela ploča, govor);
+
+|Instruktor|
+:Dijeli ekran, objašnjava gradivo;
+
+|Web-aplikacija|
+:Spremanje bilješki u realnom vremenu;
+
+|Vanjska pohrana (S3)|
+:Pohrana bilješki;
+
+|Baza podataka|
+:Spremanje URL referenci na bilješke;
+
+|Instruktor|
+:Klik "Završi sesiju";
+
+|Web-aplikacija|
+:Generiranje sažetka i kviza;
+
+|Vanjska pohrana (S3)|
+:Pohrana sažetka i kviza;
+
+|Baza podataka|
+:Spremanje URL referenci na sažetak i kviz;
+
+|Učenik|
+:Pregled sažetka;
+
+'--- NOVO: ODLUKA KVIZ DA / NE ---
+if (Učenik želi rješavati kviz odmah?) then (DA)
+  :Klik "Započni kviz";
+
+  |Web-aplikacija|
+  :Prikaz pitanja kviza (adaptivni sustav);
+
+  |Učenik|
+  :Rješavanje kviza;
+
+  |Web-aplikacija|
+  :Obrada rezultata;
+
+  |Baza podataka|
+  :Spremanje rezultata kviza;
+  --> Web-aplikacija
+
+  |Učenik|
+  :Prikaz rezultata;
+else (NE)
+
+  |Učenik|
+  :Povratak na dashboard;
+endif
+
+'--- RECENZIJA ---
+|Web-aplikacija|
+:Prikaz gumba "Ocijeni instruktora";
+
+|Učenik|
+:Upis ocjene i komentara;
+
+|Web-aplikacija|
+:Spremanje recenzije;
+
+|Baza podataka|
+:Ažuriranje prosječne ocjene instruktora;
+
+|Učenik|
+:Potvrda završetka sesije;
+
+stop
+@enduml
