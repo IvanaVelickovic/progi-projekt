@@ -4,7 +4,7 @@ import SocialButtons from "../components/SocialButtons";
 const Login = () => {
   return (
     <AuthLayout title="Prijava">
-      <div className="bg-green-light/50 h-4/5 w-10/12 rounded-2xl shadow-md shadow-gray-300 flex flex-col justify-center items-center">
+      <div className="bg-green-light/50 h-5/6 w-10/12 rounded-2xl shadow-md shadow-gray-300 flex flex-col justify-center items-center">
         <h2 className="text-xl font-bold text-blue-dark">
           Dobro došli natrag!
         </h2>
@@ -17,13 +17,15 @@ const Login = () => {
         >
           <input
             placeholder="E-mail adresa"
-            type="text"
+            type="email"
             className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-4"
+            required
           ></input>
           <input
             placeholder="Lozinka"
             type="password"
             className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-4"
+            required
           ></input>
           <button
             type="submit"
