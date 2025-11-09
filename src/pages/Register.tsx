@@ -1,10 +1,19 @@
 import AuthLayout from "../components/AuthLayout";
 import SocialButtons from "../components/SocialButtons";
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const validatePassword = (value: string) => {
     if (value.length < 8) {
@@ -19,9 +28,30 @@ const Register = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPassword(value);
-    validatePassword(value);
+    const { name, value } = e.target;
+
+    setFormData({ ...formData, [name]: value });
+
+    if (name === "password") {
+      validatePassword(value);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (error) {
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await axios.post("http://localhost:3000/register", formData);
+      if (res.status === 200) {
+        //check backend confirmation
+        navigate("/setup");
+      }
+    } catch (err: any) {
+      console.error("Greška u komunikaciji s backendom ", err);
+    }
   };
 
   return (
@@ -34,29 +64,40 @@ const Register = () => {
         <form
           method="POST"
           className="flex flex-col justify-center items-center w-11/12"
+          onSubmit={handleSubmit}
         >
           <input
             placeholder="Ime"
             type="text"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
             className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-4"
             required
           ></input>
           <input
             placeholder="Prezime"
             type="text"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
             className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-4"
             required
           ></input>
           <input
             placeholder="E-mail adresa"
             type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
             className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-4"
             required
           ></input>
           <input
             placeholder="Lozinka"
             type="password"
-            value={password}
+            name="password"
+            value={formData.password}
             onChange={handleChange}
             className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-1.5"
             required
@@ -69,13 +110,8 @@ const Register = () => {
           <button
             type="submit"
             className="bg-blue-light text-white text-base p-3 px-7.5 rounded-lg cursor-pointer mt-2.5"
-            onClick={(e) => {
-              if (error) {
-                e.preventDefault();
-              }
-            }}
           >
-            Registriraj se
+            {loading ? "Učitavanje..." : "Registriraj se"}
           </button>
         </form>
         <SocialButtons authType="register"></SocialButtons>

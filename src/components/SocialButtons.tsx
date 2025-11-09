@@ -1,50 +1,37 @@
 import { Link } from "react-router-dom";
 import GoogleLogo from "../assets/logos/google_logo.png";
-import MicrosoftLogo from "../assets/logos/microsoft_logo.png";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useMsal } from "@azure/msal-react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface SocialButtonsProps {
   authType: string;
 }
 
 const SocialButtons = ({ authType }: SocialButtonsProps) => {
-  const { instance } = useMsal();
+  const navigate = useNavigate();
 
   const googleLogin = useGoogleLogin({
     flow: "auth-code",
-    onSuccess: (codeResponse) => {
-      fetch("http://localhost:3000", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: codeResponse.code }),
-      });
+    onSuccess: async (codeResponse) => {
+      console.log(codeResponse.code);
+      try {
+        const res = await axios.post("http://localhost:3000/google-auth", {
+          code: codeResponse.code,
+        });
+        if (res.status === 200) {
+          if (authType === "register") {
+            navigate("/setup");
+          } else {
+            navigate("/dashboard");
+          }
+        }
+      } catch (err: any) {
+        console.error(err);
+      }
     },
     onError: () => console.log("Google auth failed"),
   });
-
-  const microsoftLogin = async () => {
-    try {
-      const loginResponse = await instance.loginPopup({
-        scopes: ["User.Read"],
-      });
-
-      const tokenResponse = await instance.acquireTokenSilent({
-        scopes: ["User.Read"],
-        account: loginResponse.account,
-      });
-
-      const accessToken = tokenResponse.accessToken;
-
-      await fetch("http://localhost:3000", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: accessToken }),
-      });
-    } catch (e) {
-      console.log("Microsoft login error: ", e);
-    }
-  };
 
   return (
     <>
@@ -55,18 +42,15 @@ const SocialButtons = ({ authType }: SocialButtonsProps) => {
       </div>
       <div className="flex justify-around w-3/4 text-base">
         <button
-          className="flex justify-center items-center border-3 border-blue-light rounded-xl bg-white py-1 px-3 text-blue-dark w-5/12 cursor-pointer"
+          className="flex justify-center items-center border-3 border-blue-light rounded-xl bg-white py-1.5 px-3 text-blue-dark w-full cursor-pointer text-[1.05rem]"
           onClick={googleLogin}
         >
-          <img src={GoogleLogo} className="h-7 w-7 mr-1.5"></img>
+          <img
+            src={GoogleLogo}
+            className="h-7 w-7 mr-2.5"
+            alt="google logo"
+          ></img>
           Google
-        </button>
-        <button
-          className="flex justify-center items-center border-3 border-blue-light rounded-xl px-3 py-2 bg-white text-blue-dark cursor-pointer"
-          onClick={microsoftLogin}
-        >
-          <img src={MicrosoftLogo} className="h-6 w-6 mr-2"></img>
-          Microsoft
         </button>
       </div>
       <div className="flex justify-center mt-3.5 text-blue-dark">
