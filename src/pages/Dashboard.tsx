@@ -17,7 +17,9 @@ const Dashboard = () => {
           </button>
         </div>
         <div className="flex justify-around items-center h-4/5 ">
-          <div className="text-blue-dark text-4xl font-bold">Dobro došli!</div>
+          <div className="text-blue-dark text-4xl font-bold">
+            Dobro došli, {user?.name}!
+          </div>
           <img
             src="/images/home_page.png"
             alt="logo homepagea"

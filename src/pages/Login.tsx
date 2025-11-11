@@ -3,6 +3,7 @@ import AuthLayout from "../components/AuthLayout";
 import SocialButtons from "../components/SocialButtons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,13 +14,18 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const { setUser } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
       const res = await axios.post("http://localhost:3000/login", formData);
       if (res.status === 200) {
-        //check backend confirmation
+        setUser({
+          id: res.data.id,
+          name: res.data.name,
+        });
         navigate("/dashboard");
       }
     } catch (err: any) {

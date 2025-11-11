@@ -3,6 +3,7 @@ import SocialButtons from "../components/SocialButtons";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const Register = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   const validatePassword = (value: string) => {
     if (value.length < 8) {
@@ -47,6 +49,10 @@ const Register = () => {
       const res = await axios.post("http://localhost:3000/register", formData);
       if (res.status === 200) {
         //check backend confirmation
+        setUser({
+          id: res.data.id,
+          name: formData.firstName,
+        });
         navigate("/setup");
       }
     } catch (err: any) {

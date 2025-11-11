@@ -8,8 +8,9 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, loading } = useAuth();
 
+  if (loading) return <p>Učitavanje</p>;
   if (!isLoggedIn) return <Navigate to="/" replace />;
 
   return children;
