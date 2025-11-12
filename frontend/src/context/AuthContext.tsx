@@ -1,3 +1,4 @@
+import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface User {
@@ -26,25 +27,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = sessionStorage.getItem("user");
-    if (storedUser) {
+    const fetchUser = async () => {
       try {
-        setUser(JSON.parse(storedUser));
+        const res = await axios.get("/current-user", { withCredentials: true });
+        setUser(res.data);
       } catch {
-        sessionStorage.removeItem("user");
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-    }
-    setLoading(false);
+    };
+    fetchUser();
   }, []);
-
-  useEffect(() => {
-    if (user) {
-      sessionStorage.setItem("user", JSON.stringify(user));
-    } else {
-      sessionStorage.removeItem("user");
-    }
-    setLoading(false);
-  }, [user]);
 
   return (
     <AuthContext.Provider
@@ -56,17 +50,3 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export const useAuth = () => useContext(AuthContext);
-
-/*useEffect(() => {
-    //setUser({ id: "1", name: "Ana", email: "ana@gmail.com", role: "student" });
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get("/current-user", { withCredentials: true });
-        setUser(res.data);
-      } catch {
-        setUser(null);
-      }
-    };
-    fetchUser();
-    setLoading(false);
-  }, []);*/
