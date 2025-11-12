@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "students")
+@Table(name = "instructor")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
