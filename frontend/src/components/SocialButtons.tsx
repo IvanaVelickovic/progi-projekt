@@ -1,20 +1,14 @@
 import { Link } from "react-router-dom";
 import GoogleLogo from "../assets/logos/google_logo.png";
-import { useGoogleLogin } from "@react-oauth/google";
 
 interface SocialButtonsProps {
   authType: string;
 }
 
 const SocialButtons = ({ authType }: SocialButtonsProps) => {
-  const googleLogin = useGoogleLogin({
-    flow: "auth-code",
-    state: authType,
-    redirect_uri: window.location.origin + "/auth/callback",
-    onError: (error) => {
-      console.error("Google login error: ", error);
-    },
-  });
+  const googleLogin = () => {
+    window.location.href = "http://localhost:3000/oauth2/google";
+  };
 
   return (
     <>
