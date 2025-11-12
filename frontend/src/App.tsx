@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import LandingPage from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import GoogleAuth from "./components/GoogleAuth";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<LandingPage />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/login" element={<Login />}></Route>
+          <Route path="/auth/callback" element={<GoogleAuth />}></Route>
           <Route
             path="/setup"
             element={

@@ -1,36 +1,19 @@
 import { Link } from "react-router-dom";
 import GoogleLogo from "../assets/logos/google_logo.png";
 import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 interface SocialButtonsProps {
   authType: string;
 }
 
 const SocialButtons = ({ authType }: SocialButtonsProps) => {
-  const navigate = useNavigate();
-
   const googleLogin = useGoogleLogin({
     flow: "auth-code",
-    onSuccess: async (codeResponse) => {
-      console.log(codeResponse.code);
-      try {
-        const res = await axios.post("http://localhost:3000/google-auth", {
-          code: codeResponse.code,
-        });
-        if (res.status === 200) {
-          if (authType === "register") {
-            navigate("/setup");
-          } else {
-            navigate("/dashboard");
-          }
-        }
-      } catch (err: any) {
-        console.error(err);
-      }
+    state: authType,
+    redirect_uri: window.location.origin + "/auth/callback",
+    onError: (error) => {
+      console.error("Google login error: ", error);
     },
-    onError: () => console.log("Google auth failed"),
   });
 
   return (
