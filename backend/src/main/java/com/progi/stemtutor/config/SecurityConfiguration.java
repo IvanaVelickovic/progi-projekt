@@ -19,10 +19,6 @@ public class SecurityConfiguration {
 
     private final UserRepository userRepository;
 
-    public SecurityConfiguration(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> userRepository.findByEmail(email)
