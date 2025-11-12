@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import LandingPage from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import ProfileEdit from "./pages/ProfileEdit";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
+          <Route path="/ProfileEdit" element={<ProfileEdit />}></Route>
         </Routes>
       </AuthProvider>
     </Router>
