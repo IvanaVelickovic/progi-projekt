@@ -1,8 +1,9 @@
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
 import SocialButtons from "../components/SocialButtons";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
@@ -12,6 +13,7 @@ const Login = () => {
   });
   const navigate = useNavigate();
 
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const { setUser } = useAuth();
@@ -20,12 +22,29 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:3000/login", formData);
-      if (res.status === 200) {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+      const loginRes = await axios.post(`${API_BASE_URL}/auth/login`, {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (loginRes.status === 200) {
+        const token = loginRes.data.token;
+        if (!token) {
+          setError("Login failed: token not received");
+          setLoading(false);
+          return;
+        }
+
+        sessionStorage.setItem("stemtutor-token", JSON.stringify(token));
+        const decoded: any = jwtDecode(token);
+
         setUser({
-          id: res.data.id,
-          name: res.data.name,
+          id: decoded.id,
+          name: decoded.name,
         });
+
         navigate("/dashboard");
       }
     } catch (err: any) {
@@ -83,6 +102,9 @@ const Login = () => {
           </button>
         </form>
         <SocialButtons authType="login"></SocialButtons>
+        {error && (
+          <p className="mt-3 text-blue-dark bg-red-500/50 px-5">{error}</p>
+        )}
       </div>
     </AuthLayout>
   );
