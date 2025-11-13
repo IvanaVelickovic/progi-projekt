@@ -19,12 +19,16 @@ const Register = () => {
   const { setUser } = useAuth();
 
   const validatePassword = (value: string) => {
-    if (value.length < 8) {
-      setError("Lozinka mora imati barem 8 znakova!");
-    } else if (!/[A-Z]/.test(value)) {
-      setError("Lozinka mora imati barem jedno veliko slovo!");
-    } else if (!/[0-9]/.test(value)) {
-      setError("Lozinka mora sadržavati barem jednu znamenku!");
+    if (value.length > 0) {
+      if (value.length < 8) {
+        setError("Lozinka mora imati barem 8 znakova!");
+      } else if (!/[A-Z]/.test(value)) {
+        setError("Lozinka mora imati barem jedno veliko slovo!");
+      } else if (!/[0-9]/.test(value)) {
+        setError("Lozinka mora sadržavati barem jednu znamenku!");
+      } else {
+        setError("");
+      }
     } else {
       setError("");
     }

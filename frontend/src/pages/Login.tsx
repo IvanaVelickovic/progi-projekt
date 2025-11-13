@@ -102,6 +102,9 @@ const Login = () => {
           </button>
         </form>
         <SocialButtons authType="login"></SocialButtons>
+        {error && (
+          <p className="mt-3 text-blue-dark bg-red-500/50 px-5">{error}</p>
+        )}
       </div>
     </AuthLayout>
   );
