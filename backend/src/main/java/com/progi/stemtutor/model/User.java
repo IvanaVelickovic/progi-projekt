@@ -46,7 +46,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserStatus status;
+    private UserStatus status = UserStatus.active;
 
     @Column(nullable = false)
     private Boolean isVerified = false;
@@ -56,6 +56,14 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private Instant lastLogin = Instant.now();
+
+    public User(String firstName, String lastName, String email, String passwordHash, UserRole role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.role = role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
