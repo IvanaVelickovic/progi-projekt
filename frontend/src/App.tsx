@@ -34,7 +34,7 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
-          <Route path="/ProfileEdit" element={<ProfileEdit />}></Route>
+          <Route path="/profile" element={<ProfileEdit />}></Route>
         </Routes>
       </AuthProvider>
     </Router>
