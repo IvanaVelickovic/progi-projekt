@@ -1,8 +1,9 @@
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
 import SocialButtons from "../components/SocialButtons";
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Register = () => {
@@ -18,18 +19,24 @@ const Register = () => {
   const { setUser } = useAuth();
 
   const validatePassword = (value: string) => {
-    if (value.length < 8) {
-      setError("Lozinka mora imati barem 8 znakova!");
-    } else if (!/[A-Z]/.test(value)) {
-      setError("Lozinka mora imati barem jedno veliko slovo!");
-    } else if (!/[0-9]/.test(value)) {
-      setError("Lozinka mora sadržavati barem jednu znamenku!");
+    if (value.length > 0) {
+      if (value.length < 8) {
+        setError("Lozinka mora imati barem 8 znakova!");
+      } else if (!/[A-Z]/.test(value)) {
+        setError("Lozinka mora imati barem jedno veliko slovo!");
+      } else if (!/[0-9]/.test(value)) {
+        setError("Lozinka mora sadržavati barem jednu znamenku!");
+      } else {
+        setError("");
+      }
     } else {
       setError("");
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
 
     setFormData({ ...formData, [name]: value });
@@ -46,17 +53,43 @@ const Register = () => {
     }
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:3000/register", formData);
-      if (res.status === 200) {
-        //check backend confirmation
-        setUser({
-          id: res.data.id,
-          name: formData.firstName,
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+      const signupRes = await axios.post(
+        `${API_BASE_URL}/auth/signup`,
+        formData
+      );
+
+      if (signupRes.status === 200 || signupRes.status === 201) {
+        const loginRes = await axios.post(`${API_BASE_URL}/auth/login`, {
+          email: formData.email,
+          password: formData.password,
         });
-        navigate("/setup");
+
+        if (loginRes.status === 200) {
+          const token = loginRes.data.token;
+          if (!token) {
+            setError("Login failed: token not received");
+            setLoading(false);
+            return;
+          }
+
+          sessionStorage.setItem("stemtutor-token", JSON.stringify(token));
+          const decoded: any = jwtDecode(token);
+
+          setUser({
+            id: decoded.id,
+            name: decoded.name,
+          });
+
+          navigate("/setup");
+        }
       }
     } catch (err: any) {
       console.error("Greška u komunikaciji s backendom ", err);
+      setError("Došlo je do greške, pokušajte ponovo.");
+    } finally {
+      setLoading(false);
     }
   };
 

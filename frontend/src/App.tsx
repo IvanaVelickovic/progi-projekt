@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import LandingPage from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import AuthCallback from "./components/AuthCallback";
 import ProfileEdit from "./pages/ProfileEdit";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<LandingPage />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/login" element={<Login />}></Route>
+          <Route path="/oauth2/callback" element={<AuthCallback />}></Route>
           <Route
             path="/setup"
             element={
