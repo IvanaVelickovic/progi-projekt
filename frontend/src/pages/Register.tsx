@@ -12,6 +12,7 @@ const Register = () => {
     lastName: "",
     email: "",
     password: "",
+    role: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,7 +31,9 @@ const Register = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
 
     setFormData({ ...formData, [name]: value });
@@ -49,28 +52,39 @@ const Register = () => {
     try {
       const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-      const res = await axios.post(`${API_BASE_URL}/auth/signup`, formData);
+      const signupRes = await axios.post(
+        `${API_BASE_URL}/auth/signup`,
+        formData
+      );
 
-      if (res.status === 200 || res.status === 201) {
-        const token = res.data.token;
-        if (!token) {
-          setError("Registracija je uspješna, ali token nije primljen.");
-          setLoading(false);
-          return;
-        }
-
-        sessionStorage.setItem("stemtutor-token", JSON.stringify(token));
-
-        const decoded: any = jwtDecode(token);
-        setUser({
-          id: decoded.id,
-          name: decoded.name,
+      if (signupRes.status === 200 || signupRes.status === 201) {
+        const loginRes = await axios.post(`${API_BASE_URL}/auth/login`, {
+          email: formData.email,
+          password: formData.password,
         });
 
-        navigate("/setup");
+        if (loginRes.status === 200) {
+          const token = loginRes.data.token;
+          if (!token) {
+            setError("Login failed: token not received");
+            setLoading(false);
+            return;
+          }
+
+          sessionStorage.setItem("stemtutor-token", JSON.stringify(token));
+          const decoded: any = jwtDecode(token);
+
+          setUser({
+            id: decoded.id,
+            name: decoded.name,
+          });
+
+          navigate("/setup");
+        }
       }
     } catch (err: any) {
       console.error("Greška u komunikaciji s backendom ", err);
+      setError("Došlo je do greške, pokušajte ponovo.");
     } finally {
       setLoading(false);
     }
@@ -94,36 +108,48 @@ const Register = () => {
             name="firstName"
             value={formData.firstName}
             onChange={handleChange}
-            className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-4"
-            required
-          ></input>
+            className="bg-white rounded text-base p-2 border border-blue-dark/50 w-full max-w-[87.5%] pl-3 placeholder-blue-light/40 mb-4"
+          />
           <input
             placeholder="Prezime"
             type="text"
             name="lastName"
             value={formData.lastName}
             onChange={handleChange}
-            className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-4"
-            required
-          ></input>
+            className="bg-white rounded text-base p-2 border border-blue-dark/50 w-full max-w-[87.5%] pl-3 placeholder-blue-light/40 mb-4"
+          />
           <input
             placeholder="E-mail adresa"
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-4"
-            required
-          ></input>
+            className="bg-white rounded text-base p-2 border border-blue-dark/50 w-full max-w-[87.5%] pl-3 placeholder-blue-light/40 mb-4"
+          />
           <input
             placeholder="Lozinka"
             type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-1.5"
+            className="bg-white rounded text-base p-2 border border-blue-dark/50 w-full max-w-[87.5%] pl-3 placeholder-blue-light/40 mb-4"
+          />
+
+          {/* Role Dropdown */}
+          <select
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            className="bg-white rounded text-base p-2 border border-blue-dark/50 w-full max-w-[87.5%] pl-3 mb-4"
             required
-          ></input>
+          >
+            <option value="" disabled>
+              Odaberite ulogu
+            </option>
+            <option value="student">Student</option>
+            <option value="instructor">Instruktor</option>
+          </select>
+
           {error && (
             <p className="mb-2 px-2 bg-red-500/50 text-blue-dark w-[87.5%] rounded-xs">
               {error}
