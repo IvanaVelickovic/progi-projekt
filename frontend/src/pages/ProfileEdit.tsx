@@ -173,7 +173,7 @@ const ProfileEdit = () => {
 
   return (
     <div className="bg-[#f6fefb] flex justify-center items-center min-h-screen">
-      <div className="w-[90vw] max-w-[1732px] h-auto lg:h-[90vh] bg-[#dff2ea] rounded-2xl shadow-md flex flex-col lg:flex-row items-center p-8 lg:p-12 gap-10">
+      <div className="w-[90%] h-[90%] min-w-[90%] min-h-[90%] max-w-[1732px] max-w[90%] lg:h-[90%] bg-[#dff2ea] rounded-2xl shadow-md flex flex-col lg:flex-row items-center p-8 lg:p-12 gap-10">
         {/* Left section */}
         <div className="flex flex-col items-center text-center w-full lg:w-1/4">
           <h1 className="text-3xl font-bold text-[#1e3a56] mb-8">Moj profil</h1>
@@ -188,9 +188,9 @@ const ProfileEdit = () => {
         </div>
 
         {/* Right section */}
-        <div className="bg-green-light flex flex-col justify-center">
+        <div className="bg-green-light flex flex-col justify-center w-[60%] h-[70%]">
           {/* Tab buttons */}
-          <div className="flex justify-top w-[60vh] bg-white rounded-md">
+          <div className="flex justify-top w-[55%] bg-white rounded-md">
             <button
               className={`px-4 py-2 font-semibold text-sm ${
                 activeTab === "personal"
@@ -224,37 +224,37 @@ const ProfileEdit = () => {
           </div>
 
           {/* Info section */}
-        <div className="bg-white w-[100vh] h-[70vh] rounded-md shadow-sm p-[4vh] text-[#1e3a56] transition-all duration-300">
+        <div className="bg-white w-[100%] h-[100%] rounded-md shadow-sm p-[4%] text-[#1e3a56] transition-all duration-300">
 
           {/* --- PERSONAL --- */}
           {activeTab === "personal" && (
             <>
-              <form onSubmit={handlePersonalSubmit} className="flex flex-col">
-                <div className="grid grid-cols-1 sm:grid-cols-1">
-                  <div className="p-[1vh]">
+              <form onSubmit={handlePersonalSubmit} className="flex flex-row">
+                <div className="flex flex-col w-[50%]">
+                  <div className="p-[1%]">
                     <label className="font-semibold block mb-1">Ime:</label>
                     <input
                       name="firstName"
                       type="text"
                       value={userData.firstName}
                       onChange={handleUserChange}
-                      className="border border-gray-400 rounded-md px-2 py-1 w-[30%] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
+                      className="border border-gray-400 rounded-md px-2 py-1 w-[80%] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
                     />
                   </div>
 
-                  <div className="p-[1vh]">
+                  <div className="p-[1%]">
                     <label className="font-semibold block mb-1">Prezime:</label>
                     <input
                       name="lastName"
                       type="text"
                       value={userData.lastName}
                       onChange={handleUserChange}
-                      className="border border-gray-400 rounded-md px-2 py-1 w-[30%] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
+                      className="border border-gray-400 rounded-md px-2 py-1 w-[80%] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
                     />
                   </div>
 
                   <div>
-                    <p className="pt-[2vh]">
+                    <p className="pt-[2%] p-[1%]">
                       <span className="font-semibold">E-mail:</span> {userData.email || "Učitavanje..."}
                     </p>
                   </div>
@@ -262,20 +262,20 @@ const ProfileEdit = () => {
 
                 <button
                   type="submit"
-                  className="mx-auto bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition"
+                  className="mb-[2.5%] bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition self-center"
                 >
                   Spremi promjene
                 </button>
               </form>
 
               {/* --- PROMJENA LOZINKE --- */}
-              <div className="mt-8 p-[1vh]">
+              <div className="mt-8 p-[1%]">
                 <p className="font-semibold mb-3 text-[#1e3a56]">Promjena lozinke:</p>
-                <form className="flex flex-row sm:items-end" onSubmit={handlePasswordSubmit}>
-                  <div className="flex flex-row p-[1vh]">
-                    <div className="flex flex-col">
-                      <label className="text-sm mb-1 p-[1vh]">Trenutna lozinka:</label>
-                      <label className="text-sm mb-1 p-[1.5vh]">Nova lozinka:</label>
+                <form className="flex flex-row sm:items-end " onSubmit={handlePasswordSubmit}>
+                  <div className="flex flex-row p-[1%]">
+                    <div className="flex flex-col mb-[2%]">
+                      <label className="text-sm mb-[3%] p-[1%]">Trenutna lozinka:</label>
+                      <label className="text-sm mb-[3%] p-[1.5%]">Nova lozinka:</label>
                     </div>
 
                     <div className="flex flex-col">
@@ -284,14 +284,14 @@ const ProfileEdit = () => {
                         name="oldpassword"
                         value={formData.oldpassword}
                         onChange={handleChange}
-                        className="border border-gray-400 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] m-[0.5vh]"
+                        className="border border-gray-400 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] mb-[2%] m-[0.5%]"
                       />
                       <input
                         type="password"
                         name="newpassword"
                         value={formData.newpassword}
                         onChange={handleChange}
-                        className="border border-gray-400 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] m-[0.5vh]"
+                        className="border border-gray-400 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] mb-[2%] m-[0.5%]"
                       />
                       
                     </div>
@@ -300,14 +300,14 @@ const ProfileEdit = () => {
 
                   <button
                     type="submit"
-                    className="bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition self-start mt-[3.5vh]"
+                    className="bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition self-start mt-[3.5%]"
                   >
                     Promijeni
                   </button>
                   
                 </form>
                 {error && (
-                  <p className="mb-2 px-2 bg-red-500/50 text-white w-[47%] rounded h-[4vh] text-xs flex items-center ml-[17%]">
+                  <p className="mb-[6.6%] px-2 bg-red-500/50 text-white w-[42%] rounded h-[6%] text-xs flex items-center ml-[13.5%]">
                     {error}
                   </p>
                 )}
@@ -318,9 +318,9 @@ const ProfileEdit = () => {
           {/* --- EDUCATION --- */}
           {activeTab === "education" && (
             <form className="flex flex-col w-[90%] h-[90%]" onSubmit={handleEducationSubmit}>
-              <div className="pt-[4vh] w-[100%] h-[100%]">
+              <div className="pt-[4%] w-[100%] h-[100%]">
                 <div> 
-                  <label className="font-semibold block mb-1 pb-[1vh]">
+                  <label className="font-semibold block mb-1 pb-[1%]">
                     Razina obrazovanja:
                   </label> 
                   <select name="grade" value={educationData.grade} 
@@ -328,13 +328,13 @@ const ProfileEdit = () => {
                     onChange={handleEducationChange} > 
                     <option value="" disabled> 
                       Odaberi razinu </option> 
-                    <option value="osnovna škola (1.- 4. razred)">osnovna škola (1.- 4. razred)</option>
-                    <option value="osnovna škola (5.- 8. razred)">osnovna škola (5.- 8. razred)</option>  
+                    <option value="osnovna škola (1.- 4. razred)">Osnovna škola (1.- 4. razred)</option>
+                    <option value="osnovna škola (5.- 8. razred)">Osnovna škola (5.- 8. razred)</option>  
                     <option value="srednja">Srednja škola</option> 
                   </select> 
                 </div>
                 <label className="font-semibold block mb-2 mt-[6%]">Razine znanja:</label>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-[16.1%]">
                   {/* Matematika */}
                   <div>
                     <label className="block text-sm mb-1">Matematika:</label>
@@ -345,9 +345,9 @@ const ProfileEdit = () => {
                       className="border border-gray-400 rounded-md px-2 py-1 w-full focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
                     >
                       <option value="">Odaberi razinu</option>
-                      <option value="početnik">Početnik</option>
-                      <option value="srednje">Srednje</option>
-                      <option value="napredan">Napredan</option>
+                      <option value="početna_razina">Početnak razina</option>
+                      <option value="srednja_razina">Srednja razina</option>
+                      <option value="napredna_razina">Napredna razina</option>
                     </select>
                   </div>
 
@@ -361,9 +361,9 @@ const ProfileEdit = () => {
                       className="border border-gray-400 rounded-md px-2 py-1 w-full focus:outline-none focus:ring-1 focus:ring-[#1e3a56] "
                     >
                       <option value="">Odaberi razinu</option>
-                      <option value="početnik">Početnik</option>
-                      <option value="srednje">Srednje</option>
-                      <option value="napredan">Napredan</option>
+                      <option value="početna_razina">Početnak razina</option>
+                      <option value="srednja_razina">Srednja razina</option>
+                      <option value="napredna_razina">Napredna razina</option>
                     </select>
                   </div>
 
@@ -377,9 +377,9 @@ const ProfileEdit = () => {
                       className="border border-gray-400 rounded-md px-2 py-1 w-full focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
                     >
                       <option value="">Odaberi razinu</option>
-                      <option value="početnik">Početnik</option>
-                      <option value="srednje">Srednje</option>
-                      <option value="napredan">Napredan</option>
+                      <option value="početna_razina">Početnak razina</option>
+                      <option value="srednja_razina">Srednja razina</option>
+                      <option value="napredna_razina">Napredna razina</option>
                     </select>
                   </div>
                   
@@ -388,7 +388,7 @@ const ProfileEdit = () => {
               </div>
               <button
                 type="submit"
-                className="mx-auto bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition self-center"
+                className="mt-[8%] bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition self-center"
               >
                 Spremi promjene
               </button>
@@ -409,7 +409,7 @@ const ProfileEdit = () => {
                   name="goalsMath"
                   value={goalsData.goalsMath}
                   onChange={handleGoalsChange}
-                  className="border border-gray-400 rounded-md px-2 py-1 w-full h-[8vh] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
+                  className="border border-gray-400 rounded-md px-2 py-1 w-full h-[8%] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
                 />
               </div>
 
@@ -419,7 +419,7 @@ const ProfileEdit = () => {
                   name="goalsPhi"
                   value={goalsData.goalsPhi}
                   onChange={handleGoalsChange}
-                  className="border border-gray-400 rounded-md px-2 py-1 w-full h-[8vh] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
+                  className="border border-gray-400 rounded-md px-2 py-1 w-full h-[8%] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
                 />
               </div>
 
@@ -429,7 +429,7 @@ const ProfileEdit = () => {
                   name="goalsInf"
                   value={goalsData.goalsInf}
                   onChange={handleGoalsChange}
-                  className="border border-gray-400 rounded-md px-2 py-1 w-full h-[8vh] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
+                  className="border border-gray-400 rounded-md px-2 py-1 w-full h-[8%] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
                 />
               </div>
 
