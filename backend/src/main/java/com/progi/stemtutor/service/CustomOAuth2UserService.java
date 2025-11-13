@@ -25,13 +25,13 @@ import java.util.Optional;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomOAuth2UserService.class);
     private final UserRepository userRepository;
 
     public CustomOAuth2UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest)
             throws OAuth2AuthenticationException {
@@ -44,14 +44,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String lastName = (String) attributes.get("family_name");
 
         if (email == null) {
-            logger.error("Google account email nije verificiran ili nedostaje. Prekidam prijavu.");
             throw new OAuth2AuthenticationException("Google account email not verified.");
         }
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
         User user = optionalUser.orElseGet(() -> {
-            logger.info("Korisnik s emailom {} nije pronađen. Kreiranje novog korisnika.", email);
             User newUser = User.builder() // Koristi builder!
                     .email(email)
                     .firstName(firstName != null ? firstName : "")
@@ -69,14 +67,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setLastLogin(Instant.now());
         userRepository.save(user);
 
-        return oAuth2User;
-//        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-//
-//        return new DefaultOAuth2User(
-//                authorities,
-//                oAuth2User.getAttributes(),
-//                "email" // ključ koji predstavlja 'username' u atributima
-//        ); // Spring Security will store authentication info
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+        return new DefaultOAuth2User(
+                authorities,
+                oAuth2User.getAttributes(),
+                "email" // ključ koji predstavlja 'username' u atributima
+        ); // Spring Security will store authentication info
     }
 }
+
 
