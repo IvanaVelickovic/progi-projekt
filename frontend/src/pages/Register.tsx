@@ -1,8 +1,9 @@
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
 import SocialButtons from "../components/SocialButtons";
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Register = () => {
@@ -46,17 +47,32 @@ const Register = () => {
     }
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:3000/register", formData);
-      if (res.status === 200) {
-        //check backend confirmation
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+      const res = await axios.post(`${API_BASE_URL}/auth/signup`, formData);
+
+      if (res.status === 200 || res.status === 201) {
+        const token = res.data.token;
+        if (!token) {
+          setError("Registracija je uspješna, ali token nije primljen.");
+          setLoading(false);
+          return;
+        }
+
+        sessionStorage.setItem("stemtutor-token", JSON.stringify(token));
+
+        const decoded: any = jwtDecode(token);
         setUser({
-          id: res.data.id,
-          name: formData.firstName,
+          id: decoded.id,
+          name: decoded.name,
         });
+
         navigate("/setup");
       }
     } catch (err: any) {
       console.error("Greška u komunikaciji s backendom ", err);
+    } finally {
+      setLoading(false);
     }
   };
 
