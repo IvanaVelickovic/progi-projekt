@@ -1,38 +1,15 @@
 import { Link } from "react-router-dom";
 import GoogleLogo from "../assets/logos/google_logo.png";
-import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 interface SocialButtonsProps {
   authType: string;
 }
 
 const SocialButtons = ({ authType }: SocialButtonsProps) => {
-  const navigate = useNavigate();
-
-  const googleLogin = useGoogleLogin({
-    flow: "auth-code",
-    onSuccess: async (codeResponse) => {
-      console.log(codeResponse.code);
-      try {
-        const res = await axios.post("http://localhost:3000/google-auth", {
-          code: codeResponse.code,
-        });
-        if (res.status === 200) {
-          if (authType === "register") {
-            navigate("/setup");
-          } else {
-            navigate("/dashboard");
-          }
-        }
-      } catch (err: any) {
-        console.error(err);
-      }
-    },
-    onError: () => console.log("Google auth failed"),
-  });
-
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const googleLogin = () => {
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
+  };
   return (
     <>
       <div className="flex items-center justify-center w-3/4 my-2.5">
