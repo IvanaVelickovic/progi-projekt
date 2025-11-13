@@ -1,4 +1,4 @@
-import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface User {
@@ -27,26 +27,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    const checkUser = () => {
+      try {
+        const storedToken = sessionStorage.getItem("stemtutor-token");
+        const token = storedToken ? JSON.parse(storedToken) : null;
 
-    const checkUser = async () => {
-      const storedToken = sessionStorage.getItem("stemtutor-token");
-      const token = storedToken ? JSON.parse(storedToken) : null;
-
-      if (token) {
-        try {
-          //backend check if the token is still valid
-          const userRes = await axios.get(`${API_BASE_URL}/me`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setUser(userRes.data);
-        } catch {
+        if (token) {
+          const decoded: any = jwtDecode(token);
+          const isExpired = decoded.exp
+            ? decoded.exp * 1000 < Date.now()
+            : true;
+          if (isExpired) {
+            setUser(null);
+          } else {
+            setUser({
+              id: decoded.id,
+              name: decoded.name,
+            });
+          }
+        } else {
           setUser(null);
-        } finally {
-          setLoading(false);
         }
-      } else {
+      } catch {
         setUser(null);
+      } finally {
         setLoading(false);
       }
     };
