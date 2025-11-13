@@ -24,6 +24,9 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     public ResponseEntity<User> register(@RequestBody SignupRequest signupRequest) {
+
+        authenticationService.validatePassword(signupRequest.getPassword());
+
         User registeredUser = authenticationService.signup(signupRequest);
         return ResponseEntity.ok(registeredUser);
     }
@@ -36,4 +39,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(loginResponse);
     }
 
+    //@PostMapping("/updateProfile")
+    //public
 }

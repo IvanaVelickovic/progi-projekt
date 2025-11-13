@@ -28,10 +28,10 @@ public class User implements UserDetails {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column
     private String firstName;
 
-    @Column(nullable = false, length = 100)
+    @Column
     private String lastName;
 
     @Column(nullable = false, unique = true, length = 255)
@@ -42,7 +42,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role;
+    private UserRole role = UserRole.noRole;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -57,12 +57,14 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Instant lastLogin = Instant.now();
 
-    public User(String firstName, String lastName, String email, String passwordHash, UserRole role) {
+    @Column(unique = true)
+    private String googleId;
+
+    public User(String firstName, String lastName, String email, String passwordHash) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.passwordHash = passwordHash;
-        this.role = role;
     }
 
     @Override

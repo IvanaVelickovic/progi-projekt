@@ -5,5 +5,6 @@ import jakarta.persistence.EnumType;
 public enum UserRole {
     student,
     instructor,
-    admin
+    admin,
+    noRole
 }
