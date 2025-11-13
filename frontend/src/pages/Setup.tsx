@@ -15,9 +15,9 @@ const Setup = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:3000/setup", role);
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      const res = await axios.post(`${API_BASE_URL}/setup`, role);
       if (res.status === 200) {
-        //check backend confirmation
         setLoading(false);
         navigate("/dashboard");
       }
