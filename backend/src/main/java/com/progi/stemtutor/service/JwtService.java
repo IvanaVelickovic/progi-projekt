@@ -51,7 +51,7 @@ public class JwtService {
         return generateToken(Map.of(), userDetails);
     }
 
-    public String generateToken(Map<String, Objects> extraClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
 
         return Jwts
                 .builder()
