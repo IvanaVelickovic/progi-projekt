@@ -12,7 +12,6 @@ const Register = () => {
     lastName: "",
     email: "",
     password: "",
-    role: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -108,48 +107,36 @@ const Register = () => {
             name="firstName"
             value={formData.firstName}
             onChange={handleChange}
-            className="bg-white rounded text-base p-2 border border-blue-dark/50 w-full max-w-[87.5%] pl-3 placeholder-blue-light/40 mb-4"
-          />
+            className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-4"
+            required
+          ></input>
           <input
             placeholder="Prezime"
             type="text"
             name="lastName"
             value={formData.lastName}
             onChange={handleChange}
-            className="bg-white rounded text-base p-2 border border-blue-dark/50 w-full max-w-[87.5%] pl-3 placeholder-blue-light/40 mb-4"
-          />
+            className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-4"
+            required
+          ></input>
           <input
             placeholder="E-mail adresa"
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="bg-white rounded text-base p-2 border border-blue-dark/50 w-full max-w-[87.5%] pl-3 placeholder-blue-light/40 mb-4"
-          />
+            className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-4"
+            required
+          ></input>
           <input
             placeholder="Lozinka"
             type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="bg-white rounded text-base p-2 border border-blue-dark/50 w-full max-w-[87.5%] pl-3 placeholder-blue-light/40 mb-4"
-          />
-
-          {/* Role Dropdown */}
-          <select
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            className="bg-white rounded text-base p-2 border border-blue-dark/50 w-full max-w-[87.5%] pl-3 mb-4"
+            className="bg-white rounded text-base p-0.5 border border-blue-dark/50 w-[87.5%] pl-2 placeholder-blue-light/40 mb-1.5"
             required
-          >
-            <option value="" disabled>
-              Odaberite ulogu
-            </option>
-            <option value="student">Student</option>
-            <option value="instructor">Instruktor</option>
-          </select>
-
+          ></input>
           {error && (
             <p className="mb-2 px-2 bg-red-500/50 text-blue-dark w-[87.5%] rounded-xs">
               {error}
