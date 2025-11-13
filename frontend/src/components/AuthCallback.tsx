@@ -16,14 +16,14 @@ const AuthCallback = () => {
       sessionStorage.setItem("stemtutor-token", JSON.stringify(token));
       const decoded: any = jwtDecode(token);
 
-      const role = decoded.role;
+      const no_role = decoded.no_role;
 
       setUser({
         id: decoded.id,
         name: decoded.name,
       });
 
-      if (!role) {
+      if (no_role) {
         navigate("/setup");
       } else {
         navigate("/dashboard");
