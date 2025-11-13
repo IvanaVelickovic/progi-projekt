@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const ProfileEdit = () => {
-  const [activeTab, setActiveTab] = useState<"personal" | "education">("personal");
+  const [activeTab, setActiveTab] = useState<"personal" | "education" | "goals">("personal");
 
   const [formData, setFormData] = useState({
     oldpassword: "",
@@ -10,15 +10,23 @@ const ProfileEdit = () => {
   });
 
   const [userData, setUserData] = useState({
-    ime: "",
-    prezime: "",
+    firstName: "",
+    lastName: "",
     email: "",
   });
   const [educationData, setEducationData] = useState({
-    razina: "",
-    razred: "",
-    ciljevi: "",
+    grade: "",
+    knowledgeLevelMath: "",
+    knowledgeLevelPhi: "",
+    knowledgeLevelInf: "",
   });
+
+  const [goalsData, setGoalsData] = useState({
+    goalsMath: "",
+    goalsPhi: "",
+    goalsInf: "",
+  });
+
   const [error, setError] = useState("");
 
   const validatePassword = (value: string) => {
@@ -42,6 +50,7 @@ const ProfileEdit = () => {
       validatePassword(value);
     }
   };
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -49,15 +58,22 @@ const ProfileEdit = () => {
         const data = response.data;
 
         setUserData({
-          ime: data.firstName || "",
-          prezime: data.lastName || "",
+          firstName: data.first_name || "",
+          lastName: data.last_name || "",
           email: data.email || "",
         });
 
         setEducationData({
-          razina: data.educationLevel || "",
-          razred: data.grade || "",
-          ciljevi: data.learningGoals || "",
+          grade: data.grade || "",
+          knowledgeLevelMath: data.knowledge_data_math || "",
+          knowledgeLevelPhi: data.knowledge_data_phi || "",
+          knowledgeLevelInf: data.knowledge_data_inf || "",
+        });
+
+        setGoalsData({
+          goalsMath: data.learning_goals_math || "",
+          goalsPhi: data.learning_goals_phi || "",
+          goalsInf: data.learning_goals_inf || "",
         });
       } catch (error) {
         console.error("Greška pri dohvaćanju korisničkih podataka:", error);
@@ -114,8 +130,8 @@ const ProfileEdit = () => {
   ) => {
     const { name, value } = e.target;
     setEducationData(prev => ({ ...prev, [name]: value }));
-    if (name === "razina") {
-    setEducationData({ razina: value, razred: "", ciljevi: educationData.ciljevi });
+    if (name === "grade") {
+    setEducationData({ grade: value, knowledgeLevelMath: "", knowledgeLevelPhi: "", knowledgeLevelInf: "" });
     } else {
       setEducationData(prev => ({ ...prev, [name]: value }));
     }
@@ -133,6 +149,28 @@ const ProfileEdit = () => {
       alert("Dogodila se pogreška prilikom spremanja.");
     }
   };
+
+  const handleGoalsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setGoalsData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleGoalsSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:8080/api/user/update-goals", goalsData);
+      if (response.status === 200) {
+        alert("Ciljevi uspješno spremljeni!");
+      }
+    } catch (err) {
+      console.error("Greška prilikom spremanja ciljeva:", err);
+      alert("Dogodila se pogreška prilikom spremanja.");
+    }
+  };
+
   return (
     <div className="bg-[#f6fefb] flex justify-center items-center min-h-screen">
       <div className="w-[90vw] max-w-[1732px] h-auto lg:h-[90vh] bg-[#dff2ea] rounded-2xl shadow-md flex flex-col lg:flex-row items-center p-8 lg:p-12 gap-10">
@@ -152,7 +190,7 @@ const ProfileEdit = () => {
         {/* Right section */}
         <div className="bg-green-light flex flex-col justify-center">
           {/* Tab buttons */}
-          <div className="flex justify-top w-[45vh] bg-white rounded-md">
+          <div className="flex justify-top w-[60vh] bg-white rounded-md">
             <button
               className={`px-4 py-2 font-semibold text-sm ${
                 activeTab === "personal"
@@ -173,39 +211,53 @@ const ProfileEdit = () => {
             >
               Podaci o obrazovanju
             </button>
+            <button
+              className={`px-4 py-2 font-semibold text-sm ${
+                activeTab === "goals"
+                  ? "text-[#1e3a56]"
+                  : "text-gray-400 hover:text-[#1e3a56]"
+              }`}
+              onClick={() => setActiveTab("goals")}
+            >
+              Ciljevi učenja
+            </button>
           </div>
 
           {/* Info section */}
-          <div className="bg-white w-[100vh] h-[70vh] rounded-md shadow-sm p-[4vh] text-[#1e3a56] transition-all duration-300">
-            {activeTab === "personal" ? (
+        <div className="bg-white w-[100vh] h-[70vh] rounded-md shadow-sm p-[4vh] text-[#1e3a56] transition-all duration-300">
+
+          {/* --- PERSONAL --- */}
+          {activeTab === "personal" && (
             <>
               <form onSubmit={handlePersonalSubmit} className="flex flex-col">
                 <div className="grid grid-cols-1 sm:grid-cols-1">
                   <div className="p-[1vh]">
                     <label className="font-semibold block mb-1">Ime:</label>
                     <input
-                      name="ime"
+                      name="firstName"
                       type="text"
-                      value={userData.ime}
+                      value={userData.firstName}
                       onChange={handleUserChange}
-                      className="border border-gray-400 rounded-md px-2 py-1 w-20% focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
+                      className="border border-gray-400 rounded-md px-2 py-1 w-[30%] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
                     />
                   </div>
+
                   <div className="p-[1vh]">
                     <label className="font-semibold block mb-1">Prezime:</label>
                     <input
-                      name="prezime"
+                      name="lastName"
                       type="text"
-                      value={userData.prezime}
+                      value={userData.lastName}
                       onChange={handleUserChange}
-                      className="border border-gray-400 rounded-md px-2 py-1 w-30% focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
+                      className="border border-gray-400 rounded-md px-2 py-1 w-[30%] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
                     />
+                  </div>
+
                   <div>
                     <p className="pt-[2vh]">
                       <span className="font-semibold">E-mail:</span> {userData.email || "Učitavanje..."}
                     </p>
                   </div>
-                </div>
                 </div>
 
                 <button
@@ -215,145 +267,184 @@ const ProfileEdit = () => {
                   Spremi promjene
                 </button>
               </form>
-                {/* Password change */}
-                <div className="mt-8 p-[1vh]">
-                  <p className="font-semibold mb-3 text-[#1e3a56]">
-                    Promjena lozinke:
-                  </p>
-                  <form className="flex flex-row sm:items-end" onSubmit={handlePasswordSubmit}>
-                    <div className="flex flex-row p-[1vh]">
-                      <div className="flex flex-col">
-                        <label className="text-sm mb-1 p-[1vh]">
-                          Trenutna lozinka:
-                        </label>
-                        <label className="text-sm mb-1 p-[1.5vh]">
-                          Nova lozinka:
-                        </label>
-                      </div>
 
-                      <div className="flex flex-col">
-                        <input
-                            type="password"
-                            name="oldpassword"
-                            value={formData.oldpassword}
-                            onChange={handleChange}
-                            className="border border-gray-400 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] m-[0.5vh]"
-                        />
-                        <input
-                            name="newpassword"
-                            value={formData.newpassword}
-                            onChange={handleChange}
-                            type="password"
-                            className="border border-gray-400 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] m-[0.5vh] "
-                        />
-                        {error && (
-                            <p className="mb-2 px-2 bg-red-500/50 text-blue-dark w-[100%] rounded-xs h-[4vh] text-xs content-center flex-wrap">
-                            {error}
-                            </p>
-                        )}
-                      </div>
+              {/* --- PROMJENA LOZINKE --- */}
+              <div className="mt-8 p-[1vh]">
+                <p className="font-semibold mb-3 text-[#1e3a56]">Promjena lozinke:</p>
+                <form className="flex flex-row sm:items-end" onSubmit={handlePasswordSubmit}>
+                  <div className="flex flex-row p-[1vh]">
+                    <div className="flex flex-col">
+                      <label className="text-sm mb-1 p-[1vh]">Trenutna lozinka:</label>
+                      <label className="text-sm mb-1 p-[1.5vh]">Nova lozinka:</label>
                     </div>
-                    <button
-                      type="submit"
-                      className="bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition self-start mt-[3.5vh]"
-                    >
-                      Promijeni
-                    </button>
-                  </form>
-                </div>
-              </>
-            ) : (
-                <>
-                {activeTab === "education" && (
-                    <form className="flex flex-col" onSubmit={handleEducationSubmit}>
-                        {/* Razina obrazovanja */}
-                        <div>
-                        <label className="font-semibold block mb-1 pb-[1vh]">Razina obrazovanja:</label>
-                        <select
-                            name="razina"
-                            value={educationData.razina}
-                            className="border border-gray-400 rounded-md px-2 py-1 w-1/2 focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
-                            onChange={handleEducationChange}
-                        >
-                            <option value="" disabled>
-                            Odaberi razinu
-                            </option>
-                            <option value="osnovna">Osnovna škola</option>
-                            <option value="srednja">Srednja škola</option>
-                            <option value="fakultet">Fakultet</option>
-                            <option value="ostalo">Ostalo</option>
-                        </select>
-                        </div>
 
-                        {/* Razred / semestar */}
-                        <div>
-                        <label className="font-semibold block mb-1 pt-[2vh] pb-[1vh]">Razred/semestar:</label>
-                        <select
-                            name="razred"
-                            value={educationData.razred}
-                            className="border border-gray-400 rounded-md px-2 py-1 w-1/2 focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
-                            defaultValue=""
-                            disabled={!educationData.razina}
-                            onChange={handleEducationChange}
-                        >
-                            <option value="" disabled>
-                            {educationData.razina
-                              ? "Odaberi razred ili semestar"
-                              : "Prvo odaberi razinu"}
-                          </option>
+                    <div className="flex flex-col">
+                      <input
+                        type="password"
+                        name="oldpassword"
+                        value={formData.oldpassword}
+                        onChange={handleChange}
+                        className="border border-gray-400 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] m-[0.5vh]"
+                      />
+                      <input
+                        type="password"
+                        name="newpassword"
+                        value={formData.newpassword}
+                        onChange={handleChange}
+                        className="border border-gray-400 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] m-[0.5vh]"
+                      />
+                      
+                    </div>
+                    
+                  </div>
 
-                          {/* Osnovna škola */}
-                          {educationData.razina === "osnovna" &&
-                            Array.from({ length: 8 }, (_, i) => (
-                              <option key={i + 1} value={`${i + 1}`}>
-                                {i + 1}. razred
-                              </option>
-                            ))}
-
-                          {/* Srednja škola */}
-                          {educationData.razina === "srednja" &&
-                            [1, 2, 3, 4].map((r) => (
-                              <option key={r} value={`${r}`}>
-                                {r}. razred
-                              </option>
-                            ))}
-
-                          {/* Fakultet */}
-                          {educationData.razina === "fakultet" &&
-                            [1, 2, 3, 4, 5, 6].map((s) => (
-                              <option key={s} value={`${s}s`}>
-                                {s}. semestar
-                              </option>
-                            ))}
-                        </select>
-                        </div>
-
-                        {/* Ciljevi učenja */}
-                        <div>
-                        <label className="font-semibold block mb-1 pt-[4vh] pb-[1vh]">Ciljevi učenja:</label>
-                        <textarea
-                            name="ciljevi"
-                            value={educationData.ciljevi}
-                            onChange={handleEducationChange}
-                            className="border border-gray-400 rounded-md px-2 py-1 w-full h-28 focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
-                        />
-                        </div>
-
-                        <button
-                        type="submit"
-                        className="self-center bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition self-center"
-                        >
-                        Spremi promjene
-                        </button>
-                    </form>            
+                  <button
+                    type="submit"
+                    className="bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition self-start mt-[3.5vh]"
+                  >
+                    Promijeni
+                  </button>
+                  
+                </form>
+                {error && (
+                  <p className="mb-2 px-2 bg-red-500/50 text-white w-[47%] rounded h-[4vh] text-xs flex items-center ml-[17%]">
+                    {error}
+                  </p>
                 )}
-                </>
+              </div>
+            </>
+          )}
 
-            )}
-          </div>
+          {/* --- EDUCATION --- */}
+          {activeTab === "education" && (
+            <form className="flex flex-col w-[90%] h-[90%]" onSubmit={handleEducationSubmit}>
+              <div className="pt-[4vh] w-[100%] h-[100%]">
+                <div> 
+                  <label className="font-semibold block mb-1 pb-[1vh]">
+                    Razina obrazovanja:
+                  </label> 
+                  <select name="grade" value={educationData.grade} 
+                    className="border border-gray-400 rounded-md px-2 py-1 w-1/2 focus:outline-none focus:ring-1 focus:ring-[#1e3a56]" 
+                    onChange={handleEducationChange} > 
+                    <option value="" disabled> 
+                      Odaberi razinu </option> 
+                    <option value="osnovna škola (1.- 4. razred)">osnovna škola (1.- 4. razred)</option>
+                    <option value="osnovna škola (5.- 8. razred)">osnovna škola (5.- 8. razred)</option>  
+                    <option value="srednja">Srednja škola</option> 
+                  </select> 
+                </div>
+                <label className="font-semibold block mb-2 mt-[6%]">Razine znanja:</label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Matematika */}
+                  <div>
+                    <label className="block text-sm mb-1">Matematika:</label>
+                    <select
+                      name="knowledgeLevelMath"
+                      value={educationData.knowledgeLevelMath}
+                      onChange={handleEducationChange}
+                      className="border border-gray-400 rounded-md px-2 py-1 w-full focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
+                    >
+                      <option value="">Odaberi razinu</option>
+                      <option value="početnik">Početnik</option>
+                      <option value="srednje">Srednje</option>
+                      <option value="napredan">Napredan</option>
+                    </select>
+                  </div>
+
+                  {/* Fizika */}
+                  <div>
+                    <label className="block text-sm mb-1">Fizika:</label>
+                    <select
+                      name="knowledgeLevelPhi"
+                      value={educationData.knowledgeLevelPhi}
+                      onChange={handleEducationChange}
+                      className="border border-gray-400 rounded-md px-2 py-1 w-full focus:outline-none focus:ring-1 focus:ring-[#1e3a56] "
+                    >
+                      <option value="">Odaberi razinu</option>
+                      <option value="početnik">Početnik</option>
+                      <option value="srednje">Srednje</option>
+                      <option value="napredan">Napredan</option>
+                    </select>
+                  </div>
+
+                  {/* Informatika */}
+                  <div>
+                    <label className="block text-sm mb-1">Informatika:</label>
+                    <select
+                      name="knowledgeLevelInf"
+                      value={educationData.knowledgeLevelInf}
+                      onChange={handleEducationChange}
+                      className="border border-gray-400 rounded-md px-2 py-1 w-full focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
+                    >
+                      <option value="">Odaberi razinu</option>
+                      <option value="početnik">Početnik</option>
+                      <option value="srednje">Srednje</option>
+                      <option value="napredan">Napredan</option>
+                    </select>
+                  </div>
+                  
+                </div>
+                
+              </div>
+              <button
+                type="submit"
+                className="mx-auto bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition self-center"
+              >
+                Spremi promjene
+              </button>
+            </form>
+          )}
+
+          {/* --- GOALS --- */}
+          {activeTab === "goals" && (
+            <form
+              className="flex flex-col"
+              onSubmit={handleGoalsSubmit}
+            >
+              <h2 className="text-lg font-semibold mb-4">Ciljevi učenja</h2>
+
+              <div className="mb-4">
+                <label className="font-semibold block mb-1">Matematika:</label>
+                <textarea
+                  name="goalsMath"
+                  value={goalsData.goalsMath}
+                  onChange={handleGoalsChange}
+                  className="border border-gray-400 rounded-md px-2 py-1 w-full h-[8vh] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="font-semibold block mb-1">Fizika:</label>
+                <textarea
+                  name="goalsPhi"
+                  value={goalsData.goalsPhi}
+                  onChange={handleGoalsChange}
+                  className="border border-gray-400 rounded-md px-2 py-1 w-full h-[8vh] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="font-semibold block mb-1">Informatika:</label>
+                <textarea
+                  name="goalsInf"
+                  value={goalsData.goalsInf}
+                  onChange={handleGoalsChange}
+                  className="border border-gray-400 rounded-md px-2 py-1 w-full h-[8vh] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition self-center"
+              >
+                Spremi ciljeve
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </div>
+  </div>
   );
 }
 
