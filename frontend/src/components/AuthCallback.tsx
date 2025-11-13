@@ -16,19 +16,17 @@ const AuthCallback = () => {
       sessionStorage.setItem("stemtutor-token", JSON.stringify(token));
       const decoded: any = jwtDecode(token);
 
-      const authType = decoded.role;
+      const role = decoded.role;
 
       setUser({
         id: decoded.id,
         name: decoded.name,
       });
 
-      if (authType === "register") {
+      if (!role) {
         navigate("/setup");
-      } else if (authType === "login") {
-        navigate("/dashboard");
       } else {
-        console.error("wrong authtype saved");
+        navigate("/dashboard");
       }
     }
   }, []);
