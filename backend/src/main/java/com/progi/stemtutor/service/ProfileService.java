@@ -227,9 +227,9 @@ public class ProfileService {
 
         // 2. Ažuriranje student_subjects tablice (Razine znanja)
         // Pozovi pomoćnu funkciju za svaki predmet
-        updateOrCreateStudentSubject(userId, "Matematika", dto.getKnowledgeLevelMath(), null);
-        updateOrCreateStudentSubject(userId, "Fizika", dto.getKnowledgeLevelPhi(), null);
-        updateOrCreateStudentSubject(userId, "Informatika", dto.getKnowledgeLevelInf(), null);
+        updateOrCreateStudentSubject(student.getId(), "Matematika", dto.getKnowledgeLevelMath(), null);
+        updateOrCreateStudentSubject(student.getId(), "Fizika", dto.getKnowledgeLevelPhi(), null);
+        updateOrCreateStudentSubject(student.getId(), "Informatika", dto.getKnowledgeLevelInf(), null);
 
         return true;
     }
