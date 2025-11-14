@@ -9,6 +9,7 @@ import com.progi.stemtutor.service.JwtService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -49,7 +50,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         // Generate JWT
         String jwt = jwtService.generateToken(user);
 
-        String redirectUrl = "http://localhost:5173/oauth2/callback?token=" + URLEncoder.encode(jwt, StandardCharsets.UTF_8);
+        String redirectUrl = "https://stemtutor-frontend.vercel.app/oauth2/callback?token=" + URLEncoder.encode(jwt, StandardCharsets.UTF_8);
         response.sendRedirect(redirectUrl);
         // Alternative JSON response for API clients:
         // response.setContentType("application/json");

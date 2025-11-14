@@ -62,7 +62,8 @@ public class WebConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-                "https://app-backend.com",
+                "https://stemtutor-frontend.vercel.app",
+                "https://stemtutor-backend.onrender.com",
                 "http://localhost:8080", //TODO: update backend url
                 "http://localhost:5173"
         ));
