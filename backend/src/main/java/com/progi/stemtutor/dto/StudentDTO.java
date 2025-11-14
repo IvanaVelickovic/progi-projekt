@@ -1,4 +1,17 @@
 package com.progi.stemtutor.dto;
 
-public class StudentDTO {
+import com.progi.stemtutor.model.Student;
+
+public record StudentDTO(
+        String firstName,
+        String lastName,
+        String grade
+) {
+    public static StudentDTO fromEntity(Student student) {
+        return new StudentDTO(
+                student.getFirstName(),
+                student.getLastName(),
+                student.getGrade()
+        );
+    }
 }

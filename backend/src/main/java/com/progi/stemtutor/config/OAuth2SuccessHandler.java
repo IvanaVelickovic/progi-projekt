@@ -63,7 +63,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         // Generiraj JWT token
         String jwt = jwtService.generateToken(user);
-        String redirectUrl = "http://localhost:3000/oauth2/callback?token=" + jwt;
+        String redirectUrl = "http://localhost:5173/oauth2/callback?token=" + jwt;
 
         response.sendRedirect(redirectUrl);
     }
