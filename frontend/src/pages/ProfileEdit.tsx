@@ -38,22 +38,22 @@ const ProfileEdit = () => {
         const data = response.data;
 
         setUserData({
-          firstName: data.first_name || "",
-          lastName: data.last_name || "",
+          firstName: data.firstName || "",
+          lastName: data.lastName || "",
           email: data.email || "",
         });
 
         setEducationData({
           grade: data.grade || "",
-          knowledgeLevelMath: data.knowledge_data_math || "",
-          knowledgeLevelPhi: data.knowledge_data_phi || "",
-          knowledgeLevelInf: data.knowledge_data_inf || "",
+          knowledgeLevelMath: data.knowledgeDataMath || "",
+          knowledgeLevelPhi: data.knowledgeDataPhi || "",
+          knowledgeLevelInf: data.knowledgeDataInf || "",
         });
 
         setGoalsData({
-          goalsMath: data.learning_goals_math || "",
-          goalsPhi: data.learning_goals_phi || "",
-          goalsInf: data.learning_goals_inf || "",
+          goalsMath: data.learningGoalsMath || "",
+          goalsPhi: data.learningGoalsPhi || "",
+          goalsInf: data.learningGoalsInf || "",
         });
       } catch (error) {
         console.error("Greška pri dohvaćanju korisničkih podataka:", error);

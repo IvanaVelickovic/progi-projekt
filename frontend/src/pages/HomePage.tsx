@@ -9,13 +9,13 @@ const LandingPage = () => {
           <h1 className="text-blue-dark text-5xl font-bold">STEM tutorstvo</h1>
           <div className="flex justify-around w-1/4">
             <button
-              className=" text-blue-dark text-2xl font-bold p-3 rounded-lg cursor-pointer w-5/12"
+              className=" text-blue-dark text-2xl font-bold p-3 rounded-lg cursor-pointer w-5/12 min-w-52"
               onClick={() => navigate("/register")}
             >
               Registracija
             </button>
             <button
-              className=" text-blue-dark text-2xl font-bold p-3 rounded-lg cursor-pointer w-5/12"
+              className=" text-blue-dark text-2xl font-bold p-3 rounded-lg cursor-pointer w-5/12 min-w-52"
               onClick={() => navigate("/login")}
             >
               Prijava
