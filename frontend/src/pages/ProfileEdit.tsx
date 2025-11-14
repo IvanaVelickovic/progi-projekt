@@ -65,7 +65,7 @@ const ProfileEdit = () => {
 
   return (
     <div className="bg-[#f6fefb] flex justify-center items-center min-h-screen">
-      <div className="w-[90vw] h-[90vh] min-w-[90%] min-h-[600px] max-h-[900px] max-w-[1732px] max-w[90%] lg:h-[90%] bg-[#dff2ea] rounded-2xl shadow-md flex flex-col lg:flex-row items-center p-8 lg:p-12 gap-10">
+      <div className="w-[90vw] h-[90vh] min-w-[90%] min-h-[400px] max-h-[600px] max-w-[1732px] max-w[90%] lg:h-[90%] bg-[#dff2ea] rounded-2xl shadow-md flex flex-col lg:flex-row items-center p-8 lg:p-12 gap-10">
         <ProfileLayout activeTab={activeTab} setActiveTab={setActiveTab}>
           {activeTab === "personal" && (
             <PersonalTabContent userData={userData} setUserData={setUserData} />

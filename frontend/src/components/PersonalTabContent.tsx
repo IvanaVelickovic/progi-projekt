@@ -54,6 +54,7 @@ const PersonalTabContent = ({
 
   const handlePersonalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       await api.put("http://localhost:8080/api/user/update", userData);
       alert("Podaci uspješno ažurirani!");

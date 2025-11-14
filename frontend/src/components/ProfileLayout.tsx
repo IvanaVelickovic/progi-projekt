@@ -14,13 +14,21 @@ const ProfileLayout = ({
   return (
     <>
       {/* Left section */}
-      <div className="flex flex-col items-center text-center w-full lg:w-1/4">
+      <div
+        className="flex flex-col items-center text-center 
+                      w-full 
+                      sm:w-3/4 
+                      md:w-1/2 
+                      lg:w-1/3 
+                      xl:w-1/4"
+      >
         <h1 className="text-3xl font-bold text-[#1e3a56] mb-8">Moj profil</h1>
+
         <div className="bg-white rounded-md p-6 shadow-sm flex flex-col items-center">
           <img
             src="images/student_icon.png"
             alt="učenička ikona"
-            className="w-32 h-32 mb-4"
+            className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-4"
           />
           <p className="text-lg text-[#1e3a56] font-semibold">učenik</p>
         </div>
