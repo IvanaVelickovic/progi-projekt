@@ -40,7 +40,7 @@ public class WebConfiguration {
                         })
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/oauth2/**", "/login/**").permitAll()
+                        .requestMatchers("/auth/**", "/oauth2/**", "/login/**", "/setup", "/profile").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -64,8 +64,9 @@ public class WebConfiguration {
         configuration.setAllowedOrigins(List.of(
                 "https://app-backend.com",
                 "http://localhost:8080", //TODO: update backend url
-                "http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                "http://localhost:5173"
+        ));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
