@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import api from "../api";
-import ProfileLayout from "../components/profile/ProfileLayout";
-import PersonalTabContent from "../components/profile/PersonalTabContent";
 import EducationTabContent from "../components/profile/EducationTabContent";
 import GoalsTabContent from "../components/profile/GoalsTabContent";
+import PersonalTabContent from "../components/profile/PersonalTabContent";
+import ProfileLayout from "../components/profile/ProfileLayout";
 
 const ProfileEdit = () => {
   const [activeTab, setActiveTab] = useState<
@@ -36,7 +36,6 @@ const ProfileEdit = () => {
           "http://localhost:8080/api/user/profile"
         );
         const data = response.data;
-        console.log(data);
 
         setUserData({
           firstName: data.first_name || "",

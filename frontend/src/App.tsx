@@ -1,13 +1,13 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import Setup from "./pages/Setup";
-import Dashboard from "./pages/Dashboard";
-import LandingPage from "./pages/HomePage";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import AuthCallback from "./components/AuthCallback";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
-import AuthCallback from "./components/AuthCallback";
+import Dashboard from "./pages/Dashboard";
+import LandingPage from "./pages/HomePage";
+import Login from "./pages/Login";
 import ProfileEdit from "./pages/ProfileEdit";
+import Register from "./pages/Register";
+import Setup from "./pages/Setup";
 
 function App() {
   return (
@@ -34,7 +34,14 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
-          <Route path="/profile" element={<ProfileEdit />}></Route>
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfileEdit />
+              </ProtectedRoute>
+            }
+          ></Route>
         </Routes>
       </AuthProvider>
     </Router>

@@ -30,6 +30,8 @@ const AuthCallback = () => {
     console.log("Decoded:", decoded);
     console.log("Role:", decoded.role);
 
+    setUser({ id: decoded.id, name: decoded.name });
+
     setTimeout(() => {
       if (decoded.role === "noRole") {
         console.log("Navigating to /setup");
