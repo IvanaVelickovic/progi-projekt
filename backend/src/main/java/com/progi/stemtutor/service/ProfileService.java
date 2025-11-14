@@ -216,7 +216,7 @@ public class ProfileService {
     // Implementacija NOVE RUTE 1: AŽURIRANJE OBRAZOVANJA I RAZINA ZNANJA
     @Transactional
     public boolean updateStudentEducation(Long userId, StudentEducationUpdateDto dto) {
-        Optional<Student> studentOpt = studentRepository.findById(userId);
+        Optional<Student> studentOpt = studentRepository.findByUser_Id(userId);
 
         if (studentOpt.isEmpty()) {
             return false; // Profil studenta nije pronađen
@@ -227,9 +227,9 @@ public class ProfileService {
 
         // 2. Ažuriranje student_subjects tablice (Razine znanja)
         // Pozovi pomoćnu funkciju za svaki predmet
-        updateOrCreateStudentSubject(userId, "Matematika", dto.getKnowledgeLevelMath(), null);
-        updateOrCreateStudentSubject(userId, "Fizika", dto.getKnowledgeLevelPhi(), null);
-        updateOrCreateStudentSubject(userId, "Informatika", dto.getKnowledgeLevelInf(), null);
+        updateOrCreateStudentSubject(student.getId(), "Matematika", dto.getKnowledgeLevelMath(), null);
+        updateOrCreateStudentSubject(student.getId(), "Fizika", dto.getKnowledgeLevelPhi(), null);
+        updateOrCreateStudentSubject(student.getId(), "Informatika", dto.getKnowledgeLevelInf(), null);
 
         return true;
     }
@@ -238,9 +238,8 @@ public class ProfileService {
     @Transactional
     public boolean updateStudentGoals(Long userId, StudentGoalsUpdateDto dto) {
         // 1. Provjeri postojanje studenta (za ResourceNotFoundException)
-        if (!studentRepository.existsById(userId)) {
-            return false;
-        }
+        Optional<Student> studentOpt = studentRepository.findByUser_Id(userId);
+        if (studentOpt.isEmpty()) return false;
 
         // 2. Ažuriranje student_subjects tablice (Ciljevi učenja)
         // Pozovi pomoćnu funkciju za svaki predmet

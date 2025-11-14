@@ -15,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -94,31 +95,35 @@ public class ProfileController {
 
     // AŽURIRANJE OBRAZOVANJA/RAZINE ZNANJA (POST /api/user/update-education)
     @PostMapping("/update-education")
-    public ResponseEntity<Void> updateStudentEducation(@AuthenticationPrincipal UserDetails userDetails,
-                                                       @Valid @RequestBody StudentEducationUpdateDto dto) {
+    public ResponseEntity<?> updateStudentEducation(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody StudentEducationUpdateDto dto) {
+
         Long userId = getUserId(userDetails);
 
         boolean success = profileService.updateStudentEducation(userId, dto);
 
         if (success) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(Map.of("status", "ok"));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 ako student ne postoji
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student nije pronađen");
         }
     }
 
     // AŽURIRANJE CILJEVA UČENJA (POST /api/user/update-goals)
     @PostMapping("/update-goals")
-    public ResponseEntity<Void> updateStudentGoals(@AuthenticationPrincipal UserDetails userDetails,
-                                                   @Valid @RequestBody StudentGoalsUpdateDto dto) {
+    public ResponseEntity<?> updateStudentGoals(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody StudentGoalsUpdateDto dto) {
+
         Long userId = getUserId(userDetails);
 
         boolean success = profileService.updateStudentGoals(userId, dto);
 
         if (success) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(Map.of("status", "ok"));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 ako student ne postoji
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student nije pronađen");
         }
     }
 }
