@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const checkUser = () => {
       try {
         const storedToken = sessionStorage.getItem("stemtutor-token");
-        const token = storedToken ? JSON.parse(storedToken) : null;
+        const token = storedToken ? storedToken : null;
 
         if (token) {
           const decoded: any = jwtDecode(token);

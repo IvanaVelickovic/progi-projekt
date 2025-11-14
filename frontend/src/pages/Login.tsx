@@ -37,7 +37,7 @@ const Login = () => {
           return;
         }
 
-        sessionStorage.setItem("stemtutor-token", JSON.stringify(token));
+        sessionStorage.setItem("stemtutor-token", token);
         const decoded: any = jwtDecode(token);
 
         setUser({

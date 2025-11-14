@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 
 const ProfileEdit = () => {
   const [activeTab, setActiveTab] = useState<"personal" | "education" | "goals">("personal");
@@ -54,7 +54,7 @@ const ProfileEdit = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/korisnik/1"); 
+        const response = await api.get("http://localhost:8080/api/user/profile"); 
         const data = response.data;
 
         setUserData({
@@ -91,7 +91,7 @@ const ProfileEdit = () => {
   const handlePersonalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.put("http://localhost:8080/api/user/update", userData);
+      await api.put("http://localhost:8080/api/user/update", userData);
       alert("Podaci uspješno ažurirani!");
     } catch (error) {
       console.error(error);
@@ -107,7 +107,7 @@ const ProfileEdit = () => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:8080/api/user/change-password", {
+      const response = await api.post("http://localhost:8080/api/user/change-password", {
         oldPassword: formData.oldpassword,
         newPassword: formData.newpassword,
       });
@@ -140,7 +140,7 @@ const ProfileEdit = () => {
   const handleEducationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/user/update-education", educationData);
+      const response = await api.post("http://localhost:8080/api/user/update-education", educationData);
       if (response.status === 200) {
         alert("Podaci o obrazovanju uspješno ažurirani!");
       }
@@ -161,7 +161,7 @@ const ProfileEdit = () => {
   const handleGoalsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/user/update-goals", goalsData);
+      const response = await api.post("http://localhost:8080/api/user/update-goals", goalsData);
       if (response.status === 200) {
         alert("Ciljevi uspješno spremljeni!");
       }

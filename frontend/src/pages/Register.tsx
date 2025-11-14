@@ -7,6 +7,7 @@ import SocialButtons from "../components/SocialButtons";
 import { useAuth } from "../context/AuthContext";
 
 const Register = () => {
+  const token = sessionStorage.getItem("stemtutor-token");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -81,9 +82,9 @@ const Register = () => {
           setUser({
             id: decoded.id,
             name: decoded.name,
-          });
+        });
 
-          navigate("/setup");
+        navigate("/setup");
         }
       }
     } catch (err: any) {
