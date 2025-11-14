@@ -19,16 +19,12 @@ const Register = () => {
   const { setUser } = useAuth();
 
   const validatePassword = (value: string) => {
-    if (value.length > 0) {
-      if (value.length < 8) {
-        setError("Lozinka mora imati barem 8 znakova!");
-      } else if (!/[A-Z]/.test(value)) {
-        setError("Lozinka mora imati barem jedno veliko slovo!");
-      } else if (!/[0-9]/.test(value)) {
-        setError("Lozinka mora sadržavati barem jednu znamenku!");
-      } else {
-        setError("");
-      }
+    if (value.length < 8) {
+      setError("Lozinka mora imati barem 8 znakova!");
+    } else if (!/[A-Z]/.test(value)) {
+      setError("Lozinka mora imati barem jedno veliko slovo!");
+    } else if (!/[0-9]/.test(value)) {
+      setError("Lozinka mora sadržavati barem jednu znamenku!");
     } else {
       setError("");
     }
@@ -68,14 +64,19 @@ const Register = () => {
 
         if (loginRes.status === 200) {
           const token = loginRes.data.token;
+          console.log(
+            "Token received from backend login:",
+            JSON.stringify(token)
+          );
           if (!token) {
             setError("Login failed: token not received");
             setLoading(false);
             return;
           }
 
-          sessionStorage.setItem("stemtutor-token", JSON.stringify(token));
+          sessionStorage.setItem("stemtutor-token", token);
           const decoded: any = jwtDecode(token);
+          console.log("Decoded JWT payload:", decoded);
 
           setUser({
             id: decoded.id,

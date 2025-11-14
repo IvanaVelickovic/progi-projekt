@@ -1,7 +1,7 @@
 import axios from "axios";
-import AuthLayout from "../components/AuthLayout";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import AuthLayout from "../components/AuthLayout";
 
 const Setup = () => {
   const navigate = useNavigate();
@@ -16,13 +16,27 @@ const Setup = () => {
     setLoading(true);
     try {
       const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-      const res = await axios.post(`${API_BASE_URL}/setup`, role);
-      if (res.status === 200) {
-        setLoading(false);
-        navigate("/dashboard");
-      }
-    } catch (err: any) {
-      console.error("Greška u komunikaciji s backendom ", err);
+
+      const res = await axios.post(
+        `${API_BASE_URL}/setup`,
+        { role },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem(
+              "stemtutor-token"
+            )}`,
+          },
+        }
+      );
+
+      const newToken = res.data.token;
+      sessionStorage.setItem("stemtutor-token", newToken);
+
+      setLoading(false);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Error while updating role", err);
+      setLoading(false);
     }
   };
 

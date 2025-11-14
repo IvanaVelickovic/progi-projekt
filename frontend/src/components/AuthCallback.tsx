@@ -1,34 +1,44 @@
 import { jwtDecode } from "jwt-decode";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const AuthCallback = () => {
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
+    let token = sessionStorage.getItem("stemtutor-token");
+
     if (!token) {
-      console.error("token read incorrectly from url");
-    } else {
-      sessionStorage.setItem("stemtutor-token", JSON.stringify(token));
-      const decoded: any = jwtDecode(token);
+      const params = new URLSearchParams(window.location.search);
+      token = params.get("token");
 
-      const role = decoded.role;
-
-      setUser({
-        id: decoded.id,
-        name: decoded.name,
-      });
-
-      if (role === "noRole") {
-        navigate("/setup");
-      } else {
-        navigate("/dashboard");
+      if (token) {
+        sessionStorage.setItem("stemtutor-token", token);
       }
     }
+
+    if (!token) {
+      console.error("Token missing");
+      return;
+    }
+
+    console.log("Token raw:", token);
+
+    const decoded: any = jwtDecode(token);
+    console.log("Decoded:", decoded);
+    console.log("Role:", decoded.role);
+
+    setTimeout(() => {
+      if (decoded.role === "noRole") {
+        console.log("Navigating to /setup");
+        navigate("/setup");
+      } else {
+        console.log("Navigating to /dashboard");
+        navigate("/dashboard");
+      }
+    }, 2000);
   }, []);
 
   return <p className="text-blue-dark">Processing authorization...</p>;
