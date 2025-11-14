@@ -217,7 +217,9 @@ public class ProfileService {
     // Implementacija NOVE RUTE 1: AŽURIRANJE OBRAZOVANJA I RAZINA ZNANJA
     @Transactional
     public boolean updateStudentEducation(Long userId, StudentEducationUpdateDto dto) {
+        System.out.println("UŠA U UPDATE STUDENET EDUCATION");
         Optional<Student> studentOpt = studentRepository.findById(userId);
+        System.out.println("POSLE REPOSITORYA");
 
         if (studentOpt.isEmpty()) {
             return false; // Profil studenta nije pronađen
