@@ -7,6 +7,7 @@ import LandingPage from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import AuthCallback from "./components/AuthCallback";
+import ProfileEdit from "./pages/ProfileEdit";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
+          <Route path="/profile" element={<ProfileEdit />}></Route>
         </Routes>
       </AuthProvider>
     </Router>
