@@ -5,6 +5,7 @@ Cilj nam je napraviti funkcionalnu platformu, jednostavnu za uporabu, koja svoji
 
 
 ## Link za deployanu stranicu  
+Implemenitrana funkcionalnost: Uređivanje profila učenika
 https://stemtutor-frontend.vercel.app/
                  
 
