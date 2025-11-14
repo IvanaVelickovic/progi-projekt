@@ -15,18 +15,15 @@ import java.util.ArrayList;
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "student_id")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id") // FK to users.user_id
+    @MapsId
+    @JoinColumn(name = "student_id")
     public User user;
 
     private String grade;
     private String preferredTimes;
-
-
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StudentSubject> studentSubjects = new ArrayList<>();

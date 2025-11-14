@@ -106,7 +106,7 @@ public class ProfileService {
         }
 
         // Ako jest student, ali nema Student entitet → kreiraj ga
-        Student student = studentRepository.findByUser_Id(userId).orElseGet(() -> {
+        Student student = studentRepository.findById(userId).orElseGet(() -> {
             Student s = new Student();
             s.setUser(user);
             System.out.println(user);
@@ -216,7 +216,7 @@ public class ProfileService {
     // Implementacija NOVE RUTE 1: AŽURIRANJE OBRAZOVANJA I RAZINA ZNANJA
     @Transactional
     public boolean updateStudentEducation(Long userId, StudentEducationUpdateDto dto) {
-        Optional<Student> studentOpt = studentRepository.findByUser_Id(userId);
+        Optional<Student> studentOpt = studentRepository.findById(userId);
 
         if (studentOpt.isEmpty()) {
             return false; // Profil studenta nije pronađen
@@ -238,7 +238,7 @@ public class ProfileService {
     @Transactional
     public boolean updateStudentGoals(Long userId, StudentGoalsUpdateDto dto) {
         // 1. Provjeri postojanje studenta (za ResourceNotFoundException)
-        Optional<Student> studentOpt = studentRepository.findByUser_Id(userId);
+        Optional<Student> studentOpt = studentRepository.findById(userId);
         if (studentOpt.isEmpty()) return false;
 
         // 2. Ažuriranje student_subjects tablice (Ciljevi učenja)
