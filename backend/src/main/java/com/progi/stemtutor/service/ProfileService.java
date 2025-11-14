@@ -216,7 +216,7 @@ public class ProfileService {
     // Implementacija NOVE RUTE 1: AŽURIRANJE OBRAZOVANJA I RAZINA ZNANJA
     @Transactional
     public boolean updateStudentEducation(Long userId, StudentEducationUpdateDto dto) {
-        Optional<Student> studentOpt = studentRepository.findById(userId);
+        Optional<Student> studentOpt = studentRepository.findByUser_Id(userId);
 
         if (studentOpt.isEmpty()) {
             return false; // Profil studenta nije pronađen
@@ -238,9 +238,8 @@ public class ProfileService {
     @Transactional
     public boolean updateStudentGoals(Long userId, StudentGoalsUpdateDto dto) {
         // 1. Provjeri postojanje studenta (za ResourceNotFoundException)
-        if (!studentRepository.existsById(userId)) {
-            return false;
-        }
+        Optional<Student> studentOpt = studentRepository.findByUser_Id(userId);
+        if (studentOpt.isEmpty()) return false;
 
         // 2. Ažuriranje student_subjects tablice (Ciljevi učenja)
         // Pozovi pomoćnu funkciju za svaki predmet
