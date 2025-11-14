@@ -44,7 +44,8 @@ public class ProfileController {
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(@AuthenticationPrincipal UserDetails userDetails) {
         Long userId = getUserId(userDetails);
-
+        System.out.println(userDetails);
+        System.out.println(userId);
         return profileService.getProfileData(userId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Korisnik nije pronađen."));

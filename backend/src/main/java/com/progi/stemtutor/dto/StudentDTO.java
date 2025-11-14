@@ -9,8 +9,8 @@ public record StudentDTO(
 ) {
     public static StudentDTO fromEntity(Student student) {
         return new StudentDTO(
-                student.getFirstName(),
-                student.getLastName(),
+                student.user.getFirstName(),
+                student.user.getLastName(),
                 student.getGrade()
         );
     }

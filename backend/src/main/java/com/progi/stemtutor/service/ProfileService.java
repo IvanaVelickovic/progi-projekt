@@ -9,6 +9,7 @@ import com.progi.stemtutor.model.Student;
 import com.progi.stemtutor.model.User;
 import com.progi.stemtutor.model.StudentSubject;
 import com.progi.stemtutor.model.Subject;
+import com.progi.stemtutor.model.enums.UserRole;
 import com.progi.stemtutor.repository.StudentRepository;
 import com.progi.stemtutor.repository.StudentSubjectRepository;
 import com.progi.stemtutor.repository.SubjectRepository;
@@ -90,29 +91,73 @@ public class ProfileService {
             return Optional.empty();
         }
         User user = userOpt.get();
+        System.out.println("aaaaa");
 
-        // 2. Dohvati studenta
-        Optional<Student> studentOpt = studentRepository.findById(userId);
-        if (studentOpt.isEmpty()) {
-            return Optional.empty();
+        // Ako nije student → vrati samo osnovne podatke
+        if (user.getRole() != UserRole.student) {
+            return Optional.of(new ProfileDto(
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    null,
+                    null, null, null,
+                    null, null, null
+            ));
         }
-        Student student = studentOpt.get();
 
+        // Ako jest student, ali nema Student entitet → kreiraj ga
+        Student student = studentRepository.findByUser_Id(userId).orElseGet(() -> {
+            Student s = new Student();
+            s.setUser(user);
+            System.out.println(user);
+            s.setGrade(null);
+            System.out.println("spremam studneta");
+            return studentRepository.save(s);
+        });
+
+        System.out.println("IMAM STUDENTA");
+        // Provjeri StudentSubject
+        List<String> subjects = List.of("Matematika", "Fizika", "Informatika");
+
+        for (String sub : subjects) {
+            Subject subject = subjectRepository.findBySubjectName(sub)
+                    .orElseThrow(() -> new RuntimeException("Missing subject: " + sub));
+
+            System.out.println(subject + "cccccccccc");
+            studentSubjectRepository
+                    .findByStudentIdAndSubjectId(student.getId(), subject.getId())
+                    .orElseGet(() -> {
+                        StudentSubject ss = new StudentSubject();
+                        ss.setStudent(student);
+                        System.out.println(student + "stvaranje ss repop");
+                        ss.setSubject(subject);
+                        System.out.println(subject + "stvaranje ss repop");
+                        ss.setKnowledgeLevel(null);
+                        ss.setLearningGoals("");
+                        return studentSubjectRepository.save(ss);
+                    });
+        }
         // 3. Dohvati studentske predmete
         // (pretpostavljam da svaki student ima maksimalno 3 unosa u student_subjects)
-        List<StudentSubject> subjects = studentSubjectRepository.findByStudentId(userId);
-
+        System.out.println("doša do tu");
+        List<StudentSubject> subjects2 = studentSubjectRepository.findByStudentId(student.getId());
+        System.out.println(subjects2 + "aaaaaaaaaaaaaaaaaaa");
         // Helper mapa po imenu predmeta
-        Map<String, StudentSubject> map = subjects.stream()
+        Map<String, StudentSubject> map = subjects2.stream()
                 .collect(Collectors.toMap(
                         ss -> ss.getSubject().getSubjectName(),
                         ss -> ss
                 ));
 
+        System.out.println(map + "bbbbbbbbbbbbbbbb");
+
         StudentSubject math = map.get("Matematika");
         StudentSubject phy = map.get("Fizika");
         StudentSubject inf = map.get("Informatika");
 
+        System.out.println(math + "aahahahiodhio");
+        System.out.println(phy + "aahahahiodhio");
+        System.out.println(inf + "aahahahiodhio");
         // 4. Složi DTO
         ProfileDto dto = ProfileDto.builder()
                 .firstName(user.getFirstName())
@@ -128,7 +173,7 @@ public class ProfileService {
                 .learningGoalsPhi(phy != null ? phy.getLearningGoals() : "")
                 .learningGoalsInf(inf != null ? inf.getLearningGoals() : "")
                 .build();
-
+        System.out.println(dto);
         return Optional.of(dto);
     }
 
@@ -207,13 +252,4 @@ public class ProfileService {
     }
 
 }
-
-// Stara metoda koja više nije potrebna, ali je ostavljam ako je želite zadržati za druge pozive
-    /*
-    @Override
-    @Transactional
-    public void updateStudentProfile(Long userId, StudentProfileUpdateDto dto) throws ResourceNotFoundException {
-        // ... (stara implementacija)
-    }
-    */
 

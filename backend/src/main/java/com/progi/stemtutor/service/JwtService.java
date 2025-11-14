@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.lang.Objects;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -76,5 +77,9 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
-
+    @PostConstruct
+    public void debugKey() {
+        System.out.println("🔐 SECRET KEY RAW: " + secretKey);
+        System.out.println("🔐 SECRET KEY BASE64 DECODED LENGTH: " + Decoders.BASE64.decode(secretKey).length);
+    }
 }

@@ -11,12 +11,22 @@ import java.util.ArrayList;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-public class Student extends User {
+public class Student {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "student_id")
+    private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id") // FK to users.user_id
+    public User user;
 
     private String grade;
     private String preferredTimes;
+
+
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StudentSubject> studentSubjects = new ArrayList<>();

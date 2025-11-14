@@ -1,5 +1,6 @@
 package com.progi.stemtutor.config;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.progi.stemtutor.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,6 +35,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
+        System.out.println("🔍 Incoming JWT header: " + request.getHeader("Authorization"));
+        System.out.println("🚦 JwtFilter running for path: " + request.getServletPath());
+
         String path = request.getServletPath();
         if (path.startsWith("/oauth2") || path.startsWith("/login") || path.startsWith("/auth")) {
             filterChain.doFilter(request, response);
@@ -48,12 +52,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             final String jwt = authHeader.substring(7);
+            System.out.println(jwt);
             final String userEmail = jwtService.extractEmail(jwt);
-
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+            System.out.println("🔍 userEmail = " + userEmail + authentication);
+
             if (userEmail != null && authentication == null) {
+                System.out.println("uša u if");
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+                System.out.println(userDetails);
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -66,9 +74,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
-
+            System.out.println("prošao if");
             filterChain.doFilter(request, response);
         } catch (Exception exception) {
+            System.out.println("❌ ERROR in loadUserByUsername: " + exception.getClass() + " -> " + exception.getMessage());
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
     }

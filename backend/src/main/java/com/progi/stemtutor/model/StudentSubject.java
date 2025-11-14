@@ -19,15 +19,19 @@ public class StudentSubject {
         @Column(name = "student_subject_id")
         private Long id;
 
+        @ToString.Exclude // ISKLJUČUJE
+        @EqualsAndHashCode.Exclude
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "student_id", nullable = false)
         private Student student;
 
+        @ToString.Exclude // ISKLJUČUJE
+        @EqualsAndHashCode.Exclude
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "subject_id", nullable = false)
         private Subject subject;
 
-        @Column(name = "knowledge_level", nullable = false)
+        @Column(name = "knowledge_level", nullable = true)
         private String knowledgeLevel;
 
         @Column(name = "learning_goals", length = 1000)
