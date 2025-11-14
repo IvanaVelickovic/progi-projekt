@@ -64,6 +64,12 @@ public class AuthenticationService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         validatePassword(input.getPassword());
+
+        //TO-DO: baci fix, fali ono kad usporedujes stari
+        if (user.getPasswordHash() == null || !passwordEncoder.matches(input.getPassword(), user.getPasswordHash())) {
+            throw new IllegalStateException("Trenutna lozinka nije ispravna.");
+        }
+
         return user;
     }
 
