@@ -1,0 +1,263 @@
+@startuml DomainClassDiagram
+' Postavljanje stila
+skinparam class {
+  BorderColor Black
+  BackgroundColor White
+  ArrowColor Black
+}
+
+' ===================
+' GLAVNE KLASE
+' ===================
+
+class User {
+  - id: Long
+  --
+  - firstName : String
+  - lastName : String
+  - email : String
+  - passwordHash : String
+  - createdAt : DateTime
+  - role : UserRole
+  + status : UserStatus
+  + isVerified : bool
+  --
+  + getAuthorities()
+  + getPassword() 
+  + getUsername()
+  + isAccountNonExpired()
+  + isAccountNonLocked()
+  + isCredentialsNonExpired() 
+  + isEnabled()
+}
+
+class Student {
+  - id : Long
+  --
+  - user : User
+  - grade : String
+  - preferredTimes : String
+  - studentSubjects: List<StudentSubject>
+}
+
+class Instructor {
+  + id : Long
+  --
+  - biography : String
+  - hourlyRate : BigDecimal
+  - introVideoUrl : String
+}
+
+class Location {
+  - locationId : int
+  --
+  - address : String
+  - city : String
+  - radiusAvailable : int
+}
+
+class Schedule {
+  - scheduleId : int
+  --
+  - scheduleDateTime : DateTime
+  - durationMin : int
+  - price : decimal
+  - attendanceMode : AttendanceMode
+  - maxParticipants : int
+  - status : ScheduleStatus
+  --
+  + checkAvailability() : bool
+}
+
+class Reservation {
+  - reservationId : int
+  --
+  - status : ReservationStatus
+  - reservationNotes : String
+  - createdAt : DateTime
+  - addressInPerson : String
+  --
+  + confirm()
+}
+
+class Participation {
+  - participationId : int
+  --
+  - status : ParticipationStatus
+  --
+  + markAttended()
+  + isPaid() : bool
+}
+
+class Note {
+  - noteId : int
+  --
+  - title : string
+  - url : String
+  - createdAt : DateTime
+}
+
+class Review {
+  - reviewId : int
+  --
+  - rating : int (1-5)
+  - comment : String
+  - createdAt : DateTime
+}
+
+class OnlineSession {
+  - sessionId : int
+  --
+  - recordingUrl : String
+}
+
+class SessionSummary {
+  - summaryId : int
+  --
+  - url : string
+  - createdAt : DateTime
+}
+
+class Payment {
+  - paymentId : int
+  --
+  - amount : Decimal
+  - method : PaymentMethod
+  - transactionTime : DateTime
+  - confirmationNumber : String
+  - status : PaymentStatus
+  --
+  + processPayment()
+}
+
+class Subject {
+  - id : Long
+  --
+  - subjectName : String
+}
+
+class Quiz {
+  - quizId : int
+  --
+  - title : String
+  - description : String
+  - createdAt : DateTime
+}
+
+class Question {
+  - questionId : int
+  --
+  - text : String
+  - type : QuestionType
+  - correctAnswer : String
+  - explanation : String
+  - difficulty : int
+}
+
+class AnswerOption {
+  - answerOptionId : int
+  --
+  - optionText : String
+  - isCorrect : bool
+}
+
+class StudentQuizPerformance {
+  - performanceId : int
+  --
+  - attemptStartedAt : DateTime
+  - attemptFinishedAt : DateTime
+}
+
+class StudentQuestionPerformance {
+  - performanceId : int
+  --
+  - isStudentCorrect : bool
+  - studentAnswer : String
+}
+
+
+' ===================
+' SPOJNE KLASE S ATRIBUTIMA
+' ===================
+' Ostaju kao klase jer nose bitne domenske podatke
+
+class InstructorReference {
+  - referenceId : int
+  --
+  - url : String
+  - name : String
+}
+
+class InstructorSubject {
+  - instructorSubjectId : int
+  --
+  - isRemoved : bool
+}
+
+class StudentSubject {
+  - id: Long
+  --
+  - student : Student
+  - subject : Subject
+  - knowledgeLevel : KnowledgeLevel
+  - learningGoals : String
+}
+
+class SessionQuizAssignment {
+  - assignmentId : int
+  --
+  - assignmentUrl : String
+  - dueAt : DateTime
+  - isCompleted : bool
+}
+
+
+' ===================
+' RELACIJE (ASOCIJACIJE)
+' ===================
+
+' Nasljeđivanje
+User <|-- Student : extends
+User <|-- Instructor : extends
+
+' Standardne 1:N i 1:1 asocijacije
+Instructor "1" --> "0..*" Schedule : defines
+Instructor "1" --> "0..*" InstructorReference : provides
+Instructor "1" --> "0..*" Quiz : creates
+
+Schedule "1" --> "0..*" Reservation : for
+Reservation "1" --> "1..*" Participation : includes
+Reservation "1" --> "0..1" OnlineSession : hostedIn
+
+OnlineSession "1" --> "0..1" SessionSummary : summarizedBy
+OnlineSession "1" --> "0..*" SessionQuizAssignment : assigns
+
+Participation "1" --> "0..*" Note : created
+Participation "1" --> "0..1" Review : leaves
+Participation "1" --> "0..1" Payment : makes
+
+Quiz "1" --> "1..*" Question : has
+Quiz "1" --> "0..*" StudentQuizPerformance : attempts
+
+Question "1" --> "1..*" AnswerOption : specifies
+
+Student "1" --> "0..*" Participation : participatesIn
+Student "1" --> "0..*" StudentQuizPerformance : attempts
+
+StudentQuizPerformance "1" --> "0..*" StudentQuestionPerformance : shows
+
+' M:N asocijacije modelirane kao Spojne klase s atributima
+Instructor "1" -- "0..*" InstructorSubject
+Subject "1" -- "0..*" InstructorSubject
+InstructorSubject "1" --> "0..*" Quiz : covers
+
+Student "1" -- "0..*" StudentSubject
+Subject "1" -- "0..*" StudentSubject
+
+Quiz "1" -- "0..*" SessionQuizAssignment
+
+' M:N asocijacije pretvorene u direktnu vezu (eliminirane su klase StudentFavorites i AvailableAtLocations)
+Student "*" -- "*" Instructor : favorites
+Instructor "*" -- "*" Location : availableAt
+
+@enduml
