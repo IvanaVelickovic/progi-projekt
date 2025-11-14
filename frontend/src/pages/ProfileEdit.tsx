@@ -36,24 +36,25 @@ const ProfileEdit = () => {
           "http://localhost:8080/api/user/profile"
         );
         const data = response.data;
+        console.log(data);
 
         setUserData({
-          firstName: data.firstName || "",
-          lastName: data.lastName || "",
+          firstName: data.first_name || "",
+          lastName: data.last_name || "",
           email: data.email || "",
         });
 
         setEducationData({
           grade: data.grade || "",
-          knowledgeLevelMath: data.knowledgeDataMath || "",
-          knowledgeLevelPhi: data.knowledgeDataPhi || "",
-          knowledgeLevelInf: data.knowledgeDataInf || "",
+          knowledgeLevelMath: data.knowledge_data_math || "",
+          knowledgeLevelPhi: data.knowledge_data_phi || "",
+          knowledgeLevelInf: data.knowledge_data_inf || "",
         });
 
         setGoalsData({
-          goalsMath: data.learningGoalsMath || "",
-          goalsPhi: data.learningGoalsPhi || "",
-          goalsInf: data.learningGoalsInf || "",
+          goalsMath: data.learning_goals_math || "",
+          goalsPhi: data.learning_goals_phi || "",
+          goalsInf: data.learning_goals_inf || "",
         });
       } catch (error) {
         console.error("Greška pri dohvaćanju korisničkih podataka:", error);

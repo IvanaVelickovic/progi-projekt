@@ -38,6 +38,7 @@ const EducationTabContent = ({
         "http://localhost:8080/api/user/update-education",
         educationData
       );
+      console.log(educationData);
       if (response.status === 200) {
         alert("Podaci o obrazovanju uspješno ažurirani!");
       }
