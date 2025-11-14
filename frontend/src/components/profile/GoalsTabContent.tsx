@@ -29,7 +29,7 @@ const GoalsTabContent = ({ goalsData, setGoalsData }: GoalsTabContentProps) => {
     e.preventDefault();
     try {
       const response = await api.post(
-        "http://localhost:8080/api/user/update-goals",
+        "https://progi-projekt-cza4.onrender.com/api/user/update-goals",
         goalsData
       );
       if (response.status === 200) {

@@ -56,7 +56,10 @@ const PersonalTabContent = ({
     e.preventDefault();
 
     try {
-      await api.put("http://localhost:8080/api/user/update", userData);
+      await api.put(
+        "https://progi-projekt-cza4.onrender.com/api/user/update",
+        userData
+      );
       alert("Podaci uspješno ažurirani!");
     } catch (error) {
       console.error(error);
@@ -73,7 +76,7 @@ const PersonalTabContent = ({
     }
     try {
       const response = await api.post(
-        "http://localhost:8080/api/user/change-password",
+        "https://progi-projekt-cza4.onrender.com/api/user/change-password",
         {
           oldPassword: formData.oldpassword,
           newPassword: formData.newpassword,

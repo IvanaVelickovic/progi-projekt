@@ -33,7 +33,7 @@ const ProfileEdit = () => {
     const fetchUserData = async () => {
       try {
         const response = await api.get(
-          "http://localhost:8080/api/user/profile"
+          "https://progi-projekt-cza4.onrender.com/api/user/profile"
         );
         const data = response.data;
 
