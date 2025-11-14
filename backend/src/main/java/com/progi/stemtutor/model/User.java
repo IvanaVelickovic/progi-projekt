@@ -1,0 +1,104 @@
+package com.progi.stemtutor.model;
+
+import com.progi.stemtutor.model.enums.UserRole;
+import com.progi.stemtutor.model.enums.UserStatus;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "users")
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+public class User implements UserDetails {
+
+    @Id
+    // TO-DO: Istrazit ove Generation Typeove
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Long id;
+
+    @Column
+    private String firstName;
+
+    @Column
+    private String lastName;
+
+    @Column(nullable = false, unique = true, length = 255)
+    private String email;
+
+    @Column(name = "password_hash", nullable = true, length = 255)
+    private String passwordHash = null;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role = UserRole.noRole;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status = UserStatus.active;
+
+    @Column(nullable = false)
+    private Boolean isVerified = false;
+
+    @Column(nullable = false)
+    private Instant createdAt = Instant.now();
+
+    @Column(nullable = false)
+    private Instant lastLogin = Instant.now();
+
+    @Column(unique = true)
+    private String googleId;
+
+    public User(String firstName, String lastName, String email, String passwordHash) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.passwordHash = passwordHash;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return passwordHash;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true ;
+    }
+}
