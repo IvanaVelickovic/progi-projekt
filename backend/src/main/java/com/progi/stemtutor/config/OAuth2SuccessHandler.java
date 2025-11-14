@@ -51,7 +51,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         String redirectUrl = "http://localhost:5173/oauth2/callback?token=" + URLEncoder.encode(jwt, StandardCharsets.UTF_8);
         response.sendRedirect(redirectUrl);
-
         // Alternative JSON response for API clients:
         // response.setContentType("application/json");
         // response.getWriter().write("{\"token\":\"" + jwt + "\"}");

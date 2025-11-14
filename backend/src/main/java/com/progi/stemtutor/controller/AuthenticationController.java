@@ -39,6 +39,4 @@ public class AuthenticationController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    //@PostMapping("/updateProfile")
-    //public
 }
