@@ -86,7 +86,7 @@ public class ProfileController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Korisnik nije pronađen.");
             }
 
-            return ResponseEntity.noContent().build(); // 204 No Content
+            return ResponseEntity.status(HttpStatus.OK).build(); // 204 No Content
         } catch (IllegalStateException e) {
             // Service je bacio IllegalStateException (Lozinka nije ispravna)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage()); // 401 Unauthorized

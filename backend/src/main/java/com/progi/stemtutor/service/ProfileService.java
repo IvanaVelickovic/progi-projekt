@@ -202,7 +202,8 @@ public class ProfileService {
 
         User user = userOpt.get();
 
-        if (user.getPasswordHash() != null && !passwordEncoder.matches(dto.getCurrentPassword(), user.getPasswordHash())) {
+        //TO-DO: baci fix, fali ono kad usporedujes stari
+        if (user.getPasswordHash() == null || !passwordEncoder.matches(dto.getCurrentPassword(), user.getPasswordHash())) {
             // Umjesto prilagođene iznimke, bacamo standardnu koja signalizira problem s lozinkom
             throw new IllegalStateException("Trenutna lozinka nije ispravna.");
         }
