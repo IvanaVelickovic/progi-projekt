@@ -49,11 +49,9 @@ public class WebConfiguration {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(oauth2 -> oauth2
-                        // 1. Obrada korisničkih podataka: Povezivanje vašeg servisa
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2UserService)
                         )
-                        // 2. Obrada uspješne prijave: Povezivanje vašeg handlera (generiranje JWT-a)
                         .successHandler(oAuth2SuccessHandler)
                 );
 

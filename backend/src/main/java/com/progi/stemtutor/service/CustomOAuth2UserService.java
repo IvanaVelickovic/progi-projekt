@@ -44,19 +44,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String lastName = (String) attributes.get("family_name");
 
         if (email == null) {
-            throw new OAuth2AuthenticationException("Google account email not verified.");
+            throw new OAuth2AuthenticationException("Google account email doesn't exist.");
         }
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
         User user = optionalUser.orElseGet(() -> {
-            User newUser = User.builder() // Koristi builder!
+            User newUser = User.builder()
                     .email(email)
                     .firstName(firstName != null ? firstName : "")
                     .lastName(lastName != null ? lastName : "")
                     .passwordHash(null)
-                    .role(UserRole.student)
+                    .role(UserRole.noRole)
                     .status(UserStatus.active)
+                    .isVerified(false)
                     .createdAt(Instant.now())
                     .lastLogin(Instant.now())
                     .build();
@@ -72,7 +73,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return new DefaultOAuth2User(
                 authorities,
                 oAuth2User.getAttributes(),
-                "email" // ključ koji predstavlja 'username' u atributima
+                "email"
         ); // Spring Security will store authentication info
     }
 }
