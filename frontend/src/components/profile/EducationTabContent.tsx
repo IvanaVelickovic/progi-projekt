@@ -108,7 +108,7 @@ const EducationTabContent = ({
                 className="border border-gray-400 rounded-md px-2 py-1 w-full focus:outline-none focus:ring-1 focus:ring-[#1e3a56] "
               >
                 <option value="">Odaberi razinu</option>
-                <option value="početna_razina">Početnak razina</option>
+                <option value="početna_razina">Početna razina</option>
                 <option value="srednja_razina">Srednja razina</option>
                 <option value="napredna_razina">Napredna razina</option>
               </select>
@@ -124,7 +124,7 @@ const EducationTabContent = ({
                 className="border border-gray-400 rounded-md px-2 py-1 w-full focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
               >
                 <option value="">Odaberi razinu</option>
-                <option value="početna_razina">Početnak razina</option>
+                <option value="početna_razina">Početna razina</option>
                 <option value="srednja_razina">Srednja razina</option>
                 <option value="napredna_razina">Napredna razina</option>
               </select>
