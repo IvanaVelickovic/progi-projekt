@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
+import api from "../api";
 
 const Setup = () => {
   const navigate = useNavigate();
@@ -15,19 +15,7 @@ const Setup = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-      const res = await axios.post(
-        `${API_BASE_URL}/setup`,
-        { role },
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem(
-              "stemtutor-token"
-            )}`,
-          },
-        }
-      );
+      const res = await api.post("/setup", { role });
 
       const newToken = res.data.token;
       sessionStorage.setItem("stemtutor-token", newToken);

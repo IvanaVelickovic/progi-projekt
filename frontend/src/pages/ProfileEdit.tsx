@@ -32,9 +32,7 @@ const ProfileEdit = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await api.get(
-          "https://progi-projekt-cza4.onrender.com/api/user/profile"
-        );
+        const response = await api.get("/api/user/profile");
         const data = response.data;
 
         setUserData({

@@ -56,10 +56,7 @@ const PersonalTabContent = ({
     e.preventDefault();
 
     try {
-      await api.put(
-        "https://progi-projekt-cza4.onrender.com/api/user/update",
-        userData
-      );
+      await api.put("/api/user/update", userData);
       alert("Podaci uspješno ažurirani!");
     } catch (error) {
       console.error(error);
@@ -75,13 +72,10 @@ const PersonalTabContent = ({
       return;
     }
     try {
-      const response = await api.post(
-        "https://progi-projekt-cza4.onrender.com/api/user/change-password",
-        {
-          oldPassword: formData.oldpassword,
-          newPassword: formData.newpassword,
-        }
-      );
+      const response = await api.post("/api/user/change-password", {
+        oldPassword: formData.oldpassword,
+        newPassword: formData.newpassword,
+      });
 
       if (response.status === 200) {
         alert("Lozinka uspješno promijenjena!");
