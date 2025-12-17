@@ -1,0 +1,159 @@
+import Calendar from "react-calendar";
+//import appointmentsData from "../assets/appointments.json";
+import { useNavigate } from "react-router-dom";
+import EditSchedule from "./EditSchedule";
+import { useEffect, useState } from "react";
+import api from "../api";
+
+interface Appointment {
+  id: number;
+  datetime: string;
+  format: string;
+  duration: number;
+  price: number;
+  filled: number;
+  capacity: number;
+  googleCalendarExists: boolean;
+}
+
+const Schedule = () => {
+  const [editSchedule, setEditSchedule] = useState(false);
+  const navigate = useNavigate();
+
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  //const [appointments, setAppointments] = useState(appointmentsData);
+
+  let [scheduleData, setScheduleData] = useState({
+    id: -1,
+    index: -1,
+    filled: -1,
+    googleCalendarExists: false,
+  });
+
+  const goToEditSchedule = (
+    id: number,
+    index: number,
+    filled: number,
+    googleCalendarExists: boolean
+  ) => {
+    setScheduleData({
+      id: id,
+      index: index,
+      filled: filled,
+      googleCalendarExists: googleCalendarExists,
+    });
+
+    setEditSchedule(true);
+  };
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const response = await api.get("/api/user/profile");
+        const data = response.data;
+        setAppointments(data);
+      } catch (error) {
+        console.error("Greška pri dohvaćanju korisničkih podataka:", error);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
+
+  const appointmentDates = appointments.map(
+    (item) => item.datetime.split("T")[0]
+  );
+
+  return (
+    <div className="flex h-full">
+      <div className="w-3/4 p-5 flex flex-col">
+        <h1 className="text-blue-dark text-3xl font-bold">Moji termini</h1>
+        <div className="flex flex-col items-center mt-5 overflow-y-scroll">
+          {appointments.map((item, index) => (
+            <div
+              key={item.id}
+              id={item.datetime.split("T")[0]}
+              className="flex justify-between bg-[#ADEBC8] border-2 border-blue-dark rounded-2xl w-11/12 h-[250px] mb-6 shrink-0 drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]"
+            >
+              <div className="w-7/12 p-5">
+                <h1 className="text-blue-dark text-2xl font-bold">
+                  Termin {index + 1}
+                </h1>
+                <div className="p-5 pt-7 text-blue-dark font-semibold text-xl">
+                  <div className="flex justify-between ">
+                    <span>• Održavanje</span>
+                    <span>{item.format}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>• Trajanje</span>
+                    <span>{item.duration} min</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>• Cijena po terminu:</span>
+                    <span>{item.price} €</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col items-center justify-between w-4/12">
+                <div className="w-9/12 p-4 m-3 bg-white rounded-2xl text-lg text-blue-dark font-semibold text-center">
+                  {item.datetime.split("T")[0]}
+                  <br></br>
+                  {item.datetime.split("T")[1]}
+                </div>
+                <div className="flex flex-col m-3 p-2 w-10/12 items-end">
+                  <div className="bg-[#D9D9D9] p-3 rounded-3xl text-lg text-blue-dark font-semibold text-center px-6">
+                    Popunjenost: {item.filled}/{item.capacity}
+                  </div>
+                  <button
+                    className="bg-blue-light text-white text-lg p-2 rounded-3xl text-center w-8/12 cursor-pointer mt-1.5"
+                    onClick={() =>
+                      goToEditSchedule(
+                        item.id,
+                        index + 1,
+                        item.filled,
+                        item.googleCalendarExists
+                      )
+                    }
+                  >
+                    Uredi
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex flex-col items-center justify-between w-1/4 pt-2 pb-8">
+        <Calendar
+          className="bg-white p-1 w-full"
+          tileClassName={({ date }) => {
+            const formatted = date.toLocaleDateString("sv-SE");
+            return appointmentDates.includes(formatted)
+              ? "has-appointment"
+              : null;
+          }}
+          onClickDay={(value) => {
+            const formatted = value.toLocaleDateString("sv-SE");
+            const el = document.getElementById(formatted);
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}
+        ></Calendar>
+        <button
+          className="bg-blue-light text-white text-xl p-3 rounded-2xl text-center w-10/12 cursor-pointer mt-1.5"
+          onClick={() => navigate("/instructor/addSchedule")}
+        >
+          Dodaj novi termin
+        </button>
+      </div>
+      {editSchedule && (
+        <EditSchedule
+          scheduleData={scheduleData}
+          setEditSchedule={setEditSchedule}
+          setAppointments={setAppointments}
+        />
+      )}
+    </div>
+  );
+};
+
+export default Schedule;

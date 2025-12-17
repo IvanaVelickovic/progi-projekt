@@ -8,6 +8,9 @@ import Login from "./pages/Login";
 import ProfileEdit from "./pages/ProfileEdit";
 import Register from "./pages/Register";
 import Setup from "./pages/Setup";
+import InstructorDashboard from "./pages/InstructorDashboard";
+import AddSchedule from "./pages/AddSchedule";
+import EditSchedule from "./components/EditSchedule";
 
 function App() {
   return (
@@ -34,13 +37,14 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
+          <Route path="/profile" element={<ProfileEdit />}></Route>
           <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <ProfileEdit />
-              </ProtectedRoute>
-            }
+            path="/instructor/dashboard"
+            element={<InstructorDashboard />}
+          ></Route>
+          <Route
+            path="/instructor/addSchedule"
+            element={<AddSchedule />}
           ></Route>
         </Routes>
       </AuthProvider>
