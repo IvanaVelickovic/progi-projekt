@@ -4,43 +4,49 @@ import { useNavigate } from "react-router-dom";
 import EditSchedule from "./EditSchedule";
 import { useEffect, useState } from "react";
 import api from "../api";
+import { useAppointments } from "../context/AppointmentsContext";
 
-interface Appointment {
+export interface Appointment {
   id: number;
   datetime: string;
   format: string;
   duration: number;
   price: number;
   filled: number;
-  capacity: number;
-  googleCalendarExists: boolean;
+  maxParticipants: number;
+  googleCalendar: boolean;
 }
 
 const Schedule = () => {
   const [editSchedule, setEditSchedule] = useState(false);
   const navigate = useNavigate();
+  const googleUser = JSON.parse(
+    sessionStorage.getItem("googleUser") || "false"
+  );
 
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  //const [appointments, setAppointments] = useState(appointmentsData);
+  const { appointments, setAppointments } = useAppointments();
 
   let [scheduleData, setScheduleData] = useState({
     id: -1,
     index: -1,
     filled: -1,
-    googleCalendarExists: false,
+    googleUser: false,
+    googleCalendar: false,
   });
 
   const goToEditSchedule = (
     id: number,
     index: number,
     filled: number,
-    googleCalendarExists: boolean
+    googleUser: boolean,
+    googleCalendar: boolean
   ) => {
     setScheduleData({
       id: id,
       index: index,
       filled: filled,
-      googleCalendarExists: googleCalendarExists,
+      googleUser: googleUser,
+      googleCalendar: googleCalendar,
     });
 
     setEditSchedule(true);
@@ -49,9 +55,11 @@ const Schedule = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await api.get("/api/user/profile");
-        const data = response.data;
-        setAppointments(data);
+        const userRes = await api.get("/api/google/user");
+        sessionStorage.setItem("googleUser", JSON.stringify(userRes.data));
+
+        const dataRes = await api.get("/api/user/appointments");
+        setAppointments(dataRes.data);
       } catch (error) {
         console.error("Greška pri dohvaćanju korisničkih podataka:", error);
       }
@@ -102,7 +110,7 @@ const Schedule = () => {
                 </div>
                 <div className="flex flex-col m-3 p-2 w-10/12 items-end">
                   <div className="bg-[#D9D9D9] p-3 rounded-3xl text-lg text-blue-dark font-semibold text-center px-6">
-                    Popunjenost: {item.filled}/{item.capacity}
+                    Popunjenost: {item.filled}/{item.maxParticipants}
                   </div>
                   <button
                     className="bg-blue-light text-white text-lg p-2 rounded-3xl text-center w-8/12 cursor-pointer mt-1.5"
@@ -111,7 +119,8 @@ const Schedule = () => {
                         item.id,
                         index + 1,
                         item.filled,
-                        item.googleCalendarExists
+                        googleUser,
+                        item.googleCalendar
                       )
                     }
                   >
@@ -149,7 +158,6 @@ const Schedule = () => {
         <EditSchedule
           scheduleData={scheduleData}
           setEditSchedule={setEditSchedule}
-          setAppointments={setAppointments}
         />
       )}
     </div>

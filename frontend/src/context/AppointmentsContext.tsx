@@ -1,0 +1,40 @@
+import { createContext, useContext, useState } from "react";
+import type { ReactNode } from "react";
+
+export interface Appointment {
+  id: number;
+  datetime: string;
+  format: string;
+  duration: number;
+  price: number;
+  filled: number;
+  maxParticipants: number;
+  googleCalendar: boolean;
+}
+
+interface AppointmentsContextType {
+  appointments: Appointment[];
+  setAppointments: React.Dispatch<React.SetStateAction<Appointment[]>>;
+}
+
+const AppointmentsContext = createContext<AppointmentsContextType | undefined>(
+  undefined
+);
+
+export const useAppointments = () => {
+  const context = useContext(AppointmentsContext);
+  if (!context) {
+    throw new Error("useAppointments must be used inside AppointmentsProvider");
+  }
+  return context;
+};
+
+export const AppointmentsProvider = ({ children }: { children: ReactNode }) => {
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+
+  return (
+    <AppointmentsContext.Provider value={{ appointments, setAppointments }}>
+      {children}
+    </AppointmentsContext.Provider>
+  );
+};

@@ -1,43 +1,26 @@
-import { useNavigate } from "react-router-dom";
 import googleLogo from "../assets/logos/google_logo.png";
 import { useState } from "react";
 import api from "../api";
+import { useAppointments } from "../context/AppointmentsContext";
 
 interface EditScheduleProps {
   scheduleData: {
     id: number;
     index: number;
     filled: number;
-    googleCalendarExists: boolean;
+    googleUser: boolean;
+    googleCalendar: boolean;
   };
   setEditSchedule: React.Dispatch<React.SetStateAction<boolean>>;
-  setAppointments: React.Dispatch<
-    React.SetStateAction<
-      {
-        id: number;
-        datetime: string;
-        format: string;
-        duration: number;
-        price: number;
-        filled: number;
-        capacity: number;
-        googleCalendarExists: boolean;
-      }[]
-    >
-  >;
 }
 
-const EditSchedule = ({
-  scheduleData,
-  setEditSchedule,
-  setAppointments,
-}: EditScheduleProps) => {
-  const navigate = useNavigate();
-
+const EditSchedule = ({ scheduleData, setEditSchedule }: EditScheduleProps) => {
   const [editData, setEditData] = useState({
     maxParticipants: scheduleData.filled,
     googleCalendar: "",
   });
+
+  const { setAppointments } = useAppointments();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -56,16 +39,30 @@ const EditSchedule = ({
       }
       const res = await api.post("/isntructor/edit/schedule", {
         id: scheduleData.id,
-        capacity: editData.maxParticipants,
-        addToGoogleCalendar: add,
+        maxParticipants: editData.maxParticipants,
+        googleCalendar: add,
       });
-      if (res.status == 200) {
+      if (res.status === 200) {
+        setAppointments((prev) =>
+          prev.map((item) =>
+            item.id === scheduleData.id
+              ? {
+                  ...item,
+                  maxParticipants: editData.maxParticipants,
+                  googleCalendar: add,
+                }
+              : item
+          )
+        );
+
         window.alert("Termin uspješno promijenjen!");
+        setEditSchedule(false);
       }
     } catch (err) {
       console.error("Greška s backendom: ", err);
     }
   };
+
   const handleDelete = async () => {
     const proceed = window.confirm(
       "Brisanje termina je trajno. Želite li nastaviti?"
@@ -131,7 +128,7 @@ const EditSchedule = ({
             ! Kod mijenjanja broja polaznika, novi broj ne smije biti manji od
             broja trenutno prijavljenih učenika
           </p>
-          {scheduleData.googleCalendarExists && (
+          {!scheduleData.googleCalendar && scheduleData.googleUser && (
             <div className="flex items-center gap-2 text-lg font-semibold text-blue-dark ">
               <label>
                 <input

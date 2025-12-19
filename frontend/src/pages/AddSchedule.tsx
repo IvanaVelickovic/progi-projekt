@@ -3,26 +3,10 @@ import { useNavigate } from "react-router-dom";
 import googleLogo from "../assets/logos/google_logo.png";
 import api from "../api";
 
-//warning za vraćanje natrag
-//umjesto api get, uzeti podatak iz instructordashboard
-
 const AddSchedule = () => {
-  let googleAccount = false;
-
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const res = await api.get("/instructor/checkGoogleAccount");
-        if (res.data.googleAccount == true) {
-          googleAccount = true;
-        }
-      } catch (err) {
-        console.error("Greška u komunkaciji s backendom: ", err);
-      }
-    };
-
-    checkUser();
-  }, []);
+  const googleUser = JSON.parse(
+    sessionStorage.getItem("googleUser") || "false"
+  );
 
   const [formData, setFormData] = useState({
     format: "",
@@ -43,7 +27,7 @@ const AddSchedule = () => {
   const localTime = `${hours}:${minutes}`;
   const minDateTime = `${localDate}T${localTime}`;
 
-  const isFormEmpty = Object.values(formData).every((value) => value === "");
+  const isFormEmpty = Object.values(formData).every((value) => value === ""); //initial value
 
   const goBack = () => {
     const formEmpty = Object.values(formData).every((value) => value === "");
@@ -85,10 +69,14 @@ const AddSchedule = () => {
       const res = await api.post("/instructor/addSchedule", formData);
 
       if (res.status === 200 || res.status === 201) {
+        window.alert("Termin uspješno dodan!");
         navigate("/instructor/dashboard");
       }
     } catch (err: any) {
       console.error("Greška u komunikaciji s backendom ", err);
+      window.alert(
+        "Nismo uspjeli dodati vaš termin. Molimo pokušajte ponovno."
+      );
     }
   };
 
@@ -212,7 +200,7 @@ const AddSchedule = () => {
                   required
                 />
               </div>
-              {googleAccount && (
+              {googleUser && (
                 <div className="flex items-center gap-2 w-[42%] font-semibold">
                   <label>
                     <input

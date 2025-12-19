@@ -10,7 +10,6 @@ import Register from "./pages/Register";
 import Setup from "./pages/Setup";
 import InstructorDashboard from "./pages/InstructorDashboard";
 import AddSchedule from "./pages/AddSchedule";
-import EditSchedule from "./components/EditSchedule";
 
 function App() {
   return (
