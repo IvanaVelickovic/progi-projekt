@@ -1,84 +1,143 @@
-import ProfileLayout from "../components/profile/ProfileLayout";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { useEffect, useState } from "react";
+import api from "../api";
 
 const ProfileViewStudent = () => {
+  const [educationData, setEducationData] = useState({
+    grade: "",
+    knowledgeMath: "",
+    knowledgePhi: "",
+    knowledgeInf: "",
+    goalsMath: "",
+    goalsPhi: "",
+    goalsInf: "",
+  });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const response = await api.get("/api/user/profile");
+      const data = response.data;
+
+      setEducationData({
+        grade: data.grade || "",
+        knowledgeMath: data.knowledge_data_math || "",
+        knowledgePhi: data.knowledge_data_phi || "",
+        knowledgeInf: data.knowledge_data_inf || "",
+        goalsMath: data.learning_goals_math || "",
+        goalsPhi: data.learning_goals_phi || "",
+        goalsInf: data.learning_goals_inf || "",
+      });
+    };
+
+    fetchProfile();
+  }, []);
+
   return (
-    <div className="bg-[#f6fefb] flex justify-center items-center min-h-screen">
-      <div className="w-[90vw] h-[90vh] max-w-[1732px] bg-[#f2fbf7] rounded-2xl shadow-md flex flex-col lg:flex-row items-center p-8 lg:p-12 gap-10">
-        <ProfileLayout>
-          {/* Lijevi panel */}
-          <div className="w-full max-w-[260px] bg-[#e6f6ef] rounded-2xl p-6 flex flex-col items-center gap-6">
-            <div className="flex h-36 w-36 items-center justify-center rounded-full bg-[#8fd0ad] text-sm text-[#0b3b2e] text-center">
-              Slika<br />učenika
+    <div className="min-h-screen bg-[#e9f7f1] flex flex-col">
+
+      {/* HEADER */}
+      <header className="bg-[#9bd7b6] px-8 py-4 flex items-center justify-between">
+        <h1 className="text-xl font-bold text-[#0b3b2e]">
+          STEM tutorstvo
+        </h1>
+
+        <div className="bg-[#e9f7f1] px-4 py-2 rounded-full shadow-sm">
+          <input
+            type="text"
+            placeholder="Pretražite profile"
+            className="bg-transparent outline-none text-sm w-[280px]"
+          />
+        </div>
+
+        <button className="bg-[#0b3b2e] text-white px-6 py-2 rounded-lg">
+          Profil
+        </button>
+      </header>
+
+      {/* CONTENT – CENTRIRAN CARD */}
+      <main className="flex-1 flex items-center justify-center px-6 py-10">
+        {/* MANJI CARD da se vidi zelena pozadina */}
+        <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg p-10">
+
+          <div className="flex gap-12">
+
+            {/* LIJEVI PANEL – SAVRŠENO CENTRIRAN */}
+            <div className="w-[260px] bg-[#e9f7f1] rounded-2xl p-6
+                            flex flex-col items-center justify-center text-center">
+
+              <div className="h-44 w-44 rounded-full bg-[#9bd7b6]
+                              flex items-center justify-center mb-4">
+                Slika<br />učenika
+              </div>
+
+              <p className="font-semibold text-[#0b3b2e] text-lg">
+                Ime Prezime
+              </p>
             </div>
-            <p className="text-lg font-semibold text-[#0b3b2e]">
-              Ime Prezime
-            </p>
+
+            {/* DESNI DIO */}
+            <div className="flex-1">
+
+              <div className="mb-8">
+                <span className="bg-[#dff3ea] px-5 py-2 rounded-xl font-medium text-lg">
+                  Podaci o obrazovanju
+                </span>
+              </div>
+
+              {/* RAZINA OBRAZOVANJA */}
+              <div className="flex items-center gap-5 mb-10">
+                <span className="font-medium text-lg">
+                  Razina obrazovanja:
+                </span>
+
+                <div className="bg-gray-100 rounded-md px-4 py-2 text-base min-w-[240px]">
+                  {educationData.grade}
+                </div>
+              </div>
+
+              {/* RAZINE ZNANJA */}
+              <p className="font-medium text-lg mb-5">
+                Razine znanja:
+              </p>
+
+              <div className="grid grid-cols-3 gap-8 mb-10">
+                {[
+                  ["Matematika", educationData.knowledgeMath],
+                  ["Fizika", educationData.knowledgePhi],
+                  ["Informatika", educationData.knowledgeInf],
+                ].map(([name, value]) => (
+                  <div key={name}>
+                    <p className="text-base font-medium mb-2">{name}:</p>
+                    <div className="bg-gray-100 rounded-md px-4 py-2 text-base">
+                      {value}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* CILJEVI UČENJA */}
+              <p className="font-medium text-lg mb-5">
+                Ciljevi učenja:
+              </p>
+
+              <div className="grid grid-cols-3 gap-8">
+                {[
+                  ["Matematika", educationData.goalsMath],
+                  ["Fizika", educationData.goalsPhi],
+                  ["Informatika", educationData.goalsInf],
+                ].map(([name, value]) => (
+                  <div key={name}>
+                    <p className="text-base font-medium mb-2">{name}:</p>
+                    <div className="bg-gray-100 rounded-md px-4 py-3 text-base min-h-[80px]">
+                      {value}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+            </div>
           </div>
-
-          {/* Desni sadržaj */}
-          <div className="flex-1 w-full">
-            <h2 className="mb-6 inline-block rounded-xl bg-[#dff3ea] px-5 py-2 text-lg font-medium">
-              Podaci o obrazovanju
-            </h2>
-
-            {/* Razina obrazovanja */}
-            <div className="mb-6 flex items-center gap-4">
-              <label className="min-w-[180px] font-medium">
-                Razina obrazovanja:
-              </label>
-              <Input disabled className="max-w-[240px]" />
-            </div>
-
-            {/* Razine znanja */}
-            <h3 className="mb-4 font-semibold">Razine znanja:</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div>
-                <label className="block mb-1 text-sm font-medium">
-                  Matematika
-                </label>
-                <Input disabled />
-              </div>
-              <div>
-                <label className="block mb-1 text-sm font-medium">
-                  Fizika
-                </label>
-                <Input disabled />
-              </div>
-              <div>
-                <label className="block mb-1 text-sm font-medium">
-                  Informatika
-                </label>
-                <Input disabled />
-              </div>
-            </div>
-
-            {/* Ciljevi učenja */}
-            <h3 className="mb-4 font-semibold">Ciljevi učenja:</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block mb-1 text-sm font-medium">
-                  Matematika
-                </label>
-                <Textarea disabled className="min-h-[120px]" />
-              </div>
-              <div>
-                <label className="block mb-1 text-sm font-medium">
-                  Fizika
-                </label>
-                <Textarea disabled className="min-h-[120px]" />
-              </div>
-              <div>
-                <label className="block mb-1 text-sm font-medium">
-                  Informatika
-                </label>
-                <Textarea disabled className="min-h-[120px]" />
-              </div>
-            </div>
-          </div>
-        </ProfileLayout>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };

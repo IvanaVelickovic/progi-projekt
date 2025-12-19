@@ -8,6 +8,8 @@ import Login from "./pages/Login";
 import ProfileEdit from "./pages/ProfileEdit";
 import Register from "./pages/Register";
 import Setup from "./pages/Setup";
+import ProfileViewStudent from "./pages/ProfileViewStudent";
+
 
 function App() {
   return (
@@ -42,6 +44,7 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
+          <Route path="/profile-view" element={<ProfileViewStudent />} />
         </Routes>
       </AuthProvider>
     </Router>
