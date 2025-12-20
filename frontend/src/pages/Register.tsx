@@ -1,12 +1,13 @@
+import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
 import SocialButtons from "../components/SocialButtons";
 import { useAuth } from "../context/AuthContext";
-import api from "../api";
 
 const Register = () => {
+  const token = sessionStorage.getItem("stemtutor-token");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -49,10 +50,15 @@ const Register = () => {
     }
     setLoading(true);
     try {
-      const signupRes = await api.post("/auth/signup", formData);
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+      const signupRes = await axios.post(
+        `${API_BASE_URL}/auth/signup`,
+        formData
+      );
 
       if (signupRes.status === 200 || signupRes.status === 201) {
-        const loginRes = await api.post("/auth/login", {
+        const loginRes = await axios.post(`${API_BASE_URL}/auth/login`, {
           email: formData.email,
           password: formData.password,
         });
@@ -76,9 +82,9 @@ const Register = () => {
           setUser({
             id: decoded.id,
             name: decoded.name,
-          });
+        });
 
-          navigate("/setup");
+        navigate("/setup");
         }
       }
     } catch (err: any) {

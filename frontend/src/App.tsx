@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import ProfileEdit from "./pages/ProfileEdit";
 import Register from "./pages/Register";
 import Setup from "./pages/Setup";
+import ProfileEditInstructor from "./pages/ProfileEditInstructor";
 
 function App() {
   return (
@@ -40,6 +41,12 @@ function App() {
               <ProtectedRoute>
                 <ProfileEdit />
               </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/profileInstructor"
+            element={
+                <ProfileEditInstructor />
             }
           ></Route>
         </Routes>

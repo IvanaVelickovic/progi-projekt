@@ -32,7 +32,9 @@ const ProfileEdit = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await api.get("/api/user/profile");
+        const response = await api.get(
+          "http://localhost:8080/api/user/profile"
+        );
         const data = response.data;
 
         setUserData({
