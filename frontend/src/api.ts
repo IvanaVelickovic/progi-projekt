@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://progi-projekt-cza4.onrender.com",
+  baseURL: "https://localhost:8080",
 });
 
 // Interceptor -> automatski dodaje Authorization header

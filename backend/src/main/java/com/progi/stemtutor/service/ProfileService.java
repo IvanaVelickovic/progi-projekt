@@ -8,17 +8,17 @@ import com.progi.stemtutor.dto.ProfileDto;
 import com.progi.stemtutor.model.Student;
 import com.progi.stemtutor.model.User;
 import com.progi.stemtutor.model.StudentSubject;
-import com.progi.stemtutor.model.Subject;
+import com.progi.stemtutor.model.enums.SubjectName;
 import com.progi.stemtutor.model.enums.UserRole;
 import com.progi.stemtutor.repository.StudentRepository;
 import com.progi.stemtutor.repository.StudentSubjectRepository;
-import com.progi.stemtutor.repository.SubjectRepository;
 import com.progi.stemtutor.repository.UserRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.List;
@@ -30,32 +30,23 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
     private final StudentSubjectRepository studentSubjectRepository;
-    private final SubjectRepository subjectRepository;
     private final PasswordEncoder passwordEncoder;
 
     public ProfileService(UserRepository userRepository, StudentRepository studentRepository,
-                          StudentSubjectRepository studentSubjectRepository, SubjectRepository subjectRepository,
+                          StudentSubjectRepository studentSubjectRepository,
                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.studentSubjectRepository = studentSubjectRepository;
-        this.subjectRepository = subjectRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     // Pomoćna funkcija za ažuriranje/kreiranje StudentSubject entiteta
-    private void updateOrCreateStudentSubject(Long studentId, String subjectName, String knowledgeLevel, String learningGoals) {
-        // Pronađi Subject po imenu (Matematika/Fizika/Informatika)
-        Optional<Subject> subjectOpt = subjectRepository.findBySubjectName(subjectName);
-        if (subjectOpt.isEmpty()) {
-            // Logiraj ili baci grešku ako subject nije pronađen (ne bi se trebalo dogoditi)
-            return;
-        }
-        Subject subject = subjectOpt.get();
+    private void updateOrCreateStudentSubject(Long studentId, SubjectName subjectName, String knowledgeLevel, String learningGoals) {
 
         // Pokušaj pronaći postojeći unos za tog studenta i taj predmet
         Optional<StudentSubject> studentSubjectOpt =
-                studentSubjectRepository.findByStudentIdAndSubjectId(studentId, subject.getId());
+                studentSubjectRepository.findByStudentIdAndSubjectName(studentId, subjectName);
 
         StudentSubject studentSubject;
         if (studentSubjectOpt.isPresent()) {
@@ -67,7 +58,7 @@ public class ProfileService {
 
             studentSubject = new StudentSubject();
             studentSubject.setStudent(student); // Postavi FK na studenta
-            studentSubject.setSubject(subject); // Postavi FK na predmet
+            studentSubject.setSubjectName(subjectName); // Postavi FK na predmet
 
         }
 
@@ -82,10 +73,9 @@ public class ProfileService {
         studentSubjectRepository.save(studentSubject);
     }
 
-    // Ovdje bi išla implementacija getProfileData
     public Optional<Object> getProfileData(Long userId) {
 
-        // 1. Dohvati usera
+        // Dohvati usera
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {
             return Optional.empty();
@@ -117,48 +107,42 @@ public class ProfileService {
 
         System.out.println("IMAM STUDENTA");
         // Provjeri StudentSubject
-        List<String> subjects = List.of("Matematika", "Fizika", "Informatika");
+        List<SubjectName> subjectNames = Arrays.asList(SubjectName.Matematika, SubjectName.Fizika, SubjectName.Informatika);
 
-        for (String sub : subjects) {
-            Subject subject = subjectRepository.findBySubjectName(sub)
-                    .orElseThrow(() -> new RuntimeException("Missing subject: " + sub));
-
-            System.out.println(subject + "cccccccccc");
+        for (SubjectName subName : subjectNames) {
             studentSubjectRepository
-                    .findByStudentIdAndSubjectId(student.getId(), subject.getId())
+                    .findByStudentIdAndSubjectName(student.getId(), subName)
                     .orElseGet(() -> {
                         StudentSubject ss = new StudentSubject();
                         ss.setStudent(student);
-                        System.out.println(student + "stvaranje ss repop");
-                        ss.setSubject(subject);
-                        System.out.println(subject + "stvaranje ss repop");
-                        ss.setKnowledgeLevel(null);
+                        ss.setSubjectName(subName); // Postavi Enum
+                        ss.setKnowledgeLevel("");
                         ss.setLearningGoals("");
                         return studentSubjectRepository.save(ss);
                     });
         }
-        // 3. Dohvati studentske predmete
-        // (pretpostavljam da svaki student ima maksimalno 3 unosa u student_subjects)
+
+        // Dohvati studentske predmete
         System.out.println("doša do tu");
-        List<StudentSubject> subjects2 = studentSubjectRepository.findByStudentId(student.getId());
-        System.out.println(subjects2 + "aaaaaaaaaaaaaaaaaaa");
+        List<StudentSubject> subjectsList = studentSubjectRepository.findByStudentId(student.getId());
+        System.out.println(subjectsList + "aaaaaaaaaaaaaaaaaaa");
         // Helper mapa po imenu predmeta
-        Map<String, StudentSubject> map = subjects2.stream()
+        Map<SubjectName, StudentSubject> map = subjectsList.stream()
                 .collect(Collectors.toMap(
-                        ss -> ss.getSubject().getSubjectName(),
+                        StudentSubject::getSubjectName,
                         ss -> ss
                 ));
 
         System.out.println(map + "bbbbbbbbbbbbbbbb");
 
-        StudentSubject math = map.get("Matematika");
-        StudentSubject phy = map.get("Fizika");
-        StudentSubject inf = map.get("Informatika");
+        StudentSubject math = map.get(SubjectName.Matematika);
+        StudentSubject phy = map.get(SubjectName.Fizika);
+        StudentSubject inf = map.get(SubjectName.Informatika);
 
         System.out.println(math + "aahahahiodhio");
         System.out.println(phy + "aahahahiodhio");
         System.out.println(inf + "aahahahiodhio");
-        // 4. Složi DTO
+        // Složi DTO
         ProfileDto dto = ProfileDto.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
@@ -213,11 +197,9 @@ public class ProfileService {
         return Optional.of(true);
     }
 
-
-    // Implementacija NOVE RUTE 1: AŽURIRANJE OBRAZOVANJA I RAZINA ZNANJA
     @Transactional
     public boolean updateStudentEducation(Long userId, StudentEducationUpdateDto dto) {
-        System.out.println("UŠA U UPDATE STUDENET EDUCATION");
+        System.out.println("UŠA U UPDATE STUDENT EDUCATION");
         Optional<Student> studentOpt = studentRepository.findById(userId);
         System.out.println("POSLE REPOSITORYA");
 
@@ -228,27 +210,26 @@ public class ProfileService {
         student.setGrade(dto.getGrade());
         studentRepository.save(student);
 
-        // 2. Ažuriranje student_subjects tablice (Razine znanja)
+        // Ažuriranje student_subjects tablice (Razine znanja)
         // Pozovi pomoćnu funkciju za svaki predmet
-        updateOrCreateStudentSubject(student.getId(), "Matematika", dto.getKnowledgeLevelMath(), null);
-        updateOrCreateStudentSubject(student.getId(), "Fizika", dto.getKnowledgeLevelPhi(), null);
-        updateOrCreateStudentSubject(student.getId(), "Informatika", dto.getKnowledgeLevelInf(), null);
+        updateOrCreateStudentSubject(student.getId(), SubjectName.Matematika, dto.getKnowledgeLevelMath(), null);
+        updateOrCreateStudentSubject(student.getId(), SubjectName.Fizika, dto.getKnowledgeLevelPhi(), null);
+        updateOrCreateStudentSubject(student.getId(), SubjectName.Informatika, dto.getKnowledgeLevelInf(), null);
 
         return true;
     }
 
-    // Implementacija NOVE RUTE 2: AŽURIRANJE CILJEVA UČENJA
     @Transactional
     public boolean updateStudentGoals(Long userId, StudentGoalsUpdateDto dto) {
-        // 1. Provjeri postojanje studenta (za ResourceNotFoundException)
+        // Provjeri postojanje studenta
         Optional<Student> studentOpt = studentRepository.findById(userId);
         if (studentOpt.isEmpty()) return false;
 
-        // 2. Ažuriranje student_subjects tablice (Ciljevi učenja)
+        // Ažuriranje student_subjects tablice (Ciljevi učenja)
         // Pozovi pomoćnu funkciju za svaki predmet
-        updateOrCreateStudentSubject(userId, "Matematika", null, dto.getGoalsMath());
-        updateOrCreateStudentSubject(userId, "Fizika", null, dto.getGoalsPhi());
-        updateOrCreateStudentSubject(userId, "Informatika", null, dto.getGoalsInf());
+        updateOrCreateStudentSubject(userId, SubjectName.Matematika, null, dto.getGoalsMath());
+        updateOrCreateStudentSubject(userId, SubjectName.Fizika, null, dto.getGoalsPhi());
+        updateOrCreateStudentSubject(userId, SubjectName.Informatika, null, dto.getGoalsInf());
 
         return true;
     }
