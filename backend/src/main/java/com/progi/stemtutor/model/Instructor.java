@@ -11,9 +11,18 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-public class Instructor extends User {
+public class Instructor {
+
+    @Id
+    @Column(name = "instructor_id")
+    private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "instructor_id")
+    public User user;
+
     private String biography;
     private BigDecimal hourlyRate;
     private String introVideoUrl;
