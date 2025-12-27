@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 @SuperBuilder
 public class Instructor extends User {
     private String biography;
+
+    @Column(name = "hourly_rate")
     private BigDecimal hourlyRate;
     private String introVideoUrl;
 }
