@@ -8,6 +8,8 @@ import Login from "./pages/Login";
 import ProfileEdit from "./pages/ProfileEdit";
 import Register from "./pages/Register";
 import Setup from "./pages/Setup";
+import StudentDashboard from "./pages/StudentDashboard";
+import Search from "./pages/Search";
 
 function App() {
   return (
@@ -34,14 +36,12 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
+          <Route path="/profile" element={<ProfileEdit />}></Route>
           <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <ProfileEdit />
-              </ProtectedRoute>
-            }
+            path="/student/dashboard"
+            element={<StudentDashboard />}
           ></Route>
+          <Route path="/schedules/search" element={<Search />}></Route>
         </Routes>
       </AuthProvider>
     </Router>

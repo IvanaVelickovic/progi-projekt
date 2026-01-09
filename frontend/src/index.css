@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "rc-slider/assets/index.css";
 
 body{
     background-color: #DDF4E7;
@@ -18,4 +19,24 @@ body{
     --color-green-dark: #67C090;
     --color-blue-light: #26667F;
     --color-blue-dark: #124170;
+}
+
+.react-calendar__navigation button {
+  @apply text-xl p-2.5 ;
+}
+
+.react-calendar__navigation {
+  @apply text-xl text-center ;
+}
+
+.react-calendar__tile:hover {
+  @apply bg-[#e5e7eb] cursor-pointer;
+}
+
+.react-calendar__month-view__weekdays{
+  @apply bg-blue-light/45 ;
+}
+
+.has-appointment {
+  @apply bg-blue-light/30 rounded-full;
 }
