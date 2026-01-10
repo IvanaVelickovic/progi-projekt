@@ -50,7 +50,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         // Generate JWT
         String jwt = jwtService.generateToken(user);
 
-        String redirectUrl = "https://stemtutor-frontend.vercel.app/oauth2/callback?token=" + URLEncoder.encode(jwt, StandardCharsets.UTF_8);
+        String redirectUrl = "https://localhost:5173/oauth2/callback?token=" + URLEncoder.encode(jwt, StandardCharsets.UTF_8);
         response.sendRedirect(redirectUrl);
         // Alternative JSON response for API clients:
         // response.setContentType("application/json");

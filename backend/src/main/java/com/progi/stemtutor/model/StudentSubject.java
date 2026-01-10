@@ -1,5 +1,6 @@
 package com.progi.stemtutor.model;
 
+import com.progi.stemtutor.model.enums.SubjectName;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -19,17 +20,15 @@ public class StudentSubject {
         @Column(name = "student_subject_id")
         private Long id;
 
-        @ToString.Exclude // ISKLJUČUJE
+        @ToString.Exclude
         @EqualsAndHashCode.Exclude
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "student_id", nullable = false)
         private Student student;
 
-        @ToString.Exclude // ISKLJUČUJE
-        @EqualsAndHashCode.Exclude
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "subject_id", nullable = false)
-        private Subject subject;
+        @Enumerated(EnumType.STRING)
+        @Column(name = "subject_name", nullable = false, length = 50)
+        private SubjectName subjectName;
 
         @Column(name = "knowledge_level", nullable = true)
         private String knowledgeLevel;
