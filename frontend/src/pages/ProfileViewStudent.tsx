@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api";
+import { useParams } from "react-router-dom";
+
 
 const ProfileViewStudent = () => {
   const [educationData, setEducationData] = useState({
@@ -12,9 +14,11 @@ const ProfileViewStudent = () => {
     goalsInf: "",
   });
 
+  const { id } = useParams();
+
   useEffect(() => {
     const fetchProfile = async () => {
-      const response = await api.get("/api/user/profile");
+      const response = await api.get(`/api/students/${id}`);
       const data = response.data;
 
       setEducationData({
