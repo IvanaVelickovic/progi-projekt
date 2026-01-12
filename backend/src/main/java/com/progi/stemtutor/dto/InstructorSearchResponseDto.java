@@ -1,7 +1,8 @@
 package com.progi.stemtutor.dto;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.progi.stemtutor.model.enums.AttendanceMode;
-import com.progi.stemtutor.model.enums.SubjectType;
+import com.progi.stemtutor.model.enums.SubjectName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,15 +15,27 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonPropertyOrder({
+        "id",
+        "dateTime",
+        "maxParticipants",
+        "filled",
+        "duration",
+        "price",
+        "format",
+        "subject",
+        "instructorName",
+        "instructorId"
+})
 public class InstructorSearchResponseDto {
     private Long id;
-    private LocalDateTime scheduleDateTime;
+    private LocalDateTime DateTime;
     private Integer maxParticipants;
-    private Long filledCount;
-    private Integer durationMin;
+    private Long filled;
+    private Integer duration;
     private BigDecimal price;
-    private AttendanceMode attendanceMode;
-    private SubjectType subjectName;
+    private AttendanceMode format;
+    private SubjectName subject;
     private String instructorName;
     private Long instructorId;
 }

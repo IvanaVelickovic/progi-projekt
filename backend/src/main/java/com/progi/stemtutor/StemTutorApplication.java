@@ -11,9 +11,6 @@ public class StemTutorApplication {
 	public static void main(String[] args) {
 		ApplicationContext context= SpringApplication.run(StemTutorApplication.class, args);
         DatabaseInitService initService = context.getBean(DatabaseInitService.class);
-
-        // Run your insertions
-        initService.insertSubjects();
 	}
 
 }

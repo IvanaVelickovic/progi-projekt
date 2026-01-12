@@ -1,6 +1,6 @@
 package com.progi.stemtutor.model.enums;
 
-public enum SubjectType {
+public enum SubjectName {
     Matematika,
     Fizika,
     Informatika

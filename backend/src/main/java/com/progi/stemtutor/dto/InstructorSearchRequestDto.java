@@ -1,7 +1,7 @@
 package com.progi.stemtutor.dto;
 
 import com.progi.stemtutor.model.enums.AttendanceMode;
-import com.progi.stemtutor.model.enums.SubjectType;
+import com.progi.stemtutor.model.enums.SubjectName;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class InstructorSearchRequestDto {
     @Min(1)
     private Integer limit;
 
-    private SubjectType subject;
+    private SubjectName subject;
 
     private AttendanceMode format;
 

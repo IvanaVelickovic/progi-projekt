@@ -1,5 +1,6 @@
 package com.progi.stemtutor.model;
 
+import com.progi.stemtutor.model.enums.SubjectName;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,13 +20,11 @@ public class InstructorSubject {
     @Column(name = "is_removed", nullable = false)
     private boolean isRemoved = false;
 
-    // 🔹 više instructor_subject → jedan instructor
+    @Enumerated(EnumType.STRING)
+    @Column(name = "subject_name", nullable = false)
+    private SubjectName subjectName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id", nullable = false)
     private Instructor instructor;
-
-    // 🔹 više instructor_subject → jedan subject
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subject_id", nullable = false)
-    private Subject subject;
 }
