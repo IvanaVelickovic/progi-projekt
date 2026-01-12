@@ -22,20 +22,23 @@ const ProfileViewStudent = () => {
         const response = await api.get(`/api/students/${id}`);
         const data = response.data;
 
+        // ⬇️ OVO GLEDAJ U CONSOLE (F12)
+        console.log("BACKEND DATA:", data);
+
         // Ime i prezime
         setStudentName(`${data.first_name} ${data.last_name}`);
 
-        // Podaci za prikaz (BEZ education i goals)
+        // Podaci za prikaz
         setEducationData({
-          grade: data.grade_it || "",
+          grade: data.grade_it ?? "NEMA",
 
-          knowledgeLevelMath: data.knowledge_data_math || "",
-          knowledgeLevelPhi: data.knowledge_data_phi || "",
-          knowledgeLevelInf: data.knowledge_data_inf || "",
+          knowledgeLevelMath: data.knowledge_data_math ?? "NEMA",
+          knowledgeLevelPhi: data.knowledge_data_phi ?? "NEMA",
+          knowledgeLevelInf: data.knowledge_data_inf ?? "NEMA",
 
-          learningGoalsMath: data.learning_goals_math || "",
-          learningGoalsPhi: data.learning_goals_phi || "",
-          learningGoalsInf: data.learning_goals_inf || "",
+          learningGoalsMath: data.learning_goals_math ?? "NEMA",
+          learningGoalsPhi: data.learning_goals_phi ?? "NEMA",
+          learningGoalsInf: data.learning_goals_inf ?? "NEMA",
         });
       } catch (error) {
         console.error("Greška pri dohvaćanju studenta:", error);
