@@ -5,8 +5,8 @@ interface ExpertiseTabContentInstructorProps {
     math: boolean;
     physics: boolean;
     it: boolean;
-    price: string;
-    video: string;
+    hourlyRate: string;
+    introVideoUrl: string;
     references: string;
   };
   setExpertiseData: React.Dispatch<
@@ -14,8 +14,8 @@ interface ExpertiseTabContentInstructorProps {
       math: boolean;
       physics: boolean;
       it: boolean;
-      price: string;
-      video: string;
+      hourlyRate: string;
+      introVideoUrl: string;
       references: string;
     }>
   >;
@@ -113,8 +113,8 @@ const ExpertiseTabContentInstructor = ({
             </label>
             <input
               type="number"
-              name="price"
-              value={expertiseData.price}
+              name="hourlyRate"
+              value={expertiseData.hourlyRate}
               onChange={handleExpertiseChange}
               className="border border-gray-400 rounded-md px-2 py-1 w-1/3 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] ml-5"
             />
@@ -127,8 +127,8 @@ const ExpertiseTabContentInstructor = ({
             </label>
             <input
               type="text"
-              name="video"
-              value={expertiseData.video}
+              name="introVideoUrl"
+              value={expertiseData.introVideoUrl}
               onChange={handleExpertiseChange}
               className="border border-gray-400 rounded-md px-2 py-1 w-1/2 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] ml-5"
             />

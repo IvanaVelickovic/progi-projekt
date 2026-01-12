@@ -24,8 +24,8 @@ const ProfileEditInstructor = () => {
     math: false,
     physics: false,
     it: false,
-    price: "",
-    video: "",
+    hourlyRate: "",
+    introVideoUrl: "",
     references: "",
   });
 
@@ -59,8 +59,8 @@ const ProfileEditInstructor = () => {
 
         /* --- PERSONAL --- */
         setInstructorData({
-          firstName: data.first_name || "",
-          lastName: data.last_name || "",
+          firstName: data.firstName || "",
+          lastName: data.lastName || "",
           email: data.email || "",
         });
 
@@ -69,8 +69,8 @@ const ProfileEditInstructor = () => {
           math: data.math || false,
           physics: data.physics || false,
           it: data.it || false,
-          price: data.price || "",
-          video: data.video_intro || "",
+          hourlyRate: data.hourlyRate || "",
+          introVideoUrl: data.introVideoUrl || "",
           references: data.references || "",
         });
 
