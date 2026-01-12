@@ -3,6 +3,7 @@ package com.progi.stemtutor.repository;
 import com.progi.stemtutor.dto.InstructorSearchRequestDto;
 import com.progi.stemtutor.dto.InstructorSearchResponseDto;
 import com.progi.stemtutor.model.*;
+import com.progi.stemtutor.model.enums.AttendanceMode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -46,7 +47,12 @@ public class InstructorScheduleRepositoryImpl
         }
 
         if (dto.getFormat() != null) {
-            predicates.add(cb.equal(schedule.get("attendanceMode"), dto.getFormat()));
+            predicates.add(
+                    cb.or(
+                            cb.equal(schedule.get("attendanceMode"), dto.getFormat()),
+                            cb.equal(schedule.get("attendanceMode"), AttendanceMode.flexible)
+                        )
+                    );
         }
 
         if (dto.getMinPrice() != null) {
@@ -57,6 +63,28 @@ public class InstructorScheduleRepositoryImpl
             predicates.add(cb.le(schedule.get("price"), dto.getMaxPrice()));
         }
 
+        if (dto.getDate() != null) {
+            Expression<String> dbDateStr = cb.function("to_char", String.class,
+                    schedule.get("scheduleDateTime"),
+                    cb.literal("YYYY-MM-DD")
+            );
+            predicates.add(cb.equal(dbDateStr, dto.getDate().toString()));
+        }
+
+        if (dto.getTimeFrom() != null || dto.getTimeTo() != null) {
+            Expression<String> dbTimeStr = cb.function("to_char", String.class,
+                    schedule.get("scheduleDateTime"),
+                    cb.literal("HH24:MI")
+            );
+
+            if (dto.getTimeFrom() != null) {
+                predicates.add(cb.greaterThanOrEqualTo(dbTimeStr, dto.getTimeFrom().toString()));
+            }
+
+            if (dto.getTimeTo() != null) {
+                predicates.add(cb.lessThanOrEqualTo(dbTimeStr, dto.getTimeTo().toString()));
+            }
+        }
 
         Expression<Double> avgRating = cb.avg(review.get("rating"));
         if (dto.getRating() != null) {
