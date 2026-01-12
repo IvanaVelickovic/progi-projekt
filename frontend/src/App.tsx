@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import ProfileEdit from "./pages/ProfileEdit";
 import Register from "./pages/Register";
 import Setup from "./pages/Setup";
+import Review from "./pages/Reviews"
 
 function App() {
   return (
@@ -42,6 +43,8 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
+          <Route path="/recenzija" element={<Review/>}></Route>
+
         </Routes>
       </AuthProvider>
     </Router>
