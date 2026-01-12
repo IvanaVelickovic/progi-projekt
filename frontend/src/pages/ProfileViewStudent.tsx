@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import api from "../api";
 
 const ProfileViewStudent = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // ovo mora biti stvarni ID u URL-u
 
   const [studentName, setStudentName] = useState("");
   const [educationData, setEducationData] = useState({
@@ -17,28 +17,27 @@ const ProfileViewStudent = () => {
   });
 
   useEffect(() => {
+    if (!id) return; // ako nema id, ne radi fetch
+
     const fetchStudent = async () => {
       try {
         const response = await api.get(`/api/students/${id}`);
         const data = response.data;
 
-        // ⬇️ OVO GLEDAJ U CONSOLE (F12)
-        console.log("BACKEND DATA:", data);
-
         // Ime i prezime
         setStudentName(`${data.first_name} ${data.last_name}`);
 
-        // Podaci za prikaz
+        // Podaci o obrazovanju i ciljevi
         setEducationData({
-          grade: data.grade_it ?? "NEMA",
+          grade: data.grade_it || "NEMA",
 
-          knowledgeLevelMath: data.knowledge_data_math ?? "NEMA",
-          knowledgeLevelPhi: data.knowledge_data_phi ?? "NEMA",
-          knowledgeLevelInf: data.knowledge_data_inf ?? "NEMA",
+          knowledgeLevelMath: data.knowledge_data_math || "NEMA",
+          knowledgeLevelPhi: data.knowledge_data_phi || "NEMA",
+          knowledgeLevelInf: data.knowledge_data_inf || "NEMA",
 
-          learningGoalsMath: data.learning_goals_math ?? "NEMA",
-          learningGoalsPhi: data.learning_goals_phi ?? "NEMA",
-          learningGoalsInf: data.learning_goals_inf ?? "NEMA",
+          learningGoalsMath: data.learning_goals_math || "NEMA",
+          learningGoalsPhi: data.learning_goals_phi || "NEMA",
+          learningGoalsInf: data.learning_goals_inf || "NEMA",
         });
       } catch (error) {
         console.error("Greška pri dohvaćanju studenta:", error);
@@ -52,13 +51,13 @@ const ProfileViewStudent = () => {
     <div className="min-h-screen bg-[#e9f7f1] flex flex-col">
       {/* HEADER */}
       <header className="bg-[#9bd7b6] px-8 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-[#0b3b2e]">
-          STEM tutorstvo
-        </h1>
+        <h1 className="text-xl font-bold text-[#0b3b2e]">STEM tutorstvo</h1>
 
         <div className="bg-[#e9f7f1] px-4 py-2 rounded-full shadow-sm">
           <input
             type="text"
+            id="search"
+            name="search"
             placeholder="Pretražite profile"
             className="bg-transparent outline-none text-sm w-[280px]"
           />
@@ -74,15 +73,12 @@ const ProfileViewStudent = () => {
         <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg p-10">
           <div className="flex gap-12">
             {/* LIJEVI PANEL */}
-            <div className="w-[260px] bg-[#e9f7f1] rounded-2xl p-6
-                            flex flex-col items-center justify-center text-center">
-              <div className="h-44 w-44 rounded-full bg-[#9bd7b6]
-                              flex items-center justify-center mb-4">
+            <div className="w-[260px] bg-[#e9f7f1] rounded-2xl p-6 flex flex-col items-center text-center">
+              <div className="h-44 w-44 rounded-full bg-[#9bd7b6] flex items-center justify-center mb-4">
                 Slika<br />učenika
               </div>
-
               <p className="font-semibold text-[#0b3b2e] text-lg">
-                {studentName}
+                {studentName || "NEMA IMENA"}
               </p>
             </div>
 
@@ -96,20 +92,14 @@ const ProfileViewStudent = () => {
 
               {/* RAZINA OBRAZOVANJA */}
               <div className="flex items-center gap-5 mb-10">
-                <span className="font-medium text-lg">
-                  Razina obrazovanja:
-                </span>
-
-                <div className="bg-gray-100 rounded-lg px-5 py-3 text-lg min-w-[280px] min-h-[48px]">
+                <span className="font-medium text-lg">Razina obrazovanja:</span>
+                <div className="bg-gray-100 rounded-lg px-5 py-3 text-lg min-w-[280px]">
                   {educationData.grade}
                 </div>
               </div>
 
               {/* RAZINE ZNANJA */}
-              <p className="font-medium text-lg mb-5">
-                Razine znanja:
-              </p>
-
+              <p className="font-medium text-lg mb-5">Razine znanja:</p>
               <div className="grid grid-cols-3 gap-8 mb-10">
                 {[
                   ["Matematika", educationData.knowledgeLevelMath],
@@ -126,10 +116,7 @@ const ProfileViewStudent = () => {
               </div>
 
               {/* CILJEVI UČENJA */}
-              <p className="font-medium text-lg mb-5">
-                Ciljevi učenja:
-              </p>
-
+              <p className="font-medium text-lg mb-5">Ciljevi učenja:</p>
               <div className="grid grid-cols-3 gap-8">
                 {[
                   ["Matematika", educationData.learningGoalsMath],
@@ -144,7 +131,6 @@ const ProfileViewStudent = () => {
                   </div>
                 ))}
               </div>
-
             </div>
           </div>
         </div>
