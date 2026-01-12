@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "instructors")
+@PrimaryKeyJoinColumn(name = "instructor_id")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

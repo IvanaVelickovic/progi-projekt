@@ -1,18 +1,42 @@
 package com.progi.stemtutor.dto;
 
 import com.progi.stemtutor.model.enums.AttendanceMode;
+import com.progi.stemtutor.model.enums.SubjectType;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Setter
 @Getter
 public class InstructorSearchRequestDto {
 
-    private Long subjectId;
-    private BigDecimal maxHourlyRate;
-    private AttendanceMode attendanceMode;
-    private String city;
-    private String address;
+    @NotNull(message = "Page is required")
+    @Min(0)
+    private Integer page;
+
+    @NotNull(message = "Limit is required")
+    @Min(1)
+    private Integer limit;
+
+    private SubjectType subject;
+
+    private AttendanceMode format;
+
+    private BigDecimal minPrice;
+    private BigDecimal maxPrice;
+
+    private LocalDate date;
+    private LocalTime timeFrom;
+    private LocalTime timeTo;
+
+    private Integer rating;
+
+    private Double lat;
+    private Double lng;
+    private Integer locationRadius;
 }

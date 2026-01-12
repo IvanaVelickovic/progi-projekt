@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "reservations")
@@ -44,4 +45,7 @@ public class Reservation {
     protected void onCreate() {
         this.reservationCreatedAt = Instant.now();
     }
+
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private List<ReservationParticipation> participations;
 }

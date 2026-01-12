@@ -2,7 +2,7 @@ package com.progi.stemtutor.service;
 
 import com.progi.stemtutor.dto.InstructorSearchRequestDto;
 import com.progi.stemtutor.dto.InstructorSearchResponseDto;
-import com.progi.stemtutor.repository.InstructorSearchRepository;
+import com.progi.stemtutor.repository.InstructorScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +12,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InstructorSearchService {
 
-    private final InstructorSearchRepository repository;
+    private final InstructorScheduleRepository repository;
 
     public List<InstructorSearchResponseDto> search(InstructorSearchRequestDto dto) {
-        return repository.search(
-                dto.getSubjectId(),
-                dto.getMaxHourlyRate(),
-                dto.getCity(),
-                dto.getAddress()
-        );
+        return repository.search(dto);
     }
 }

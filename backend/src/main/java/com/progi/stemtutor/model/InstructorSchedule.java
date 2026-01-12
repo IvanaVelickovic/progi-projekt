@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "instructor_schedules")
@@ -46,9 +47,15 @@ public class InstructorSchedule {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Instructor instructor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_subject_id", nullable = false)
     private InstructorSubject instructorSubject;
+
+    @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
+
 }

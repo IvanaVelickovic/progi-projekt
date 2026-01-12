@@ -28,4 +28,7 @@ public class ReservationParticipation {
     @ManyToOne(optional = false)
     @JoinColumn(name = "student_id")
     private Student student;
+
+    @OneToOne(mappedBy = "reservationParticipation")
+    private Review review;
 }
