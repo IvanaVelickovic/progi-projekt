@@ -44,11 +44,7 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
-          <Route 
-            path="/students/:id" 
-            element={
-              <ProfileViewStudent />
-            } />
+          <Route path="/profile-view" element={<ProfileViewStudent />} />
         </Routes>
       </AuthProvider>
     </Router>
