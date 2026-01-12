@@ -8,12 +8,12 @@ const ProfileViewStudent = () => {
   const [studentName, setStudentName] = useState("");
   const [educationData, setEducationData] = useState({
     grade: "",
-    knowledgeMath: "",
-    knowledgePhi: "",
-    knowledgeInf: "",
-    goalsMath: "",
-    goalsPhi: "",
-    goalsInf: "",
+    knowledgeLevelMath: "",
+    knowledgeLevelPhi: "",
+    knowledgeLevelInf: "",
+    learningGoalsMath: "",
+    learningGoalsPhi: "",
+    learningGoalsInf: "",
   });
 
   useEffect(() => {
@@ -22,18 +22,20 @@ const ProfileViewStudent = () => {
         const response = await api.get(`/api/students/${id}`);
         const data = response.data;
 
-        // Ime + prezime
+        // Ime i prezime
         setStudentName(`${data.first_name} ${data.last_name}`);
 
-        // Podaci za prikaz
+        // Podaci za prikaz (BEZ education i goals)
         setEducationData({
-          grade: data.education.grade || "",
-          knowledgeMath: data.education.knowledge_math || "",
-          knowledgePhi: data.education.knowledge_phi || "",
-          knowledgeInf: data.education.knowledge_inf || "",
-          goalsMath: data.goals.math || "",
-          goalsPhi: data.goals.phi || "",
-          goalsInf: data.goals.inf || "",
+          grade: data.grade_it || "",
+
+          knowledgeLevelMath: data.knowledge_data_math || "",
+          knowledgeLevelPhi: data.knowledge_data_phi || "",
+          knowledgeLevelInf: data.knowledge_data_inf || "",
+
+          learningGoalsMath: data.learning_goals_math || "",
+          learningGoalsPhi: data.learning_goals_phi || "",
+          learningGoalsInf: data.learning_goals_inf || "",
         });
       } catch (error) {
         console.error("Greška pri dohvaćanju studenta:", error);
@@ -107,9 +109,9 @@ const ProfileViewStudent = () => {
 
               <div className="grid grid-cols-3 gap-8 mb-10">
                 {[
-                  ["Matematika", educationData.knowledgeMath],
-                  ["Fizika", educationData.knowledgePhi],
-                  ["Informatika", educationData.knowledgeInf],
+                  ["Matematika", educationData.knowledgeLevelMath],
+                  ["Fizika", educationData.knowledgeLevelPhi],
+                  ["Informatika", educationData.knowledgeLevelInf],
                 ].map(([name, value]) => (
                   <div key={name}>
                     <p className="text-base font-medium mb-2">{name}:</p>
@@ -127,9 +129,9 @@ const ProfileViewStudent = () => {
 
               <div className="grid grid-cols-3 gap-8">
                 {[
-                  ["Matematika", educationData.goalsMath],
-                  ["Fizika", educationData.goalsPhi],
-                  ["Informatika", educationData.goalsInf],
+                  ["Matematika", educationData.learningGoalsMath],
+                  ["Fizika", educationData.learningGoalsPhi],
+                  ["Informatika", educationData.learningGoalsInf],
                 ].map(([name, value]) => (
                   <div key={name}>
                     <p className="text-base font-medium mb-2">{name}:</p>
