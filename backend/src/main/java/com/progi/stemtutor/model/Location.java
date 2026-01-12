@@ -28,4 +28,7 @@ public class Location {
     @Column(name = "radius_available")
     private Integer radiusAvailable;
 
+    private Double lat;
+    private Double lng;
+
 }

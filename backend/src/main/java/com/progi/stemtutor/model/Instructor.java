@@ -5,19 +5,17 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "instructors")
-@PrimaryKeyJoinColumn(name = "instructor_id") // This links back to user_id
+@PrimaryKeyJoinColumn(name = "instructor_id")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper = true) // Important for @Data with inheritance
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-public class Instructor extends User { // <--- Must extend User
-
-    // Remove the id and user fields entirely.
-    // They are inherited from User.
+public class Instructor extends User {
 
     @Column(columnDefinition = "TEXT")
     private String biography;
@@ -27,4 +25,7 @@ public class Instructor extends User { // <--- Must extend User
 
     @Column(name = "intro_video_url", length = 2083)
     private String introVideoUrl;
+
+    @OneToMany(mappedBy = "instructor")
+    private List<AvailableAtLocation> availableAtLocations;
 }

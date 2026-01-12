@@ -4,6 +4,8 @@ import com.progi.stemtutor.dto.InstructorSearchRequestDto;
 import com.progi.stemtutor.dto.InstructorSearchResponseDto;
 import com.progi.stemtutor.model.*;
 import com.progi.stemtutor.model.enums.AttendanceMode;
+import com.progi.stemtutor.model.enums.ScheduleStatus;
+import com.progi.stemtutor.model.enums.UserStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -35,10 +37,20 @@ public class InstructorScheduleRepositoryImpl
 
         Join<InstructorSchedule, Instructor> instructor = schedule.join("instructor");
         Join<InstructorSchedule, Reservation> reservation = schedule.join("reservations", JoinType.LEFT);
-        Join<Reservation, ReservationParticipation> participation = reservation.join("participations", JoinType.LEFT);
+        Join<Reservation, ReservationParticipation> participation = reservation
+                .join("participations", JoinType.LEFT);
         Join<ReservationParticipation, Review> review = participation.join("review", JoinType.LEFT);
+        Join<Instructor, AvailableAtLocation> availableAtLocation = instructor
+                .join("availableAtLocations", JoinType.LEFT);
+        Join<AvailableAtLocation, Location> location = availableAtLocation.join("location", JoinType.LEFT);
 
         List<Predicate> predicates = new ArrayList<>();
+
+        predicates.add(cb.notEqual(instructor.get("status"), UserStatus.banned));
+        predicates.add(cb.isTrue(instructor.get("isVerified")));
+        predicates.add(cb.greaterThan(schedule.get("scheduleDateTime"), cb.currentTimestamp()));
+        predicates.add(cb.notEqual(schedule.get("status"), ScheduleStatus.completed));
+
 
         if (dto.getSubject() != null) {
             predicates.add(
@@ -89,6 +101,45 @@ public class InstructorScheduleRepositoryImpl
         Expression<Double> avgRating = cb.avg(review.get("rating"));
         if (dto.getRating() != null) {
             cq.having(cb.ge(cb.coalesce(avgRating, 0.0), dto.getRating().doubleValue()));
+        }
+
+        if (dto.getLat() != null && dto.getLng() != null && dto.getLocationRadius() != null) {
+            Predicate hasCoords = cb.and(
+                    cb.isNotNull(location.get("lat")),
+                    cb.isNotNull(location.get("lng"))
+            );
+
+            Expression<Double> lat1 = cb.function("radians", Double.class, cb.literal(dto.getLat()));
+            Expression<Double> lng1 = cb.function("radians", Double.class, cb.literal(dto.getLng()));
+            Expression<Double> lat2 = cb.function("radians", Double.class, location.get("lat"));
+            Expression<Double> lng2 = cb.function("radians", Double.class, location.get("lng"));
+
+            Expression<Double> dLat = cb.diff(lat2, lat1);
+            Expression<Double> dLng = cb.diff(lng2, lng1);
+
+            Expression<Double> a = cb.sum(
+                    cb.function("pow", Double.class, cb.function("sin", Double.class, cb.quot(dLat, 2.0)), cb.literal(2.0)),
+                    cb.prod(
+                            cb.prod(cb.function("cos", Double.class, lat1), cb.function("cos", Double.class, lat2)),
+                            cb.function("pow", Double.class, cb.function("sin", Double.class, cb.quot(dLng, 2.0)), cb.literal(2.0))
+                    )
+            );
+
+            Expression<Double> c = cb.prod(2.0,
+                    cb.function("atan2", Double.class,
+                            cb.function("sqrt", Double.class, a),
+                            cb.function("sqrt", Double.class, cb.diff(1.0, a))
+                    )
+            );
+
+            Expression<Double> distance = cb.prod(6371.0, c);
+
+            Expression<Integer> totalRadius = cb.sum(
+                    cb.literal(dto.getLocationRadius()),
+                    cb.coalesce(location.get("radiusAvailable"), 0)
+            );
+
+            predicates.add(cb.and(hasCoords, cb.le(distance, totalRadius.as(Double.class))));
         }
 
         Expression<Long> filledCount = cb.countDistinct(participation.get("id"));
