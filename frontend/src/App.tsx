@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import ProfileEdit from "./pages/ProfileEdit";
 import Register from "./pages/Register";
 import Setup from "./pages/Setup";
+import InstructorProfile from "./pages/InstructorProfile/InstructorProfile";
 
 function App() {
   return (
@@ -39,6 +40,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfileEdit />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/instructorprofile"
+            element={
+              <ProtectedRoute>
+                <InstructorProfile />
               </ProtectedRoute>
             }
           ></Route>
