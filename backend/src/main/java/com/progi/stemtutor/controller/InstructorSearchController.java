@@ -5,10 +5,7 @@ import com.progi.stemtutor.dto.InstructorSearchResponseDto;
 import com.progi.stemtutor.service.InstructorSearchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,9 +16,9 @@ public class InstructorSearchController {
 
     private final InstructorSearchService instructorSearchService;
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     public List<InstructorSearchResponseDto> search(
-           @Valid @RequestBody InstructorSearchRequestDto dto) {
+           @Valid @ModelAttribute InstructorSearchRequestDto dto) {
         return instructorSearchService.search(dto);
     }
 }
