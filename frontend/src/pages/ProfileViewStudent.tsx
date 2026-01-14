@@ -29,15 +29,15 @@ const ProfileViewStudent = () => {
 
         // Podaci o obrazovanju i ciljevi
         setEducationData({
-          grade: data.grade_it || "NEMA",
+          grade: data.grade || "",
 
-          knowledgeLevelMath: data.knowledge_data_math || "NEMA",
-          knowledgeLevelPhi: data.knowledge_data_phi || "NEMA",
-          knowledgeLevelInf: data.knowledge_data_inf || "NEMA",
+          knowledgeLevelMath: data.knowledge_data_math || "",
+          knowledgeLevelPhi: data.knowledge_data_phi || "",
+          knowledgeLevelInf: data.knowledge_data_inf || "",
 
-          learningGoalsMath: data.learning_goals_math || "NEMA",
-          learningGoalsPhi: data.learning_goals_phi || "NEMA",
-          learningGoalsInf: data.learning_goals_inf || "NEMA",
+          learningGoalsMath: data.learning_goals_math || "",
+          learningGoalsPhi: data.learning_goals_phi || "",
+          learningGoalsInf: data.learning_goals_inf || "",
         });
       } catch (error) {
         console.error("Greška pri dohvaćanju studenta:", error);
