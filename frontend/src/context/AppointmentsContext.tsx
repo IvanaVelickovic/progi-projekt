@@ -10,6 +10,7 @@ export interface Appointment {
   filled: number;
   maxParticipants: number;
   googleCalendar: boolean;
+  subject: string;
 }
 
 interface AppointmentsContextType {

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://progi-projekt-cza4.onrender.com",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 // Interceptor -> automatski dodaje Authorization header

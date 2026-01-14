@@ -15,6 +15,7 @@ const AddSchedule = () => {
     duration: "",
     price: "",
     googleCalendar: "",
+    subject: "",
   });
 
   const navigate = useNavigate();
@@ -200,7 +201,26 @@ const AddSchedule = () => {
                   required
                 />
               </div>
-              {googleUser && (
+              <div className="w-[42%] ">
+                <label className="font-semibold block">Predmet</label>
+                <select
+                  name="subject"
+                  value={formData.subject}
+                  className="border border-gray-400 rounded-md py-0.5 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] bg-white w-4/5"
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="" disabled>
+                    Odaberi predmet
+                  </option>
+                  <option value="Fizika">Fizika</option>
+                  <option value="Matematika">Matematika</option>
+                  <option value="Informatika">Informatika</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex h-1/4 justify-between items-center mt-[5%]">
+              {googleUser ? (
                 <div className="flex items-center gap-2 w-[42%] font-semibold">
                   <label>
                     <input
@@ -214,12 +234,12 @@ const AddSchedule = () => {
                   Dodaj termin u Google Calendar
                   <img src={googleLogo} className="h-5"></img>
                 </div>
+              ) : (
+                <div className="flex w-[42%] items-center"></div>
               )}
-            </div>
-            <div className="flex h-1/4 items-center justify-end mt-[5%]">
               <button
                 type="submit"
-                className="bg-blue-light text-white text-xl p-3 rounded-2xl text-center w-1/4 h-13 cursor-pointer"
+                className="bg-blue-light text-white text-xl p-3 rounded-2xl text-center w-1/4 h-13 cursor-pointer mr-17.5"
               >
                 Dodaj novi termin
               </button>
