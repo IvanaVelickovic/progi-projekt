@@ -84,7 +84,7 @@ const Search = () => {
     }
 
     try {
-      const dataRes = await api.get("/api/user/appointments", { params });
+      const dataRes = await api.get("/api/instructors/search", { params });
       setAppointments(dataRes.data);
     } catch (error) {
       console.error("Greška pri dohvaćanju podataka:", error);
@@ -94,9 +94,9 @@ const Search = () => {
   };
 
   useEffect(() => {
-    setAppointments(appointmentsData); //samo za lokalno testiranje
+    //setAppointments(appointmentsData); //samo za lokalno testiranje
 
-    //fetchAppointments(filterData);
+    fetchAppointments(filterData);
   }, []);
 
   const handleChange = (

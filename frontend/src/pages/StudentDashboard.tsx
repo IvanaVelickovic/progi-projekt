@@ -29,7 +29,7 @@ const StudentDashboard = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const dataRes = await api.get("/api/user/appointments");
+        const dataRes = await api.get("/api/instructors/search");
         setAppointments(dataRes.data);
       } catch (error) {
         console.error("Greška pri dohvaćanju korisničkih podataka:", error);
