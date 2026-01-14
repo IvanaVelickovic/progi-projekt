@@ -15,6 +15,7 @@ export interface Appointment {
   filled: number;
   maxParticipants: number;
   googleCalendar: boolean;
+  subject: string;
 }
 
 const Schedule = () => {
@@ -66,6 +67,7 @@ const Schedule = () => {
     };
 
     fetchAppointments();
+    //setAppointments(appointmentsData);
   }, []);
 
   const appointmentDates = appointments.map(
@@ -85,7 +87,7 @@ const Schedule = () => {
             >
               <div className="w-7/12 p-5">
                 <h1 className="text-blue-dark text-2xl font-bold">
-                  Termin {index + 1}
+                  Termin {index + 1} - {item.subject}
                 </h1>
                 <div className="p-5 pt-7 text-blue-dark font-semibold text-xl">
                   <div className="flex justify-between ">
