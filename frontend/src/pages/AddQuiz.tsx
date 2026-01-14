@@ -4,6 +4,7 @@ import googleLogo from "../assets/logos/google_logo.png";
 import api from "../api";
 
 interface Question {
+  id: number;
   text: string;
   type: "input" | "multiple-choice";
   difficulty: "easy" | "medium" | "hard";
@@ -14,6 +15,7 @@ interface Question {
 const AddQuiz = () => {
   const [questions, setQuestions] = useState<Question[]>([
     {
+      id: -1,
       text: "",
       type: "input",
       difficulty: "easy",
@@ -73,6 +75,21 @@ const AddQuiz = () => {
       );
     }
   }; */
+
+  const handleTypeChange = (
+    id: number,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q) =>
+        q.id === id
+          ? { ...q, [name]: value } // spojimo postojeće i nove vrijednosti
+          : q
+      )
+    );
+  };
 
   return (
     <div className="h-screen">
@@ -135,7 +152,35 @@ const AddQuiz = () => {
                     placeholder="Unesite tekst pitanja"
                   ></input>
                 </div>
-                <div></div>
+                <div className=" flex justify-between px-12 mt-2">
+                  <div className="w-[42%]">
+                    <label className="font-semibold block">Tip pitanja</label>
+                    <select
+                      name="type"
+                      value={item.type}
+                      className="border border-gray-400 rounded-md py-0.5 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] bg-white w-4/5"
+                      onChange={(e) => handleTypeChange(id, e)}
+                    >
+                      <option value="input">Unos teksta</option>
+                      <option value="options">Opcije</option>
+                      <option value="truefalse">Točno/Netočno</option>
+                    </select>
+                  </div>
+                  <div className="w-[42%] ">
+                    <label className="font-semibold block">
+                      Težina pitanja
+                    </label>
+                    <select
+                      name="subject"
+                      value={item.difficulty}
+                      className="border border-gray-400 rounded-md py-0.5 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] bg-white w-4/5"
+                    >
+                      <option value="easy">Lagano</option>
+                      <option value="medium">Srednje</option>
+                      <option value="hard">Teško</option>
+                    </select>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
