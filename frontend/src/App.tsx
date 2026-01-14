@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import Setup from "./pages/Setup";
 import InstructorDashboard from "./pages/InstructorDashboard";
 import AddSchedule from "./pages/AddSchedule";
+import AddQuiz from "./pages/AddQuiz";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
             path="/instructor/addSchedule"
             element={<AddSchedule />}
           ></Route>
+          <Route path="/instructor/addQuiz" element={<AddQuiz />}></Route>
         </Routes>
       </AuthProvider>
     </Router>

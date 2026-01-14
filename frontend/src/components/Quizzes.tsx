@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import quizzesData from "../assets/quizzes.json";
 import AddToSchedule from "./AddToSchedule";
 import schedulesData from "../assets/schedules.json";
+import api from "../api";
 
 export interface Quizzes {
   quizId: number;
@@ -26,7 +27,7 @@ const Quizzes = () => {
   const [quizzes, setQuizzes] = useState<Quizzes[]>([]);
 
   const [addToSchedule, setAddToSchedule] = useState(false);
-  const [quizData, setQuizData] = useState({
+  const [quizName, setQuizName] = useState({
     id: -1,
     name: "",
   });
@@ -34,43 +35,59 @@ const Quizzes = () => {
   const [schedules, setSchedules] = useState<Schedules[]>([]);
 
   useEffect(() => {
-    setQuizzes(quizzesData);
-  }, []);
-
-  /* useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const userRes = await api.get("/api/google/user");
-        sessionStorage.setItem("googleUser", JSON.stringify(userRes.data));
-
-        const dataRes = await api.get("/api/user/appointments");
-        setAppointments(dataRes.data);
+        const dataRes = await api.get("/api/instructor/quizzes");
+        setQuizzes(dataRes.data);
       } catch (error) {
         console.error("Greška pri dohvaćanju korisničkih podataka:", error);
       }
     };
-
+    setQuizzes(quizzesData);
     fetchAppointments();
-  }, []); */
+  }, []);
 
   function addQuizToSchedule(id: number, name: string) {
-    setQuizData({ id: id, name: name });
+    setQuizName({ id: id, name: name });
     setSchedules(schedulesData);
     setAddToSchedule(true);
   }
+
+  const handleDelete = async (id: number) => {
+    const proceed = window.confirm(
+      "Brisanje termina je trajno. Želite li nastaviti?"
+    );
+    if (proceed) {
+      /* try {
+        const res = await api.post("/api/instructor/deleteQuiz", {
+          quizId: id,
+        });
+        setQuizzes((prev) => prev.filter((item) => item.quizId !== id));
+      } catch (error) {
+        console.error("Greška s backendom");
+      } */
+      setQuizzes((prev) => prev.filter((item) => item.quizId !== id));
+    }
+  };
 
   return (
     <div className="flex h-full">
       <div className="w-full p-5 flex flex-col">
         <div className="flex justify-between">
           <h1 className="text-blue-dark text-3xl font-bold">Moji kvizovi</h1>
-          <button className="bg-[#00506F] text-white text-xl rounded-2xl px-10 py-2">
+          <button
+            className="bg-[#00506F] text-white text-xl rounded-2xl px-10 py-2 cursor-pointer"
+            onClick={() => navigate("/instructor/addQuiz")}
+          >
             + Kreiraj kviz
           </button>
         </div>
         <div className="grid grid-cols-2 gap-x-8 gap-y-4 mt-5 overflow-y-scroll px-5">
           {quizzes.map((item) => (
-            <div className="flex flex-col justify-between border-2 bg-white border-blue-dark rounded-xl w-full min-h-[250px] shrink-0 p-5">
+            <div
+              key={item.quizId}
+              className="flex flex-col justify-between border-2 bg-white border-blue-dark rounded-xl w-full min-h-[250px] shrink-0 p-5"
+            >
               <h1 className="text-blue-dark font-bold text-2xl">
                 {item.quizName}
               </h1>
@@ -82,12 +99,15 @@ const Quizzes = () => {
                 <div className="text-blue-dark/70">{item.creationDate}</div>
               </div>
               <div className="flex gap-x-3 pr-10">
-                <button className="border-2 border-[#9A1818] flex justify-center items-center rounded-xl py-1 w-1/2">
+                <button
+                  className="border-2 border-[#9A1818] flex justify-center items-center rounded-xl py-1 w-1/2 cursor-pointer"
+                  onClick={() => handleDelete(item.quizId)}
+                >
                   <img src="/images/trash_icon.png" className="w-8"></img>
                   <p className="text-[#9A1818] ml-2">Izbriši</p>
                 </button>
                 <button
-                  className="bg-blue-light flex justify-center items-center rounded-xl px-14 py-1 gap-4 w-1/2"
+                  className="bg-blue-light flex justify-center items-center rounded-xl px-14 py-1 gap-4 w-1/2 cursor-pointer"
                   onClick={() => addQuizToSchedule(item.quizId, item.quizName)}
                 >
                   <p className="text-white">Dodijeli terminu</p>
@@ -99,8 +119,8 @@ const Quizzes = () => {
       </div>
       {addToSchedule && (
         <AddToSchedule
-          quizId={quizData.id}
-          quizName={quizData.name}
+          quizId={quizName.id}
+          quizName={quizName.name}
           setAddToSchedule={setAddToSchedule}
           schedules={schedules}
           setSchedules={setSchedules}

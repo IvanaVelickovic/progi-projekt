@@ -23,18 +23,39 @@ const AddToSchedule = ({
   schedules,
   setSchedules,
 }: AddToScheduleProps) => {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/30 "></div>
+  const handleAddToSchedule = async () => {
+    /*const selectedScheduleIds = schedules
+      .filter((s) => s.selected)
+      .map((s) => s.id);
+    try {
+      await api.post("/api/instructor/addToSchedule", {
+        quizId: quizId, //id kviza
+        scheduleIds: selectedScheduleIds, //polje s schedule id-ovima
+      });
+      window.alert("Uspješno pridodijeljeno!");
+    } catch (error) {
+      console.error("Greška s backendom");
+      window.alert("Neuspjeh - kviz nije pridodijeljen terminima.");
+    } finally {
+      setAddToSchedule(false);
+    } */
 
-      <div className="relative bg-white rounded-xl w-1/2 h-9/12 z-10 border-2 border-blue-dark flex flex-col">
+    window.alert("Neuspjeh - kviz nije pridodijeljen terminima.");
+    setAddToSchedule(false);
+  };
+
+  return (
+    <div className="fixed inset-0 z-40 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/30 pointer-events-none"></div>
+
+      <div className="relative bg-white rounded-xl w-1/2 h-3/4 z-10 border-2 border-blue-dark flex flex-col">
         <div className="flex justify-between items-center p-4 rounded-t-2xl">
           <div>
             <h1 className="text-blue-dark text-xl font-bold">
               Dodijeli kviz terminu
             </h1>
             <p className="text-blue-dark">
-              Odaberite termine kojima želite dodijeliti kviz - {quizName}
+              Kliknite na ime termina kojemu želite dodijeliti kviz - {quizName}
             </p>
           </div>
           <button
@@ -50,10 +71,29 @@ const AddToSchedule = ({
             <div
               key={item.id}
               className="flex items-center min-h-[90px] shrink-0 bg-green-light border-2 border-blue-dark rounded-2xl px-5 gap-x-3"
+              onClick={() => {
+                setSchedules((prev) =>
+                  prev.map((i) =>
+                    i.id === item.id
+                      ? {
+                          ...i,
+                          selected: !item.selected,
+                        }
+                      : i
+                  )
+                );
+              }}
             >
               <input
                 type="checkbox"
                 checked={item.selected}
+                onChange={() => {
+                  setSchedules((prev) =>
+                    prev.map((i) =>
+                      i.id === item.id ? { ...i, selected: !i.selected } : i
+                    )
+                  );
+                }}
                 className="h-5 w-5"
               ></input>
               <div className="flex justify-between items-center w-full">
@@ -68,7 +108,11 @@ const AddToSchedule = ({
             </div>
           ))}
         </div>
-        <button className="bg-blue-light text-white py-3 px-2 rounded-2xl w-3/12 self-end mr-7 mb-1">
+        <button
+          type="button"
+          className="bg-blue-light text-white py-3 px-2 rounded-2xl w-3/12 self-end mr-7 mb-1 cursor-pointer z-50"
+          onClick={handleAddToSchedule}
+        >
           Dodijeli terminima
         </button>
       </div>
