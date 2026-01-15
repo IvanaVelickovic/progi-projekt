@@ -22,9 +22,9 @@ interface StudentScheduleProps {
 const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
   const navigate = useNavigate();
 
-  const appointmentDates = appointments.map(
-    (item) => item.dateTime.split("T")[0]
-  );
+  const appointmentDates = Array.isArray(appointments)
+    ? appointments.map((item) => item.dateTime.split("T")[0])
+    : [];
 
   return (
     <div className={search ? "flex h-full w-3/4" : "flex h-full"}>
