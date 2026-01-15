@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import appointmentsData from "../assets/appointments.json";
+//import appointmentsData from "../assets/appointments.json";
 import Slider from "rc-slider";
 import api from "../api";
 import StudentSchedule from "../components/StudentSchedule";
 
 interface Appointment {
   id: number;
-  datetime: string;
+  dateTime: string;
   format: string;
   duration: number;
   price: number;
@@ -36,7 +36,7 @@ const Search = () => {
     timeTo: "",
     locationRadius: 0,
     rating: "",
-    page: 1,
+    page: 0,
     limit: 6,
   });
 

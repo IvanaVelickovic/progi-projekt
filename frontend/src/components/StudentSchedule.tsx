@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 interface Appointment {
   id: number;
-  datetime: string;
+  dateTime: string;
   format: string;
   duration: number;
   price: number;
@@ -23,7 +23,7 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
   const navigate = useNavigate();
 
   const appointmentDates = appointments.map(
-    (item) => item.datetime.split("T")[0]
+    (item) => item.dateTime.split("T")[0]
   );
 
   return (
@@ -49,7 +49,7 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
             appointments.map((item, index) => (
               <div
                 key={item.id}
-                id={item.datetime.split("T")[0]}
+                id={item.dateTime.split("T")[0]}
                 className="flex justify-between bg-[#ADEBC8] border-2 border-blue-dark rounded-2xl w-11/12 h-[250px] mb-6 shrink-0 drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]"
               >
                 <div className="w-7/12 p-5">
@@ -89,9 +89,9 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
                 </div>
                 <div className="flex flex-col items-center justify-between w-4/12">
                   <div className="w-9/12 p-4 m-3 bg-white rounded-2xl text-lg text-blue-dark font-semibold text-center">
-                    {item.datetime.split("T")[0]}
+                    {item.dateTime.split("T")[0]}
                     <br></br>
-                    {item.datetime.split("T")[1]}
+                    {item.dateTime.split("T")[1]}
                   </div>
                   <div className="flex flex-col m-3 p-2 w-10/12 items-end gap-y-2">
                     <div className="bg-[#D9D9D9] p-3 rounded-3xl text-lg text-blue-dark font-semibold text-center px-6 w-full">

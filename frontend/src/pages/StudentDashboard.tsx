@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StudentSchedule from "../components/StudentSchedule";
-import appointmentsData from "../assets/appointments.json";
+//import appointmentsData from "../assets/appointments.json";
 import api from "../api";
 
 interface Appointment {
   id: number;
-  datetime: string;
+  dateTime: string;
   format: string;
   duration: number;
   price: number;
@@ -29,13 +29,16 @@ const StudentDashboard = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const dataRes = await api.get("/api/instructors/search");
+        const params = new URLSearchParams();
+        const dataRes = await api.get("/api/student/schedules", {
+          params,
+        });
         setAppointments(dataRes.data);
       } catch (error) {
         console.error("Greška pri dohvaćanju korisničkih podataka:", error);
       }
     };
-    setAppointments(appointmentsData);
+    //setAppointments(appointmentsData);
 
     fetchAppointments();
   }, []);
