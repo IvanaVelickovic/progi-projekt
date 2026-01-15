@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import Setup from "./pages/Setup";
 import StudentDashboard from "./pages/StudentDashboard";
 import Search from "./pages/Search";
+import ProfileViewStudent from "./pages/ProfileViewStudent";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             element={<StudentDashboard />}
           ></Route>
           <Route path="/schedules/search" element={<Search />}></Route>
+          <Route path="/students/:id" element={<ProfileViewStudent />} />
         </Routes>
       </AuthProvider>
     </Router>
