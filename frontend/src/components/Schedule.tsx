@@ -1,16 +1,16 @@
 import Calendar from "react-calendar";
 //import appointmentsData from "../assets/appointments.json";
-import { useNavigate } from "react-router-dom";
-import EditSchedule from "./EditSchedule";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api";
 import { useAppointments } from "../context/AppointmentsContext";
+import EditSchedule from "./EditSchedule";
 
 export interface Appointment {
-  id: number;
+  scheduleId: number;
   datetime: string;
   format: string;
-  duration: number;
+  durationMin: number;
   price: number;
   filled: number;
   maxParticipants: number;
@@ -27,8 +27,10 @@ const Schedule = () => {
 
   const { appointments, setAppointments } = useAppointments();
 
+  const safeAppointments = Array.isArray(appointments) ? appointments : [];
+
   let [scheduleData, setScheduleData] = useState({
-    id: -1,
+    scheduleId: -1,
     index: -1,
     filled: -1,
     googleUser: false,
@@ -36,14 +38,14 @@ const Schedule = () => {
   });
 
   const goToEditSchedule = (
-    id: number,
+    scheduleId: number,
     index: number,
     filled: number,
     googleUser: boolean,
     googleCalendar: boolean
   ) => {
     setScheduleData({
-      id: id,
+      scheduleId: scheduleId,
       index: index,
       filled: filled,
       googleUser: googleUser,
@@ -56,13 +58,23 @@ const Schedule = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const userRes = await api.get("/api/google/user");
-        sessionStorage.setItem("googleUser", JSON.stringify(userRes.data));
+        // 1. Sync with a Google status endpoint (optional check)
+        // If you don't have this on back yet, you can comment it out
+        try {
+          const userRes = await api.get("/api/google/status");
+          sessionStorage.setItem("googleUser", JSON.stringify(userRes.data));
+        } catch (e) {
+          console.log("Google sync check skipped");
+        }
 
-        const dataRes = await api.get("/api/user/appointments");
+        // 2. THIS IS THE IMPORTANT CHANGE:
+        // Calling the specific instructor schedule endpoint
+        const dataRes = await api.get(
+          "/api/instructor-schedules/my-appointments"
+        );
         setAppointments(dataRes.data);
       } catch (error) {
-        console.error("Greška pri dohvaćanju korisničkih podataka:", error);
+        console.error("Greška pri dohvaćanju podataka:", error);
       }
     };
 
@@ -70,8 +82,8 @@ const Schedule = () => {
     //setAppointments(appointmentsData);
   }, []);
 
-  const appointmentDates = appointments.map(
-    (item) => item.datetime.split("T")[0]
+  const appointmentDates = safeAppointments.map(
+    (item) => item.datetime?.split("T")[0] || ""
   );
 
   return (
@@ -79,10 +91,10 @@ const Schedule = () => {
       <div className="w-3/4 p-5 flex flex-col">
         <h1 className="text-blue-dark text-3xl font-bold">Moji termini</h1>
         <div className="flex flex-col items-center mt-5 overflow-y-scroll">
-          {appointments.map((item, index) => (
+          {safeAppointments.map((item, index) => (
             <div
-              key={item.id}
-              id={item.datetime.split("T")[0]}
+              key={item.scheduleId}
+              id={item.datetime?.split("T")[0] || "No Date"}
               className="flex justify-between bg-[#ADEBC8] border-2 border-blue-dark rounded-2xl w-11/12 h-[250px] mb-6 shrink-0 drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]"
             >
               <div className="w-7/12 p-5">
@@ -96,7 +108,7 @@ const Schedule = () => {
                   </div>
                   <div className="flex justify-between">
                     <span>• Trajanje</span>
-                    <span>{item.duration} min</span>
+                    <span>{item.durationMin} min</span>
                   </div>
                   <div className="flex justify-between">
                     <span>• Cijena po terminu:</span>
@@ -106,9 +118,9 @@ const Schedule = () => {
               </div>
               <div className="flex flex-col items-center justify-between w-4/12">
                 <div className="w-9/12 p-4 m-3 bg-white rounded-2xl text-lg text-blue-dark font-semibold text-center">
-                  {item.datetime.split("T")[0]}
+                  {item.datetime?.split("T")[0] || "No Date"}
                   <br></br>
-                  {item.datetime.split("T")[1]}
+                  {item.datetime?.split("T")[1] || "No Time"}
                 </div>
                 <div className="flex flex-col m-3 p-2 w-10/12 items-end">
                   <div className="bg-[#D9D9D9] p-3 rounded-3xl text-lg text-blue-dark font-semibold text-center px-6">
@@ -118,7 +130,7 @@ const Schedule = () => {
                     className="bg-blue-light text-white text-lg p-2 rounded-3xl text-center w-8/12 cursor-pointer mt-1.5"
                     onClick={() =>
                       goToEditSchedule(
-                        item.id,
+                        item.scheduleId,
                         index + 1,
                         item.filled,
                         googleUser,

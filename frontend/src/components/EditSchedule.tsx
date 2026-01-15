@@ -1,11 +1,11 @@
-import googleLogo from "../assets/logos/google_logo.png";
 import { useState } from "react";
 import api from "../api";
+import googleLogo from "../assets/logos/google_logo.png";
 import { useAppointments } from "../context/AppointmentsContext";
 
 interface EditScheduleProps {
   scheduleData: {
-    id: number;
+    scheduleId: number;
     index: number;
     filled: number;
     googleUser: boolean;
@@ -16,7 +16,7 @@ interface EditScheduleProps {
 
 const EditSchedule = ({ scheduleData, setEditSchedule }: EditScheduleProps) => {
   const [editData, setEditData] = useState({
-    maxParticipants: scheduleData.filled,
+    maxParticipants: scheduleData?.filled || 0,
     googleCalendar: "",
   });
 
@@ -33,23 +33,24 @@ const EditSchedule = ({ scheduleData, setEditSchedule }: EditScheduleProps) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      let add = false;
-      if (editData.googleCalendar != "") {
-        add = true;
-      }
-      const res = await api.post("/isntructor/edit/schedule", {
-        id: scheduleData.id,
+      const payload = {
         maxParticipants: editData.maxParticipants,
-        googleCalendar: add,
-      });
+        googleCalendar: editData.googleCalendar !== "",
+      };
+
+      const res = await api.put(
+        `/api/instructor-schedules/${scheduleData.scheduleId}`,
+        payload
+      );
+
       if (res.status === 200) {
         setAppointments((prev) =>
           prev.map((item) =>
-            item.id === scheduleData.id
+            item.scheduleId === scheduleData.scheduleId
               ? {
                   ...item,
                   maxParticipants: editData.maxParticipants,
-                  googleCalendar: add,
+                  googleCalendar: payload.googleCalendar,
                 }
               : item
           )
@@ -60,6 +61,7 @@ const EditSchedule = ({ scheduleData, setEditSchedule }: EditScheduleProps) => {
       }
     } catch (err) {
       console.error("Greška s backendom: ", err);
+      window.alert("Nismo uspjeli spremiti promjene.");
     }
   };
 
@@ -69,17 +71,19 @@ const EditSchedule = ({ scheduleData, setEditSchedule }: EditScheduleProps) => {
     );
     if (proceed) {
       try {
-        await api.post("/schedule/delete", scheduleData.id);
+        await api.delete(
+          `/api/instructor-schedules/${scheduleData.scheduleId}`
+        );
 
         setAppointments((prev) =>
-          prev.filter((item) => item.id !== scheduleData.id)
+          prev.filter((item) => item.scheduleId !== scheduleData.scheduleId)
         );
 
         window.alert("Uspješno izbrisano!");
         setEditSchedule(false);
       } catch (err) {
         console.log("Pogreška u komunikaciji s backendom: ", err);
-        window.alert("Brisanje nije uspjelo");
+        window.alert("Brisanje nije uspjelo.");
       }
     }
   };
@@ -119,7 +123,7 @@ const EditSchedule = ({ scheduleData, setEditSchedule }: EditScheduleProps) => {
               min={scheduleData.filled}
               name="maxParticipants"
               value={editData.maxParticipants}
-              placeholder={scheduleData.filled.toString()}
+              placeholder={scheduleData?.filled?.toString() || "0"}
               onChange={handleChange}
               className="bg-white rounded border border-blue-dark/50 w-1/12 ml-3 pl-2 text-center"
             />

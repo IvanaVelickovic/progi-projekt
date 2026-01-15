@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import googleLogo from "../assets/logos/google_logo.png";
 import api from "../api";
+import googleLogo from "../assets/logos/google_logo.png";
 
 const AddSchedule = () => {
   const googleUser = JSON.parse(
@@ -12,7 +12,7 @@ const AddSchedule = () => {
     format: "",
     datetime: "",
     maxParticipants: "",
-    duration: "",
+    durationMin: "",
     price: "",
     googleCalendar: "",
     subject: "",
@@ -66,8 +66,17 @@ const AddSchedule = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const payload = {
+      datetime: formData.datetime,
+      durationMin: parseInt(formData.durationMin),
+      price: parseFloat(formData.price),
+      attendanceMode: formData.format === "live" ? "in_person" : "online",
+      maxParticipants: parseInt(formData.maxParticipants),
+      status: "scheduled",
+    };
     try {
-      const res = await api.post("/instructor/addSchedule", formData);
+      const res = await api.post("/api/instructor-schedules", payload);
 
       if (res.status === 200 || res.status === 201) {
         window.alert("Termin uspješno dodan!");
@@ -146,8 +155,8 @@ const AddSchedule = () => {
                     type="number"
                     step={10}
                     min={10}
-                    name="duration"
-                    value={formData.duration}
+                    name="durationMin"
+                    value={formData.durationMin}
                     onChange={handleChange}
                     className="bg-white rounded border border-blue-dark/50 mr-1.5 w-4/5"
                     required

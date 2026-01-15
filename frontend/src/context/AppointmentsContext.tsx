@@ -1,11 +1,11 @@
-import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
+import { createContext, useContext, useState } from "react";
 
 export interface Appointment {
-  id: number;
+  scheduleId: number;
   datetime: string;
   format: string;
-  duration: number;
+  durationMin: number;
   price: number;
   filled: number;
   maxParticipants: number;
