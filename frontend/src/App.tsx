@@ -12,6 +12,9 @@ import StudentDashboard from "./pages/StudentDashboard";
 import Search from "./pages/Search";
 import ProfileViewStudent from "./pages/ProfileViewStudent";
 import ProfileEditInstructor from "./pages/ProfileEditInstructor";
+import BookingConfirmation from "./pages/reservation";
+import Payment from "./pages/payment";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 function App() {
   return (
@@ -49,6 +52,24 @@ function App() {
             path="/profileInstructor"
             element={
                 <ProfileEditInstructor />
+            }
+          ></Route>
+          <Route
+            path="/BookingConfirmation"
+            element={
+                <BookingConfirmation />
+            }
+          ></Route>
+          <Route
+            path="/payment"
+            element={
+                <Payment />
+            }
+          ></Route>
+          <Route
+            path="/payment-success"
+            element={
+                <PaymentSuccess />
             }
           ></Route>
         </Routes>
