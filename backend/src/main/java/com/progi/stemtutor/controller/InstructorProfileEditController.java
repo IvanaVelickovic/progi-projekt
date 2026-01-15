@@ -1,11 +1,8 @@
 package com.progi.stemtutor.controller;
 
-import com.progi.stemtutor.dto.PersonalInfoUpdateDto;
-import com.progi.stemtutor.dto.PasswordUpdateDto;
-import com.progi.stemtutor.dto.StudentEducationUpdateDto;
-import com.progi.stemtutor.dto.StudentGoalsUpdateDto;
-import com.progi.stemtutor.service.ProfileService;
-import com.progi.stemtutor.model.User; // Pretpostavljam da je User vaš Principal
+import com.progi.stemtutor.dto.*;
+import com.progi.stemtutor.service.InstructorProfileEditService;
+import com.progi.stemtutor.model.User;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -20,19 +17,18 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/user")
-public class ProfileController {
+@RequestMapping("/api/Instructor")
 
-    private final ProfileService profileService;
+public class InstructorProfileEditController {
 
-    public ProfileController(ProfileService profileService) {
-        this.profileService = profileService;
+    private final InstructorProfileEditService instructorProfileEditService;
+
+    public InstructorProfileEditController(InstructorProfileEditService instructorProfileEditService) {
+        this.instructorProfileEditService = instructorProfileEditService;
     }
 
     // Pomoćna metoda za dohvaćanje ID-a iz Principal objekta
     private Long getUserId(UserDetails userDetails) {
-        // OVISI O VAŠOJ SPRING SECURITY IMPLEMENTACIJI.
-        // AKO VAM JE PRINCIPAL VAŠ USER ENTITET:
         if (userDetails instanceof User) {
             return ((User) userDetails).getId();
         }
@@ -47,7 +43,7 @@ public class ProfileController {
         Long userId = getUserId(userDetails);
         System.out.println(userDetails);
         System.out.println(userId);
-        return profileService.getProfileData(userId)
+        return instructorProfileEditService.getProfileData(userId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Korisnik nije pronađen."));
     }
@@ -63,7 +59,7 @@ public class ProfileController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        boolean success = profileService.updatePersonalInfo(userId, dto);
+        boolean success = instructorProfileEditService.updatePersonalInfo(userId, dto);
 
         if (success) {
             return ResponseEntity.noContent().build(); // 204 No Content za uspješno ažuriranje
@@ -79,7 +75,7 @@ public class ProfileController {
         Long userId = getUserId(userDetails);
 
         try {
-            Optional<Boolean> result = profileService.changePassword(userId, dto);
+            Optional<Boolean> result = instructorProfileEditService.changePassword(userId, dto);
 
             if (result.isEmpty()) {
                 // Korisnik nije pronađen (Service je vratio Optional.empty())
@@ -94,14 +90,14 @@ public class ProfileController {
     }
 
     // AŽURIRANJE OBRAZOVANJA/RAZINE ZNANJA (POST /api/user/update-education)
-    @PostMapping("/update-education")
+    @PostMapping("/update-biography")
     public ResponseEntity<?> updateStudentEducation(
             @AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody StudentEducationUpdateDto dto) {
+            @Valid @RequestBody InstructorBiographyDto dto) {
 
         Long userId = getUserId(userDetails);
 
-        boolean success = profileService.updateStudentEducation(userId, dto);
+        boolean success = instructorProfileEditService.updateInstructorBiography(userId, dto);
 
         if (success) {
             return ResponseEntity.ok(Map.of("status", "ok"));
@@ -111,14 +107,14 @@ public class ProfileController {
     }
 
     // AŽURIRANJE CILJEVA UČENJA (POST /api/user/update-goals)
-    @PostMapping("/update-goals")
-    public ResponseEntity<?> updateStudentGoals(
+    @PostMapping("/update-expertise")
+    public ResponseEntity<?> updateInstructorExpertise(
             @AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody StudentGoalsUpdateDto dto) {
+            @Valid @RequestBody InstructorExpertiseDto dto) {
 
         Long userId = getUserId(userDetails);
 
-        boolean success = profileService.updateStudentGoals(userId, dto);
+        boolean success = instructorProfileEditService.updateInstructorExpertise(userId, dto);
 
         if (success) {
             return ResponseEntity.ok(Map.of("status", "ok"));

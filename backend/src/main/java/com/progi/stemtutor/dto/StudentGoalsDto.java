@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class StudentGoalsUpdateDto {
+public class StudentGoalsDto {
 
     @Size(max = 500, message = "Ciljevi učenja za Matematiku su predugi (max 500 znakova)")
     private String goalsMath;

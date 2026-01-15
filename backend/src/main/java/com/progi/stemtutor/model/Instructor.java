@@ -11,10 +11,25 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-public class Instructor extends User {
+public class Instructor{
+
+    @Id
+    private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "instructor_id")
+    public User user;
+
     private String biography;
     private BigDecimal hourlyRate;
     private String introVideoUrl;
+    private boolean math;
+    private boolean physics;
+    private boolean it;
+    @Column(name = "reference")
+    private String references;
+    private BigDecimal longitude;
+    private BigDecimal latitude;
 }

@@ -2,9 +2,9 @@ package com.progi.stemtutor.service;
 
 import com.progi.stemtutor.dto.PersonalInfoUpdateDto;
 import com.progi.stemtutor.dto.PasswordUpdateDto;
-import com.progi.stemtutor.dto.StudentEducationUpdateDto; // NOVI IMPORT
-import com.progi.stemtutor.dto.StudentGoalsUpdateDto; // NOVI IMPORT
-import com.progi.stemtutor.dto.ProfileDto;
+import com.progi.stemtutor.dto.StudentEducationDto; // NOVI IMPORT
+import com.progi.stemtutor.dto.StudentGoalsDto; // NOVI IMPORT
+import com.progi.stemtutor.dto.StudentProfileDto;
 import com.progi.stemtutor.model.Student;
 import com.progi.stemtutor.model.User;
 import com.progi.stemtutor.model.StudentSubject;
@@ -12,7 +12,6 @@ import com.progi.stemtutor.model.enums.SubjectName;
 import com.progi.stemtutor.model.enums.UserRole;
 import com.progi.stemtutor.repository.StudentRepository;
 import com.progi.stemtutor.repository.StudentSubjectRepository;
-import com.progi.stemtutor.repository.SubjectRepository;
 import com.progi.stemtutor.repository.UserRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,16 +25,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ProfileService {
+public class StudentProfileEditService {
 
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
     private final StudentSubjectRepository studentSubjectRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ProfileService(UserRepository userRepository, StudentRepository studentRepository,
-                          StudentSubjectRepository studentSubjectRepository,
-                          PasswordEncoder passwordEncoder) {
+    public StudentProfileEditService(UserRepository userRepository, StudentRepository studentRepository,
+                                     StudentSubjectRepository studentSubjectRepository,
+                                     PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.studentSubjectRepository = studentSubjectRepository;
@@ -86,7 +85,7 @@ public class ProfileService {
 
         // Ako nije student → vrati samo osnovne podatke
         if (user.getRole() != UserRole.student) {
-            return Optional.of(new ProfileDto(
+            return Optional.of(new StudentProfileDto(
                     user.getFirstName(),
                     user.getLastName(),
                     user.getEmail(),
@@ -146,7 +145,7 @@ public class ProfileService {
         System.out.println(phy + "aahahahiodhio");
         System.out.println(inf + "aahahahiodhio");
         // Složi DTO
-        ProfileDto dto = ProfileDto.builder()
+        StudentProfileDto dto = StudentProfileDto.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .lastName(user.getLastName())
@@ -202,7 +201,7 @@ public class ProfileService {
     }
 
     @Transactional
-    public boolean updateStudentEducation(Long userId, StudentEducationUpdateDto dto) {
+    public boolean updateStudentEducation(Long userId, StudentEducationDto dto) {
         System.out.println("UŠA U UPDATE STUDENT EDUCATION");
         Optional<Student> studentOpt = studentRepository.findById(userId);
         System.out.println("POSLE REPOSITORYA");
@@ -225,7 +224,7 @@ public class ProfileService {
 
 
     @Transactional
-    public boolean updateStudentGoals(Long userId, StudentGoalsUpdateDto dto) {
+    public boolean updateStudentGoals(Long userId, StudentGoalsDto dto) {
         // Provjeri postojanje studenta (za ResourceNotFoundException)
         Optional<Student> studentOpt = studentRepository.findById(userId);
         if (studentOpt.isEmpty()) return false;

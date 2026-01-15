@@ -2,13 +2,13 @@ package com.progi.stemtutor.dto;
 
 import com.progi.stemtutor.model.Student;
 
-public record StudentDTO(
+public record StudentDto(
         String firstName,
         String lastName,
         String grade
 ) {
-    public static StudentDTO fromEntity(Student student) {
-        return new StudentDTO(
+    public static StudentDto fromEntity(Student student) {
+        return new StudentDto(
                 student.user.getFirstName(),
                 student.user.getLastName(),
                 student.getGrade()
