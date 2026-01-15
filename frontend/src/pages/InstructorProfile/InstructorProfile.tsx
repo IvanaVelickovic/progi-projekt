@@ -16,6 +16,7 @@ import {
 import LeafletMap from "../LeafletMap";
 //import { LeafletMap } from "../../components/leaflet-map/LeafletMap";
 
+
 interface ProfileSection {
   icon: string;
   label: string;
@@ -25,8 +26,7 @@ interface ProfileSection {
 
 const InstructorProfile = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const instructorId: string | undefined = id?.toString();
+  const { instructorId } = useParams();
 
   const [instructorSummary, setInstructorSummary] = useState<InstructorSummary>(
     getEmptyInstructorSummary()
@@ -55,13 +55,13 @@ const InstructorProfile = () => {
     {
       icon: EducationIcon,
       label: "Područja stručnosti:",
-      value: instructorData.expertise,
+      value: instructorData.expertiseAreas,
       href: undefined,
     },
     {
       icon: MoneyIcon,
       label: "Cijena po satu:",
-      value: instructorData.price,
+      value: instructorData.hourlyRate,
       href: undefined,
     },
     {
@@ -69,7 +69,7 @@ const InstructorProfile = () => {
       label: "Lokacija:",
       value: (
         <div className="w-full min-h-[220px]">
-          <LeafletMap lat={instructorData.lat} lng={instructorData.lng} />
+          <LeafletMap lat={instructorData.latitude} lng={instructorData.longitude} />
         </div>
       ),
       href: undefined,
@@ -90,9 +90,9 @@ const InstructorProfile = () => {
         </h1>
         <div className="flex items-center bg-[#D9D9D9] w-5/12 rounded-3xl cursor-pointer">
           <img src="/images/search_icon.png" className="w-11 ml-2" />
-          <p className="text-blue-dark/60 font-bold text-xl ml-1">
+          <div className="text-blue-dark/60 font-bold text-xl ml-1">
             Pretražite profile
-          </p>
+          </div>
         </div>
         <button
           className="bg-blue-light text-white text-xl p-3 px-15 rounded-lg cursor-pointer"
@@ -111,8 +111,8 @@ const InstructorProfile = () => {
             {instructorSummary.firstName} {instructorSummary.lastName}
           </h2>
           <StarRating
-            rating={instructorSummary.rating}
-            count={instructorSummary.reviewsCount}
+            rating={instructorSummary.averageRating}
+            count={instructorSummary.reviewCount}
           />
           <ul className="list-group text-blue-dark text-2xl flex-col mt-8 p-5">
             <li className="list-group-item bg-green-dark/50 rounded-3xl cursor-pointer text-center font-semibold p-3 active">
@@ -157,11 +157,11 @@ function ProfileRow({ icon, label, value, href }: ProfileRowProps) {
     <div className="grid grid-cols-[60px_1fr] gap-4 items-start">
       <img src={icon} alt="" className="w-12 h-12 object-contain" />
       <div>
-        <p className="text-blue-dark font-semibold mb-2 text-3xl">{label}</p>
-        <p className="text-gray-700 text-xl">
+        <div className="text-blue-dark font-semibold mb-2 text-3xl">{label}</div>
+        <div className="text-gray-700 text-xl">
           {value && <>{value}</>}
           {href && <a href={href} />}
-        </p>
+        </div>
       </div>
     </div>
   );

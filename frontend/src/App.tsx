@@ -44,7 +44,7 @@ function App() {
             }
           ></Route>
           <Route
-            path="/instructorprofile"
+            path="/instructors/:instructorId"
             element={
               //<ProtectedRoute>
               <InstructorProfile />

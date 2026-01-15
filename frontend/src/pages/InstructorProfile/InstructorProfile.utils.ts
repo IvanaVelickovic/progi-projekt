@@ -4,9 +4,9 @@ export interface InstructorSummary{
     photo: string;
     firstName: string;
     lastName: string;
-    rating: number;
-    reviewsCount: number;
-    instructorId: string;
+    averageRating: number;
+    reviewCount: number;
+    id: string;
 }
 
 export function getEmptyInstructorSummary(): InstructorSummary {
@@ -14,9 +14,9 @@ export function getEmptyInstructorSummary(): InstructorSummary {
         photo: "",
         firstName: "",
         lastName: "",
-        rating: 0,
-        reviewsCount: 0,
-        instructorId: "",
+        averageRating: 0,
+        reviewCount: 0,
+        id: "",
   }
 }
 
@@ -30,20 +30,20 @@ export async function fetchInstructorSummary(instructorId: string | undefined): 
 
 export interface InstructorData {
   introVideoUrl: string;
-  expertise: string;
-  price: number;
-  lat: number;
-  lng: number;
+  expertiseAreas: string;
+  hourlyRate: number;
+  latitude: number | null;
+  longitude: number | null;
   biography: string;
 }
 
 export function getEmptyInstructorObject(): InstructorData {
     return {
         introVideoUrl: "",
-        expertise: "",
-        price: 0,
-        lat: 0, //Zagreb: 45.80
-        lng: 0, //Zagreb: 15.97
+        expertiseAreas: "",
+        hourlyRate: 0,
+        latitude: null, //Zagreb: 45.80
+        longitude:  null, //Zagreb: 15.97
         biography: "",
   }
 }
