@@ -23,6 +23,7 @@ public class Instructor{
     @JoinColumn(name = "instructor_id")
     public User user;
 
+    @Column(columnDefinition = "TEXT")
     private String biography;
     private BigDecimal hourlyRate;
     private String introVideoUrl;
@@ -34,6 +35,6 @@ public class Instructor{
     private BigDecimal longitude;
     private BigDecimal latitude;
 
-    @OneToMany(mappedBy = "instructor")
+    @OneToMany(mappedBy = "instructor", fetch = FetchType.LAZY)
     private List<AvailableAtLocation> availableAtLocations;
 }
