@@ -23,7 +23,7 @@ const InstructorDashboard = () => {
         </div>
         <button
           className="bg-blue-light text-white text-xl p-3 px-15 rounded-lg cursor-pointer"
-          onClick={() => navigate("/profile")}
+          onClick={() => navigate("/profileInstructor")}
         >
           Profil
         </button>
