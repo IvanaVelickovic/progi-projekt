@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+body{
+    background-color: #DDF4E7;
+    font-family: 'Inter', sans-serif;
+}
+
+@font-face{
+  font-family: 'Inter';
+  src: url('./assets/fonts/Inter/static/Inter_18pt-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+@theme{
+    --color-green-light: #DDF4E7;
+    --color-green-dark: #67C090;
+    --color-blue-light: #26667F;
+    --color-blue-dark: #124170;
+}

@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "instructors")
@@ -32,4 +33,7 @@ public class Instructor{
     private String references;
     private BigDecimal longitude;
     private BigDecimal latitude;
+
+    @OneToMany(mappedBy = "instructor")
+    private List<AvailableAtLocation> availableAtLocations;
 }
