@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from "react";
 export interface Appointment {
   scheduleId: number;
   datetime: string;
-  format: string;
+  attendanceMode: string;
   durationMin: number;
   price: number;
   filled: number;

@@ -9,7 +9,7 @@ import EditSchedule from "./EditSchedule";
 export interface Appointment {
   scheduleId: number;
   datetime: string;
-  format: string;
+  attendanceMode: string;
   durationMin: number;
   price: number;
   filled: number;
@@ -104,7 +104,7 @@ const Schedule = () => {
                 <div className="p-5 pt-7 text-blue-dark font-semibold text-xl">
                   <div className="flex justify-between ">
                     <span>• Održavanje</span>
-                    <span>{item.format}</span>
+                    <span>{item.attendanceMode}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>• Trajanje</span>

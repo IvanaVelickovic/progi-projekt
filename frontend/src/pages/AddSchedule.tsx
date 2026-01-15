@@ -14,7 +14,7 @@ const AddSchedule = () => {
     maxParticipants: "",
     durationMin: "",
     price: "",
-    googleCalendar: "",
+    googleCalendar: false,
     subject: "",
   });
 
@@ -59,9 +59,12 @@ const AddSchedule = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
 
-    setFormData({ ...formData, [name]: value });
+    const val =
+      type === "checkbox" ? (e.target as HTMLInputElement).checked : value;
+
+    setFormData({ ...formData, [name]: val });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -74,6 +77,7 @@ const AddSchedule = () => {
       attendanceMode: formData.format === "live" ? "in_person" : "online",
       maxParticipants: parseInt(formData.maxParticipants),
       status: "scheduled",
+      googleCalendar: true,
     };
     try {
       const res = await api.post("/api/instructor-schedules", payload);
@@ -229,7 +233,7 @@ const AddSchedule = () => {
               </div>
             </div>
             <div className="flex h-1/4 justify-between items-center mt-[5%]">
-              {googleUser ? (
+              {true ? (
                 <div className="flex items-center gap-2 w-[42%] font-semibold">
                   <label>
                     <input
