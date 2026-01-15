@@ -11,6 +11,7 @@ import Setup from "./pages/Setup";
 import StudentDashboard from "./pages/StudentDashboard";
 import Search from "./pages/Search";
 import ProfileViewStudent from "./pages/ProfileViewStudent";
+import ProfileEditInstructor from "./pages/ProfileEditInstructor";
 
 function App() {
   return (
@@ -44,6 +45,12 @@ function App() {
           ></Route>
           <Route path="/schedules/search" element={<Search />}></Route>
           <Route path="/students/:id" element={<ProfileViewStudent />} />
+          <Route
+            path="/profileInstructor"
+            element={
+                <ProfileEditInstructor />
+            }
+          ></Route>
         </Routes>
       </AuthProvider>
     </Router>

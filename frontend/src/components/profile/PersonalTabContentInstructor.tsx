@@ -2,12 +2,12 @@ import { useState } from "react";
 import api from "../../api";
 
 interface PersonalTabContentProps {
-  userData: {
+  InstructorData: {
     firstName: string;
     lastName: string;
     email: string;
   };
-  setUserData: React.Dispatch<
+  setInstructorData: React.Dispatch<
     React.SetStateAction<{
       firstName: string;
       lastName: string;
@@ -16,9 +16,9 @@ interface PersonalTabContentProps {
   >;
 }
 
-const PersonalTabContent = ({
-  userData,
-  setUserData,
+const PersonalTabContentInstructor = ({
+  InstructorData,
+  setInstructorData,
 }: PersonalTabContentProps) => {
   const [formData, setFormData] = useState({
     oldpassword: "",
@@ -26,9 +26,9 @@ const PersonalTabContent = ({
   });
   const [error, setError] = useState("");
 
-  const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInstructorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUserData((prev) => ({ ...prev, [name]: value }));
+    setInstructorData((prev) => ({ ...prev, [name]: value }));
   };
 
   const validatePassword = (value: string) => {
@@ -56,7 +56,7 @@ const PersonalTabContent = ({
     e.preventDefault();
 
     try {
-      await api.put("http://localhost:8080/api/user/update", userData);
+      await api.put("http://localhost:8080/api/Instructor/update", InstructorData);
       alert("Podaci uspješno ažurirani!");
     } catch (error) {
       console.error(error);
@@ -73,7 +73,7 @@ const PersonalTabContent = ({
     }
     try {
       const response = await api.post(
-        "http://localhost:8080/api/user/change-password",
+        "http://localhost:8080/api/Instructor/change-password",
         {
           oldPassword: formData.oldpassword,
           newPassword: formData.newpassword,
@@ -103,8 +103,8 @@ const PersonalTabContent = ({
             <input
               name="firstName"
               type="text"
-              value={userData.firstName}
-              onChange={handleUserChange}
+              value={InstructorData.firstName}
+              onChange={handleInstructorChange}
               className="border border-gray-400 rounded-md px-2 py-1 w-[80%] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
             />
           </div>
@@ -114,8 +114,8 @@ const PersonalTabContent = ({
             <input
               name="lastName"
               type="text"
-              value={userData.lastName}
-              onChange={handleUserChange}
+              value={InstructorData.lastName}
+              onChange={handleInstructorChange}
               className="border border-gray-400 rounded-md px-2 py-1 w-[80%] focus:outline-none focus:ring-1 focus:ring-[#1e3a56]"
             />
           </div>
@@ -123,7 +123,7 @@ const PersonalTabContent = ({
           <div>
             <p className="pt-[2%] p-[1%]">
               <span className="font-semibold">E-mail:</span>{" "}
-              {userData.email || "Učitavanje..."}
+              {InstructorData.email || "Učitavanje..."}
             </p>
           </div>
         </div>
@@ -186,4 +186,4 @@ const PersonalTabContent = ({
   );
 };
 
-export default PersonalTabContent;
+export default PersonalTabContentInstructor;

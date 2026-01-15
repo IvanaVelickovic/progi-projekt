@@ -50,7 +50,6 @@ const Register = () => {
     setLoading(true);
     try {
       const signupRes = await api.post("/auth/signup", formData);
-
       if (signupRes.status === 200 || signupRes.status === 201) {
         const loginRes = await api.post("/auth/login", {
           email: formData.email,
