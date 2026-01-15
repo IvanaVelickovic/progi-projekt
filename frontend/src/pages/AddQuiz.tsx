@@ -13,9 +13,10 @@ interface Question {
 }
 
 const AddQuiz = () => {
+  let nextId = 0;
   const [questions, setQuestions] = useState<Question[]>([
     {
-      id: -1,
+      id: nextId++,
       text: "",
       type: "input",
       difficulty: "easy",
@@ -76,7 +77,7 @@ const AddQuiz = () => {
     }
   }; */
 
-  const handleTypeChange = (
+  const handleSelectionChange = (
     id: number,
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -89,6 +90,11 @@ const AddQuiz = () => {
           : q
       )
     );
+  };
+
+  const findItem = (id: number) => {
+    const find = questions.find((q) => q.id === id);
+    return find;
   };
 
   return (
@@ -109,7 +115,7 @@ const AddQuiz = () => {
               <p className="text-lg font-semibold">Ime kviza</p>
               <input
                 type="text"
-                className="bg-white border-1 border-blue-dark rounded-lg w-full mr-10 px-2"
+                className="bg-white border border-blue-dark rounded-lg w-full mr-10 px-2"
               ></input>
             </div>
             <div className=" mx-6">
@@ -157,9 +163,9 @@ const AddQuiz = () => {
                     <label className="font-semibold block">Tip pitanja</label>
                     <select
                       name="type"
-                      value={item.type}
+                      value={findItem(id)?.type}
                       className="border border-gray-400 rounded-md py-0.5 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] bg-white w-4/5"
-                      onChange={(e) => handleTypeChange(id, e)}
+                      onChange={(e) => handleSelectionChange(id, e)}
                     >
                       <option value="input">Unos teksta</option>
                       <option value="options">Opcije</option>
@@ -172,8 +178,9 @@ const AddQuiz = () => {
                     </label>
                     <select
                       name="subject"
-                      value={item.difficulty}
+                      value={findItem(id)?.difficulty}
                       className="border border-gray-400 rounded-md py-0.5 focus:outline-none focus:ring-1 focus:ring-[#1e3a56] bg-white w-4/5"
+                      onChange={(e) => handleSelectionChange(id, e)}
                     >
                       <option value="easy">Lagano</option>
                       <option value="medium">Srednje</option>
@@ -181,6 +188,16 @@ const AddQuiz = () => {
                     </select>
                   </div>
                 </div>
+                {findItem(id)?.type === "input" && (
+                  <div className="">
+                    <input
+                      value={item.text}
+                      name="text"
+                      className="w-full border border-blue-dark rounded-lg bg-white px-2 h-8 placeholder-blue-light/40"
+                      placeholder="Unesite tekst pitanja"
+                    ></input>
+                  </div>
+                )}
               </div>
             ))}
           </div>

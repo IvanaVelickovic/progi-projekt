@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "datetime": "2025-12-15T16:00",
+    "maxParticipants": 5,
+    "filled": 2,
+    "duration": 60,
+    "price": 20,
+    "format": "online",
+    "googleCalendar": true,
+    "subject": "Fizika",
+    "instructorName": "Ivan Horvat",
+    "instructorId" : 1
+  },
+  {
+    "id": 2,
+    "datetime": "2025-12-16T18:30",
+    "maxParticipants": 3,
+    "filled": 3,
+    "duration": 90,
+    "price": 25,
+    "format": "live",
+    "googleCalendar": true,
+    "subject": "Matematika",
+    "instructorName": "Mario Kovačević",
+    "instructorId" : 2
+  },
+  {
+    "id": 3,
+    "datetime": "2025-12-18T14:00",
+    "maxParticipants": 6,
+    "filled": 1,
+    "duration": 45,
+    "price": 15,
+    "format": "online",
+    "googleCalendar": true,
+    "subject": "Informatika",
+    "instructorName": "Željko Andrić",
+    "instructorId" : 3
+  },
+  {
+    "id": 4,
+    "datetime": "2025-12-20T10:00",
+    "maxParticipants": 4,
+    "filled": 0,
+    "duration": 60,
+    "price": 30,
+    "format": "live",
+    "googleCalendar": true,
+    "subject": "Fizika",
+    "instructorName": "Ivan Horvat",
+    "instructorId" : 1
+  },
+  {
+    "id": 5,
+    "datetime": "2025-12-22T19:00",
+    "maxParticipants": 8,
+    "filled": 5,
+    "duration": 120,
+    "price": 40,
+    "format": "online",
+    "googleCalendar": false,
+    "subject": "Fizika",
+    "instructorName": "Ivan Horvat",
+    "instructorId" : 1
+  },
+  {
+    "id": 6,
+    "datetime": "2025-12-22T20:00",
+    "maxParticipants": 8,
+    "filled": 5,
+    "duration": 120,
+    "price": 40,
+    "format": "online",
+    "googleCalendar": false,
+    "subject": "Fizika",
+    "instructorName": "Ivan Horvat",
+    "instructorId" : 1
+  }
+]

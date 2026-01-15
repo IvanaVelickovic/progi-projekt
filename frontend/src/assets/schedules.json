@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "subject": "Matematika",
+    "datetime": "2026-01-20T10:00:00",
+    "selected": true
+  },
+  {
+    "id": 2,
+    "subject": "Fizika",
+    "datetime": "2026-01-20T12:00:00",
+    "selected": false
+  },
+  {
+    "id": 3,
+    "subject": "Informatika",
+    "datetime": "2026-01-21T09:00:00",
+    "selected": false
+  },
+  {
+    "id": 4,
+    "subject": "Matematika",
+    "datetime": "2026-01-21T11:00:00",
+    "selected": false
+  },
+  {
+    "id": 5,
+    "subject": "Fizika",
+    "datetime": "2026-01-22T14:00:00",
+    "selected": false
+  }
+]
