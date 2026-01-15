@@ -14,7 +14,6 @@ import {
   type InstructorSummary,
 } from "./InstructorProfile.utils";
 import LeafletMap from "../LeafletMap";
-//import { LeafletMap } from "../../components/leaflet-map/LeafletMap";
 
 
 interface ProfileSection {
