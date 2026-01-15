@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api";
 
+import BackBanner from "../components/profile/BackBanner";
 import PersonalTabContentInstructor from "../components/profile/PersonalTabContentInstructor";
 import ExpertiseTabContentInstructor from "../components/profile/ExpertiseTabContent";
 import BiographyTabContentInstructor from "../components/profile/BiographyTabContent";
@@ -11,6 +12,9 @@ const ProfileEditInstructor = () => {
   const [activeTab, setActiveTab] = useState<
     "personal" | "expertise" | "biography"
   >("personal");
+
+  /* ================= FORM EMPTY STATE ================= */
+  const [formEmpty, setFormEmpty] = useState(true);
 
   /* ================= PERSONAL DATA ================= */
   const [InstructorData, setInstructorData] = useState({
@@ -38,15 +42,16 @@ const ProfileEditInstructor = () => {
       label: string;
     };
   }
+
   const [biographyData, setBiographyData] =
-  useState<InstructorBiographyData>({
-    bio: "",
-    location: {
-      lat: null,
-      lng: null,
-      label: "",
-    },
-  });
+    useState<InstructorBiographyData>({
+      bio: "",
+      location: {
+        lat: null,
+        lng: null,
+        label: "",
+      },
+    });
 
   /* ================= FETCH DATA ================= */
   useEffect(() => {
@@ -75,7 +80,7 @@ const ProfileEditInstructor = () => {
         });
 
         /* --- BIOGRAPHY --- */
-         setBiographyData({
+        setBiographyData({
           bio: data.biography || "",
           location: {
             lat: data.latitude ?? null,
@@ -86,6 +91,9 @@ const ProfileEditInstructor = () => {
                 : "",
           },
         });
+
+        // podaci su tek učitani → forma je "čista"
+        setFormEmpty(true);
       } catch (error) {
         console.error(
           "Greška pri dohvaćanju podataka instruktora:",
@@ -97,35 +105,49 @@ const ProfileEditInstructor = () => {
     fetchInstructorData();
   }, []);
 
+  /* ================= UNSAVED CHANGES ================= */
+  useEffect(() => {
+    setFormEmpty(false);
+  }, [InstructorData, expertiseData, biographyData]);
+
   /* ================= RENDER ================= */
   return (
-    <div className="bg-[#f6fefb] flex justify-center items-center min-h-screen">
-      <div className="w-[90vw] h-[90vh] min-w-[90%] min-h-[400px] max-h-[600px] max-w-[1732px] max-w[90%] lg:h-[90%] bg-[#dff2ea] rounded-2xl shadow-md flex flex-col lg:flex-row items-center p-8 lg:p-12 gap-10">
-        <ProfileLayoutInstructor
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        >
-          {activeTab === "personal" && (
-            <PersonalTabContentInstructor
-              InstructorData={InstructorData}
-              setInstructorData={setInstructorData}
-            />
-          )}
+    <div className="bg-[#f6fefb] min-h-screen">
+      {/* BACK BANNER */}
+      <BackBanner
+        formEmpty={formEmpty}
+        backPath="/instructor/dashboard"
+      />
 
-          {activeTab === "expertise" && (
-            <ExpertiseTabContentInstructor
-              expertiseData={expertiseData}
-              setExpertiseData={setExpertiseData}
-            />
-          )}
+      {/* GLAVNI SADRŽAJ */}
+      <div className="flex justify-center items-center">
+        <div className="w-[90vw] h-[90vh] min-w-[90%] min-h-[400px] max-h-[600px] max-w-[1732px] lg:h-[90%] bg-[#dff2ea] rounded-2xl shadow-md flex flex-col lg:flex-row items-center p-8 lg:p-12 gap-10">
+          <ProfileLayoutInstructor
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          >
+            {activeTab === "personal" && (
+              <PersonalTabContentInstructor
+                InstructorData={InstructorData}
+                setInstructorData={setInstructorData}
+              />
+            )}
 
-          {activeTab === "biography" && (
-            <BiographyTabContentInstructor
-              biographyData={biographyData}
-              setBiographyData={setBiographyData}
-            />
-          )}
-        </ProfileLayoutInstructor>
+            {activeTab === "expertise" && (
+              <ExpertiseTabContentInstructor
+                expertiseData={expertiseData}
+                setExpertiseData={setExpertiseData}
+              />
+            )}
+
+            {activeTab === "biography" && (
+              <BiographyTabContentInstructor
+                biographyData={biographyData}
+                setBiographyData={setBiographyData}
+              />
+            )}
+          </ProfileLayoutInstructor>
+        </div>
       </div>
     </div>
   );
