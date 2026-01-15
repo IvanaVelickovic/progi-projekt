@@ -4,7 +4,7 @@ import EducationIcon from "/images/education_icon.png";
 import MoneyIcon from "/images/money_icon.png";
 import LocationIcon from "/images/location_icon.png";
 import PersonIcon from "/images/person_icon.png";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   fetchInstructorData,
   fetchInstructorSummary,
@@ -13,11 +13,12 @@ import {
   type InstructorData,
   type InstructorSummary,
 } from "./InstructorProfile.utils";
+import { LeafletMap } from "../../components/leaflet-map/LeafletMap";
 
 interface ProfileSection {
   icon: string;
   label: string;
-  value?: string | number;
+  value?: string | number | React.ReactNode;
   href?: string;
 }
 
@@ -65,7 +66,7 @@ const InstructorProfile = () => {
     {
       icon: LocationIcon,
       label: "Lokacija:",
-      value: instructorData.location,
+      value: <LeafletMap width="700px" height="400px" />,
       href: undefined,
     },
     {
@@ -77,7 +78,7 @@ const InstructorProfile = () => {
   ];
 
   return (
-    <div className="h-screen">
+    <div className="h-full">
       <header className="flex justify-between items-center content-end p-10 bg-green-dark/50 h-1/6 shadow">
         <h1 className="text-blue-dark text-3xl lg:text-5xl font-bold">
           STEM tutorstvo
@@ -142,7 +143,7 @@ const InstructorProfile = () => {
 type ProfileRowProps = {
   icon: string;
   label: string;
-  value?: string | number;
+  value?: string | number | React.ReactNode;
   href?: string;
 };
 
