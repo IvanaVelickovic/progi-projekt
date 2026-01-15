@@ -13,7 +13,8 @@ import {
   type InstructorData,
   type InstructorSummary,
 } from "./InstructorProfile.utils";
-import { LeafletMap } from "../../components/leaflet-map/LeafletMap";
+import LeafletMap from "../LeafletMap";
+//import { LeafletMap } from "../../components/leaflet-map/LeafletMap";
 
 interface ProfileSection {
   icon: string;
@@ -66,7 +67,11 @@ const InstructorProfile = () => {
     {
       icon: LocationIcon,
       label: "Lokacija:",
-      value: <LeafletMap width="700px" height="400px" />,
+      value: (
+        <div className="w-full min-h-[220px]">
+          <LeafletMap lat={instructorData.lat} lng={instructorData.lng} />
+        </div>
+      ),
       href: undefined,
     },
     {

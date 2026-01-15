@@ -32,7 +32,8 @@ export interface InstructorData {
   introVideoUrl: string;
   expertise: string;
   price: number;
-  location: string;
+  lat: number;
+  lng: number;
   biography: string;
 }
 
@@ -41,7 +42,8 @@ export function getEmptyInstructorObject(): InstructorData {
         introVideoUrl: "",
         expertise: "",
         price: 0,
-        location: "",
+        lat: 0, //Zagreb: 45.80
+        lng: 0, //Zagreb: 15.97
         biography: "",
   }
 }
