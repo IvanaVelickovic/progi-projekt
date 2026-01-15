@@ -14,6 +14,7 @@ import ProfileViewStudent from "./pages/ProfileViewStudent";
 import ProfileEditInstructor from "./pages/ProfileEditInstructor";
 import InstructorDashboard from "./pages/InstructorDashboard";
 import AddSchedule from "./pages/AddSchedule";
+import InstructorProfile from "./pages/InstructorProfile/InstructorProfile";
 
 function App() {
   return (
@@ -58,6 +59,14 @@ function App() {
           <Route
             path="/instructor/addSchedule"
             element={<AddSchedule />}
+          ></Route>
+          <Route
+            path="/instructors/:instructorId"
+            element={
+              //<ProtectedRoute>
+              <InstructorProfile />
+              //</ProtectedRoute>
+            }
           ></Route>
         </Routes>
       </AuthProvider>
