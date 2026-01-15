@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class Student {
 
     @Id
+    @Column(name = "student_id")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)

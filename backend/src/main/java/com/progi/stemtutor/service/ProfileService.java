@@ -12,7 +12,6 @@ import com.progi.stemtutor.model.enums.SubjectName;
 import com.progi.stemtutor.model.enums.UserRole;
 import com.progi.stemtutor.repository.StudentRepository;
 import com.progi.stemtutor.repository.StudentSubjectRepository;
-import com.progi.stemtutor.repository.SubjectRepository;
 import com.progi.stemtutor.repository.UserRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -118,8 +117,6 @@ public class ProfileService {
                         ss.setStudent(student);
                         ss.setSubjectName(subName); // Postavi Enum
                         ss.setKnowledgeLevel("");
-
-
                         ss.setLearningGoals("");
                         return studentSubjectRepository.save(ss);
                     });
@@ -148,7 +145,6 @@ public class ProfileService {
         // Složi DTO
         ProfileDto dto = ProfileDto.builder()
                 .firstName(user.getFirstName())
-                .lastName(user.getLastName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .grade(student.getGrade())
@@ -223,10 +219,9 @@ public class ProfileService {
         return true;
     }
 
-
     @Transactional
     public boolean updateStudentGoals(Long userId, StudentGoalsUpdateDto dto) {
-        // Provjeri postojanje studenta (za ResourceNotFoundException)
+        // Provjeri postojanje studenta
         Optional<Student> studentOpt = studentRepository.findById(userId);
         if (studentOpt.isEmpty()) return false;
 
@@ -240,4 +235,3 @@ public class ProfileService {
     }
 
 }
-
