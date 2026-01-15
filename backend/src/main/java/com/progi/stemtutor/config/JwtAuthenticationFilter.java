@@ -1,7 +1,7 @@
 package com.progi.stemtutor.config;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.progi.stemtutor.service.JwtService;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,16 +35,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        System.out.println("🔍 Incoming JWT header: " + request.getHeader("Authorization"));
-        System.out.println("🚦 JwtFilter running for path: " + request.getServletPath());
-
         String path = request.getServletPath();
+        // Preskačemo filter za rute koje ne zahtijevaju JWT
         if (path.startsWith("/oauth2") || path.startsWith("/login") || path.startsWith("/auth")) {
             filterChain.doFilter(request, response);
             return;
         }
-        final String authHeader = request.getHeader("Authorization");
 
+        final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -52,32 +50,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             final String jwt = authHeader.substring(7);
-            System.out.println(jwt);
             final String userEmail = jwtService.extractEmail(jwt);
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Authentication existingAuth = SecurityContextHolder.getContext().getAuthentication();
 
-            System.out.println("🔍 userEmail = " + userEmail + authentication);
-
-            if (userEmail != null && authentication == null) {
-                System.out.println("uša u if");
+            if (userEmail != null && existingAuth == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-                System.out.println(userDetails);
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {
+                    // 1. Izvlačenje googleTokena iz JWT-a
+                    Claims claims = jwtService.extractAllClaims(jwt);
+                    String googleToken = claims.get("googleToken", String.class);
+
+                    // 2. Postavljanje Authentication objekta s Google tokenom u 'credentials'
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
-                            null,
+                            googleToken, // Ključno: Google token je sada dostupan kroz authentication.getCredentials()
                             userDetails.getAuthorities()
                     );
 
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                    if (googleToken != null) {
+                        System.out.println("✅ Filter: Google Token ekstraktiran za korisnika: " + userEmail);
+                    }
                 }
             }
-            System.out.println("prošao if");
             filterChain.doFilter(request, response);
         } catch (Exception exception) {
-            System.out.println("❌ ERROR in loadUserByUsername: " + exception.getClass() + " -> " + exception.getMessage());
+            System.err.println("❌ Filter Error: " + exception.getMessage());
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
     }
