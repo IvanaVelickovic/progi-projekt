@@ -91,59 +91,65 @@ const Schedule = () => {
       <div className="w-3/4 p-5 flex flex-col">
         <h1 className="text-blue-dark text-3xl font-bold">Moji termini</h1>
         <div className="flex flex-col items-center mt-5 overflow-y-scroll">
-          {safeAppointments.map((item, index) => (
-            <div
-              key={item.scheduleId}
-              id={item.datetime?.split("T")[0] || "No Date"}
-              className="flex justify-between bg-[#ADEBC8] border-2 border-blue-dark rounded-2xl w-11/12 h-[250px] mb-6 shrink-0 drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]"
-            >
-              <div className="w-7/12 p-5">
-                <h1 className="text-blue-dark text-2xl font-bold">
-                  Termin {index + 1} - {item.subject}
-                </h1>
-                <div className="p-5 pt-7 text-blue-dark font-semibold text-xl">
-                  <div className="flex justify-between ">
-                    <span>• Održavanje</span>
-                    <span>{item.attendanceMode}</span>
+          {safeAppointments.length !== 0 ? (
+            safeAppointments.map((item, index) => (
+              <div
+                key={item.scheduleId}
+                id={item.datetime?.split("T")[0] || "No Date"}
+                className="flex justify-between bg-[#ADEBC8] border-2 border-blue-dark rounded-2xl w-11/12 h-[250px] mb-6 shrink-0 drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]"
+              >
+                <div className="w-7/12 p-5">
+                  <h1 className="text-blue-dark text-2xl font-bold">
+                    Termin {index + 1} - {item.subject}
+                  </h1>
+                  <div className="p-5 pt-7 text-blue-dark font-semibold text-xl">
+                    <div className="flex justify-between ">
+                      <span>• Održavanje</span>
+                      <span>{item.attendanceMode}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>• Trajanje</span>
+                      <span>{item.durationMin} min</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>• Cijena po terminu:</span>
+                      <span>{item.price} €</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span>• Trajanje</span>
-                    <span>{item.durationMin} min</span>
+                </div>
+                <div className="flex flex-col items-center justify-between w-4/12">
+                  <div className="w-9/12 p-4 m-3 bg-white rounded-2xl text-lg text-blue-dark font-semibold text-center">
+                    {item.datetime?.split("T")[0] || "No Date"}
+                    <br></br>
+                    {item.datetime?.split("T")[1] || "No Time"}
                   </div>
-                  <div className="flex justify-between">
-                    <span>• Cijena po terminu:</span>
-                    <span>{item.price} €</span>
+                  <div className="flex flex-col m-3 p-2 w-10/12 items-end">
+                    <div className="bg-[#D9D9D9] p-3 rounded-3xl text-lg text-blue-dark font-semibold text-center px-6">
+                      Popunjenost: {item.filled}/{item.maxParticipants}
+                    </div>
+                    <button
+                      className="bg-blue-light text-white text-lg p-2 rounded-3xl text-center w-8/12 cursor-pointer mt-1.5"
+                      onClick={() =>
+                        goToEditSchedule(
+                          item.scheduleId,
+                          index + 1,
+                          item.filled,
+                          googleUser,
+                          item.googleCalendar
+                        )
+                      }
+                    >
+                      Uredi
+                    </button>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col items-center justify-between w-4/12">
-                <div className="w-9/12 p-4 m-3 bg-white rounded-2xl text-lg text-blue-dark font-semibold text-center">
-                  {item.datetime?.split("T")[0] || "No Date"}
-                  <br></br>
-                  {item.datetime?.split("T")[1] || "No Time"}
-                </div>
-                <div className="flex flex-col m-3 p-2 w-10/12 items-end">
-                  <div className="bg-[#D9D9D9] p-3 rounded-3xl text-lg text-blue-dark font-semibold text-center px-6">
-                    Popunjenost: {item.filled}/{item.maxParticipants}
-                  </div>
-                  <button
-                    className="bg-blue-light text-white text-lg p-2 rounded-3xl text-center w-8/12 cursor-pointer mt-1.5"
-                    onClick={() =>
-                      goToEditSchedule(
-                        item.scheduleId,
-                        index + 1,
-                        item.filled,
-                        googleUser,
-                        item.googleCalendar
-                      )
-                    }
-                  >
-                    Uredi
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="self-start ml-4 text-blue-dark text-xl">
+              Nema termina.
+            </p>
+          )}
         </div>
       </div>
       <div className="flex flex-col items-center justify-between w-1/4 pt-2 pb-8">

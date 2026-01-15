@@ -11,8 +11,10 @@ const InstructorDashboard = () => {
 
   return (
     <div className="h-screen">
-      <div className="flex justify-between items-center content-end p-10 bg-green-dark/50 h-1/6 shadow">
-        <h1 className="text-blue-dark text-5xl font-bold">STEM tutorstvo</h1>
+      <div className="flex justify-between items-center content-end p-10 bg-green-dark/50 h-[14%] shadow">
+        <h1 className="text-blue-dark text-[2.7rem] font-bold">
+          STEM tutorstvo
+        </h1>
         <div className="flex items-center bg-[#D9D9D9] w-5/12 rounded-3xl cursor-pointer">
           <img src="/images/search_icon.png" className="w-11 ml-2"></img>
           <p className="text-blue-dark/60 font-bold text-xl ml-1">

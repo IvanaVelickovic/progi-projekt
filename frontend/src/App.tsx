@@ -50,6 +50,8 @@ function App() {
           <Route
             path="/profileInstructor"
             element={<ProfileEditInstructor />}
+          ></Route>
+          <Route
             path="/instructor/dashboard"
             element={<InstructorDashboard />}
           ></Route>

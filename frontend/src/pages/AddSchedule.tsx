@@ -96,8 +96,10 @@ const AddSchedule = () => {
 
   return (
     <div className="h-screen">
-      <div className="flex justify-between items-center content-end p-10 bg-green-dark/50 h-1/6 shadow">
-        <h1 className="text-blue-dark text-5xl font-bold">STEM tutorstvo</h1>{" "}
+      <div className="flex justify-between items-center content-end p-10 bg-green-dark/50 h-[14%] shadow">
+        <h1 className="text-blue-dark text-[2.7rem] font-bold">
+          STEM tutorstvo
+        </h1>{" "}
       </div>
 
       <div className=" h-5/6 py-8 px-30">
@@ -233,7 +235,7 @@ const AddSchedule = () => {
               </div>
             </div>
             <div className="flex h-1/4 justify-between items-center mt-[5%]">
-              {true ? (
+              {googleUser ? (
                 <div className="flex items-center gap-2 w-[42%] font-semibold">
                   <label>
                     <input

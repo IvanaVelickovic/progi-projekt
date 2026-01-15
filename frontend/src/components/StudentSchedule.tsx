@@ -107,7 +107,9 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
               </div>
             ))
           ) : (
-            <p>Nema termina</p>
+            <p className="self-start ml-4 text-blue-dark text-xl">
+              Nema termina.
+            </p>
           )}
         </div>
       </div>
