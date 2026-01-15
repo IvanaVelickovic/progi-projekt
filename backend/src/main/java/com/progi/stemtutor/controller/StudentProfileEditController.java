@@ -2,8 +2,8 @@ package com.progi.stemtutor.controller;
 
 import com.progi.stemtutor.dto.PersonalInfoUpdateDto;
 import com.progi.stemtutor.dto.PasswordUpdateDto;
-import com.progi.stemtutor.dto.StudentEducationDto;
-import com.progi.stemtutor.dto.StudentGoalsDto;
+import com.progi.stemtutor.dto.StudentEducationUpdateDto;
+import com.progi.stemtutor.dto.StudentGoalsUpdateDto;
 import com.progi.stemtutor.service.StudentProfileEditService;
 import com.progi.stemtutor.model.User; // Pretpostavljam da je User vaš Principal
 
@@ -97,7 +97,7 @@ public class StudentProfileEditController {
     @PostMapping("/update-education")
     public ResponseEntity<?> updateStudentEducation(
             @AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody StudentEducationDto dto) {
+            @Valid @RequestBody StudentEducationUpdateDto dto) {
 
         Long userId = getUserId(userDetails);
 
@@ -114,7 +114,7 @@ public class StudentProfileEditController {
     @PostMapping("/update-goals")
     public ResponseEntity<?> updateStudentGoals(
             @AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody StudentGoalsDto dto) {
+            @Valid @RequestBody StudentGoalsUpdateDto dto) {
 
         Long userId = getUserId(userDetails);
 

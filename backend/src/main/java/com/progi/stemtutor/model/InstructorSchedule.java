@@ -54,6 +54,17 @@ public class InstructorSchedule {
     @Column(name = "google_calendar_id", unique = true)
     private String googleCalendarId;
 
-    @Column(name = "instructor_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instructor_id", insertable = false, updatable = false)
+    private Instructor instructor;
+
+    @Column(name = "instructor_id")
     private Integer instructorId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instructor_subject_id", nullable = false)
+    private InstructorSubject instructorSubject;
+
+    @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
 }

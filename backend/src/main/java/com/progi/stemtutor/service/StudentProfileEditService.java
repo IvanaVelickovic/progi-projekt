@@ -25,14 +25,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ProfileService {
+public class StudentProfileEditService {
 
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
     private final StudentSubjectRepository studentSubjectRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ProfileService(UserRepository userRepository, StudentRepository studentRepository,
+    public StudentProfileEditService(UserRepository userRepository, StudentRepository studentRepository,
                           StudentSubjectRepository studentSubjectRepository,
                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;

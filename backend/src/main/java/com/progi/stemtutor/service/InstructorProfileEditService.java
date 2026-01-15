@@ -66,9 +66,9 @@ public class InstructorProfileEditService {
                 .hourlyRate(instructor.getHourlyRate())
                 .introVideoUrl(instructor.getIntroVideoUrl())
                 .references(instructor.getReferences())
-                .math(instructor.isMath())
-                .physics(instructor.isPhysics())
-                .it(instructor.isIt())
+                .math(Boolean.TRUE.equals(instructor.getMath()))
+                .physics(Boolean.TRUE.equals(instructor.getPhysics()))
+                .it(Boolean.TRUE.equals(instructor.getIt()))
                 .build();
         System.out.println(dto);
         return Optional.of(dto);

@@ -1,6 +1,6 @@
 package com.progi.stemtutor.service;
 
-import com.progi.stemtutor.dto.StudentProfileDto;
+import com.progi.stemtutor.dto.ProfileDto;
 import com.progi.stemtutor.model.Student;
 import com.progi.stemtutor.model.StudentSubject;
 import com.progi.stemtutor.model.enums.SubjectName;
@@ -57,7 +57,7 @@ public class StudentProfileService {
         StudentSubject inf = map.get(SubjectName.Informatika);
 
         // Složi DTO
-        StudentProfileDto dto = StudentProfileDto.builder()
+        ProfileDto dto = ProfileDto.builder()
                 .firstName(student.getUser().getFirstName())
                 .lastName(student.getUser().getLastName())
                 .lastName(student.getUser().getLastName())

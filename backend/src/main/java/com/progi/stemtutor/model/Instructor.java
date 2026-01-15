@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @SuperBuilder
-public class Instructor{
+public class Instructor {
 
     @Id
     private Long id;
@@ -27,9 +27,9 @@ public class Instructor{
     private String biography;
     private BigDecimal hourlyRate;
     private String introVideoUrl;
-    private boolean math;
-    private boolean physics;
-    private boolean it;
+    private Boolean math;
+    private Boolean physics;
+    private Boolean it;
     @Column(name = "reference")
     private String references;
     private BigDecimal longitude;

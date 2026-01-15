@@ -3,7 +3,7 @@ package com.progi.stemtutor.dto;
 import lombok.Data;
 
 @Data
-public class StudentEducationDto {
+public class StudentEducationUpdateDto {
 
     private String grade;
     private String knowledgeLevelMath;

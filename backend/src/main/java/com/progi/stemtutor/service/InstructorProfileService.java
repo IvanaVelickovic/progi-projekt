@@ -25,9 +25,9 @@ public class InstructorProfileService {
         Instructor instructor = optInstructor.orElse(null);
 
         List<String> areas = new ArrayList<>();
-        if (instructor.isMath()) areas.add("Matematika");
-        if (instructor.isPhysics()) areas.add("Fizika");
-        if (instructor.isIt()) areas.add("Informatika");
+        if (Boolean.TRUE.equals(instructor.getMath())) areas.add("Matematika");
+        if (Boolean.TRUE.equals(instructor.getPhysics())) areas.add("Fizika");
+        if (Boolean.TRUE.equals(instructor.getIt())) areas.add("Informatika");
         String expertiseAreas = String.join(", ", areas);
 
         // Složi DTO
@@ -37,9 +37,9 @@ public class InstructorProfileService {
                 .lastName(instructor.getUser().getLastName())
                 .biography(instructor.getBiography())
                 .introVideoUrl(instructor.getIntroVideoUrl())
-                .math(instructor.isMath())
-                .physics(instructor.isPhysics())
-                .it(instructor.isIt())
+                .math(Boolean.TRUE.equals(instructor.getMath()))
+                .physics(Boolean.TRUE.equals(instructor.getPhysics()))
+                .it(Boolean.TRUE.equals(instructor.getIt()))
                 .longitude(instructor.getLongitude())
                 .latitude(instructor.getLatitude())
                 .hourlyRate(instructor.getHourlyRate())

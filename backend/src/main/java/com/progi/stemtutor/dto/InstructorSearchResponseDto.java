@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 })
 public class InstructorSearchResponseDto {
     private Long id;
-    private LocalDateTime DateTime;
+    private LocalDateTime dateTime;
     private Integer maxParticipants;
     private Long filled;
     private Integer duration;

@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class StudentProfileDto {
+public class ProfileDto {
 
     @JsonProperty("first_name")
     private String firstName;
