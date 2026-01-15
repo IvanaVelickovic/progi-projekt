@@ -23,7 +23,7 @@ public interface InstructorRepository extends JpaRepository<Instructor, Long> {
         WHERE i.instructor_id = :instructor_id
         GROUP BY i.instructor_id;
     """, nativeQuery = true)
-    Double findAverageRatingByInstructorId(@Param("instructorId") Long instructorId);
+    Double findAverageRatingByInstructorId(@Param("instructor_id") Long instructorId);
 
     @Query(value = """
         SELECT
@@ -41,5 +41,5 @@ public interface InstructorRepository extends JpaRepository<Instructor, Long> {
         WHERE i.instructor_id = :instructor_id
         GROUP BY i.instructor_id
     """, nativeQuery = true)
-    Integer countByInstructorId(@Param("instructorId") Long instructorId);
+    Integer countByInstructorId(@Param("instructor_id") Long instructorId);
 }
