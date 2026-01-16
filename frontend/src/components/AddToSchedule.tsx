@@ -1,36 +1,51 @@
 import { useEffect, useState } from "react";
 import api from "../api";
-
-interface Schedules {
-  id: number;
-  subject: string;
-  datetime: string;
-  selected: boolean;
-}
+import { useAppointments } from "../context/AppointmentsContext";
 
 interface AddToScheduleProps {
   quizId: number;
   quizName: string;
   setAddToSchedule: React.Dispatch<React.SetStateAction<boolean>>;
-  schedules: Schedules[];
-  setSchedules: React.Dispatch<React.SetStateAction<Schedules[]>>;
 }
 
 const AddToSchedule = ({
   quizId,
   quizName,
   setAddToSchedule,
-  schedules,
-  setSchedules,
 }: AddToScheduleProps) => {
+  const { appointments } = useAppointments();
+  const [selected, setSelected] = useState<number[]>([]);
+
+  useEffect(() => {
+    const scheduleIds = appointments.map((a) => a.id);
+    const fetchSelectedSchedules = async () => {
+      try {
+        const res = await api.get("/instructor/selectedSchedules", {
+          params: {
+            quiz_id: quizId,
+            instructor_schedule_ids: scheduleIds,
+          },
+        });
+        setSelected(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchSelectedSchedules();
+  }, [quizId]);
+
+  const toggleSelected = (id: number) => {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
   const handleAddToSchedule = async () => {
-    /*const selectedScheduleIds = schedules
-      .filter((s) => s.selected)
-      .map((s) => s.id);
     try {
-      await api.post("/api/instructor/addToSchedule", {
-        quizId: quizId, //id kviza
-        scheduleIds: selectedScheduleIds, //polje s schedule id-ovima
+      await api.post("/instructor/addToSchedule", {
+        quiz_id: quizId, //id kviza
+        schedule_ids: selected, //polje s schedule id-ovima
       });
       window.alert("Uspješno pridodijeljeno!");
     } catch (error) {
@@ -38,7 +53,7 @@ const AddToSchedule = ({
       window.alert("Neuspjeh - kviz nije pridodijeljen terminima.");
     } finally {
       setAddToSchedule(false);
-    } */
+    }
 
     window.alert("Neuspjeh - kviz nije pridodijeljen terminima.");
     setAddToSchedule(false);
@@ -67,34 +82,18 @@ const AddToSchedule = ({
         </div>
 
         <div className="flex-1 grid grid-cols-1 gap-4 overflow-y-auto p-5">
-          {schedules.map((item, id) => (
+          {appointments.map((item, id) => (
             <div
               key={item.id}
-              className="flex items-center min-h-[90px] shrink-0 bg-green-light border-2 border-blue-dark rounded-2xl px-5 gap-x-3"
-              onClick={() => {
-                setSchedules((prev) =>
-                  prev.map((i) =>
-                    i.id === item.id
-                      ? {
-                          ...i,
-                          selected: !item.selected,
-                        }
-                      : i
-                  )
-                );
-              }}
+              className="flex items-center min-h-[90px] shrink-0 bg-green-light border-2 border-blue-dark rounded-2xl px-5 gap-x-3 cursor-pointer"
+              onClick={() => toggleSelected(item.id)}
+              onChange={() => toggleSelected(item.id)}
             >
               <input
                 type="checkbox"
-                checked={item.selected}
-                onChange={() => {
-                  setSchedules((prev) =>
-                    prev.map((i) =>
-                      i.id === item.id ? { ...i, selected: !i.selected } : i
-                    )
-                  );
-                }}
-                className="h-5 w-5"
+                checked={selected.includes(item.id)}
+                onChange={() => toggleSelected(item.id)}
+                className="h-5 w-5 cursor-pointer"
               ></input>
               <div className="flex justify-between items-center w-full">
                 <div className="text-blue-dark text-xl font-bold">

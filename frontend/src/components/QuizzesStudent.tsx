@@ -2,11 +2,10 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import quizzesData from "../assets/quizzes.json";
-import AddToSchedule from "./AddToSchedule";
 import schedulesData from "../assets/schedules.json";
 import api from "../api";
 
-export interface Quizzes {
+export interface QuizzesStudent {
   quizId: number;
   quizName: string;
   description: string;
@@ -21,17 +20,10 @@ interface Schedules {
   selected: boolean;
 }
 
-const Quizzes = () => {
+const QuizzesStudent = () => {
   const navigate = useNavigate();
 
-  const [quizzes, setQuizzes] = useState<Quizzes[]>([]);
-
-  const [addToSchedule, setAddToSchedule] = useState(false);
-  const [quizName, setQuizName] = useState({
-    id: -1,
-    name: "",
-  });
-
+  const [quizzes, setQuizzes] = useState<QuizzesStudent[]>([]);
   const [schedules, setSchedules] = useState<Schedules[]>([]);
 
   useEffect(() => {
@@ -46,12 +38,6 @@ const Quizzes = () => {
     setQuizzes(quizzesData);
     fetchAppointments();
   }, []);
-
-  function addQuizToSchedule(id: number, name: string) {
-    setQuizName({ id: id, name: name });
-    setSchedules(schedulesData);
-    setAddToSchedule(true);
-  }
 
   const handleDelete = async (id: number) => {
     const proceed = window.confirm(
@@ -106,28 +92,13 @@ const Quizzes = () => {
                   <img src="/images/trash_icon.png" className="w-8"></img>
                   <p className="text-[#9A1818] ml-2">Izbriši</p>
                 </button>
-                <button
-                  className="bg-blue-light flex justify-center items-center rounded-xl px-14 py-1 gap-4 w-1/2 cursor-pointer"
-                  onClick={() => addQuizToSchedule(item.quizId, item.quizName)}
-                >
-                  <p className="text-white">Dodijeli terminu</p>
-                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
-      {addToSchedule && (
-        <AddToSchedule
-          quizId={quizName.id}
-          quizName={quizName.name}
-          setAddToSchedule={setAddToSchedule}
-          schedules={schedules}
-          setSchedules={setSchedules}
-        ></AddToSchedule>
-      )}
     </div>
   );
 };
 
-export default Quizzes;
+export default QuizzesStudent;

@@ -67,7 +67,7 @@ const Schedule = () => {
     };
 
     fetchAppointments();
-    //setAppointments(appointmentsData);
+    setAppointments(appointmentsData);
   }, []);
 
   const appointmentDates = appointments.map(

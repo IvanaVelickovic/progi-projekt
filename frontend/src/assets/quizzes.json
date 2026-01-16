@@ -1,37 +1,37 @@
 [
   {
-    "quizId": 1,
-    "quizName": "Osnove Jave",
-    "description": "Kviz koji provjerava osnovno znanje Java programskog jezika.",
+    "quiz_id": 1,
+    "quiz_name": "Osnove Jave",
+    "quiz_description": "Kviz koji provjerava osnovno znanje Java programskog jezika.",
     "numberOfQuestions": 10,
-    "creationDate": "2025-10-01"
+    "quiz_created_at": "2025-10-01"
   },
   {
-    "quizId": 2,
-    "quizName": "Frontend osnove",
-    "description": "HTML, CSS i JavaScript osnove za početnike. HTML, CSS i JavaScript osnove za početnike. HTML, CSS i JavaScript osnove za početnike.",
+    "quiz_id": 2,
+    "quiz_name": "Frontend osnove",
+    "quiz_description": "HTML, CSS i JavaScript osnove za početnike. HTML, CSS i JavaScript osnove za početnike. HTML, CSS i JavaScript osnove za početnike.",
     "numberOfQuestions": 12,
-    "creationDate": "2025-10-05"
+    "quiz_created_at": "2025-10-05"
   },
   {
-    "quizId": 3,
-    "quizName": "Baze podataka",
-    "description": "Relacijske baze podataka, SQL i normalizacija.",
+    "quiz_id": 3,
+    "quiz_name": "Baze podataka",
+    "quiz_description": "Relacijske baze podataka, SQL i normalizacija.",
     "numberOfQuestions": 15,
-    "creationDate": "2025-10-10"
+    "quiz_created_at": "2025-10-10"
   },
   {
-    "quizId": 4,
-    "quizName": "Spring Boot",
-    "description": "Kviz o Spring Boot frameworku i REST API-ima.",
+    "quiz_id": 4,
+    "quiz_name": "Spring Boot",
+    "quiz_description": "Kviz o Spring Boot frameworku i REST API-ima.",
     "numberOfQuestions": 8,
-    "creationDate": "2025-10-15"
+    "quiz_created_at": "2025-10-15"
   },
   {
-    "quizId": 5,
-    "quizName": "Algoritmi i strukture podataka",
-    "description": "Sortiranja, pretrage i osnovne strukture podataka.",
+    "quiz_id": 5,
+    "quiz_name": "Algoritmi i strukture podataka",
+    "quiz_description": "Sortiranja, pretrage i osnovne strukture podataka.",
     "numberOfQuestions": 20,
-    "creationDate": "2025-10-20"
+    "quiz_created_at": "2025-10-20"
   }
 ]
