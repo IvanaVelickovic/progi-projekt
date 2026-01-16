@@ -66,7 +66,7 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
                     className="text-blue-dark/93 text-xl font-bold ml-1 cursor-pointer hover:text-blue-dark/70"
                     onClick={() => {
                       navigate(
-                        `instructor/viewProfile/id?=${item.instructorId}`
+                        `/instructors/${item.instructorId}`
                       );
                     }}
                   >

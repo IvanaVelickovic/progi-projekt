@@ -63,7 +63,7 @@ const Search = () => {
     if (filters.subject) params.append("subject", filters.subject);
 
     if (filters.formatLive && !filters.formatOnline)
-      params.append("format", "live");
+      params.append("format", "in_person");
     if (filters.formatOnline && !filters.formatLive)
       params.append("format", "online");
 
