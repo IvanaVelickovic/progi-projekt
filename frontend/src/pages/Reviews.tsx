@@ -5,14 +5,12 @@ const Review = () => {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
 
-  // State za instruktora (isto kao u ProfileEditInstructor)
   const [InstructorData, setInstructorData] = useState({
     firstName: "",
     lastName: "",
     email: "",
   });
 
-  // Dohvati podatke instruktora
   useEffect(() => {
     const fetchInstructor = async () => {
       try {
@@ -30,11 +28,9 @@ const Review = () => {
     fetchInstructor();
   }, []);
 
-  // Slanje recenzije
   const sendReview = async () => {
     try {
       await api.post("/api/reviews", {
-        // backend može prepoznati instruktora preko tokena, pa id nije potreban
         rating,
         text: reviewText,
       });
