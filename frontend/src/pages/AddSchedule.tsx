@@ -5,7 +5,7 @@ import api from "../api";
 
 const AddSchedule = () => {
   const googleUser = JSON.parse(
-    sessionStorage.getItem("googleUser") || "false"
+    sessionStorage.getItem("googleUser") || "false",
   );
 
   const [formData, setFormData] = useState({
@@ -28,14 +28,12 @@ const AddSchedule = () => {
   const localTime = `${hours}:${minutes}`;
   const minDateTime = `${localDate}T${localTime}`;
 
-  const isFormEmpty = Object.values(formData).every((value) => value === ""); //initial value
-
   const goBack = () => {
     const formEmpty = Object.values(formData).every((value) => value === "");
 
     if (!formEmpty) {
       const proceed = window.confirm(
-        "Ako se vratite natrag, vaši podaci neće biti spremljeni. Želite li nastaviti?"
+        "Ako se vratite natrag, vaši podaci neće biti spremljeni. Želite li nastaviti?",
       );
       if (proceed) {
         navigate("/instructor/dashboard");
@@ -45,19 +43,8 @@ const AddSchedule = () => {
     }
   };
 
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (!isFormEmpty) {
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [isFormEmpty]);
-
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
 
@@ -76,7 +63,7 @@ const AddSchedule = () => {
     } catch (err: any) {
       console.error("Greška u komunikaciji s backendom ", err);
       window.alert(
-        "Nismo uspjeli dodati vaš termin. Molimo pokušajte ponovno."
+        "Nismo uspjeli dodati vaš termin. Molimo pokušajte ponovno.",
       );
     }
   };
@@ -84,7 +71,9 @@ const AddSchedule = () => {
   return (
     <div className="h-screen">
       <div className="flex justify-between items-center content-end p-10 bg-green-dark/50 h-1/6 shadow">
-        <h1 className="text-blue-dark text-5xl font-bold">STEM tutorstvo</h1>{" "}
+        <h1 className="text-blue-dark text-5xl font-bold">
+          STEM tutorstvo
+        </h1>{" "}
       </div>
 
       <div className=" h-5/6 py-8 px-30">

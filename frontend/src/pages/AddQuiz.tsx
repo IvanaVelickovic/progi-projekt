@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api";
 import AddQuestion from "../components/AddQuestion";
 
 interface Question {
@@ -14,7 +13,6 @@ interface Question {
 
 const AddQuiz = () => {
   const navigate = useNavigate();
-  const nextId = useRef(1);
   const [aboutQuiz, setAboutQuiz] = useState({
     quiz_title: "",
     quiz_description: "",
@@ -23,24 +21,15 @@ const AddQuiz = () => {
 
   const goBack = () => {
     const proceed = window.confirm(
-      "Ako se vratite natrag, vaši podaci neće biti spremljeni. Želite li nastaviti?"
+      "Ako se vratite natrag, vaši podaci neće biti spremljeni. Želite li nastaviti?",
     );
     if (proceed) {
       navigate("/instructor/dashboard");
     }
   };
 
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, []);
-
   const handleAboutChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
 
@@ -48,36 +37,8 @@ const AddQuiz = () => {
     console.log(aboutQuiz);
   };
 
-  const addQuestion = () => {
-    setQuestions((prev) => [
-      ...prev,
-      {
-        id: nextId.current++,
-        text: "",
-        type: "input",
-        difficulty: "easy",
-        options: [],
-        correct: "",
-      },
-    ]);
-  };
-
-  const handleSubmit = async () => {
-    try {
-      await api.post("/instructor/addQuiz", {
-        quiz_title: aboutQuiz.quiz_title,
-        quiz_description: aboutQuiz.quiz_description,
-        questions: questions,
-      });
-      window.alert("Uspješno dodan kviz!");
-      navigate("/instructor/dashboard");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
-    <div className=" bg-white">
+    <div className=" bg-white min-h-screen">
       <div className="flex justify-between items-center content-end p-10 bg-green-dark/50 h-[110px] shadow">
         <h1 className="text-blue-dark text-[2.7rem] font-bold">
           STEM tutorstvo
@@ -117,37 +78,12 @@ const AddQuiz = () => {
               ></textarea>
             </div>
           </div>
-          <div className="flex justify-between items-center mt-8 mb-6">
-            <div>
-              <h1 className="font-bold text-xl">
-                Banka pitanja ({questions.length})
-              </h1>
-              <p>
-                Za adaptivno preporučivanje, potrebno je definirati veći broj
-                pitanja ({">"}10). Sustav će iz tog skupa generirati prilagođeni
-                kviz za svakog učenika.
-              </p>
-            </div>
-            <button
-              className="bg-blue-light rounded-xl text-white text-lg px-10 py-2 cursor-pointer"
-              onClick={addQuestion}
-            >
-              + Dodaj pitanje
-            </button>
-          </div>
           <AddQuestion
+            quiz_title={aboutQuiz.quiz_title}
+            quiz_description={aboutQuiz.quiz_description}
             questions={questions}
             setQuestions={setQuestions}
           ></AddQuestion>
-        </div>
-        <div className="flex justify-end px-8">
-          <button
-            className="bg-blue-light rounded-xl text-white text-lg px-12 py-3 cursor-pointer"
-            type="button"
-            onClick={handleSubmit}
-          >
-            Objavi kviz
-          </button>
         </div>
       </div>
     </div>

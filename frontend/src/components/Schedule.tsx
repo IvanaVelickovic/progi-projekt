@@ -1,5 +1,5 @@
 import Calendar from "react-calendar";
-import appointmentsData from "../assets/appointments.json";
+//import appointmentsData from "../assets/appointments.json";
 import { useNavigate } from "react-router-dom";
 import EditSchedule from "./EditSchedule";
 import { useEffect, useState } from "react";
@@ -22,7 +22,7 @@ const Schedule = () => {
   const [editSchedule, setEditSchedule] = useState(false);
   const navigate = useNavigate();
   const googleUser = JSON.parse(
-    sessionStorage.getItem("googleUser") || "false"
+    sessionStorage.getItem("googleUser") || "false",
   );
 
   const { appointments, setAppointments } = useAppointments();
@@ -40,7 +40,7 @@ const Schedule = () => {
     index: number,
     filled: number,
     googleUser: boolean,
-    googleCalendar: boolean
+    googleCalendar: boolean,
   ) => {
     setScheduleData({
       id: id,
@@ -67,11 +67,11 @@ const Schedule = () => {
     };
 
     fetchAppointments();
-    setAppointments(appointmentsData);
+    //setAppointments(appointmentsData);
   }, []);
 
   const appointmentDates = appointments.map(
-    (item) => item.datetime.split("T")[0]
+    (item) => item.datetime.split("T")[0],
   );
 
   return (
@@ -122,7 +122,7 @@ const Schedule = () => {
                         index + 1,
                         item.filled,
                         googleUser,
-                        item.googleCalendar
+                        item.googleCalendar,
                       )
                     }
                   >

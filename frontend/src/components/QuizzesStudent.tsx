@@ -1,7 +1,7 @@
 //import appointmentsData from "../assets/appointments.json";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import quizzesData from "../assets/quizzes_s.json";
+//import quizzesData from "../assets/quizzes_s.json";
 import api from "../api";
 
 export interface QuizzesStudent {
@@ -27,7 +27,7 @@ const QuizzesStudent = () => {
         console.error("Greška pri dohvaćanju korisničkih podataka:", error);
       }
     };
-    setQuizzes(quizzesData);
+    //setQuizzes(quizzesData);
     fetchAppointments();
   }, []);
 
