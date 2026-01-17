@@ -11,6 +11,8 @@ import Setup from "./pages/Setup";
 import InstructorDashboard from "./pages/InstructorDashboard";
 import AddSchedule from "./pages/AddSchedule";
 import AddQuiz from "./pages/AddQuiz";
+import StudentDashboard from "./pages/StudentDashboard";
+import SolveQuiz from "./pages/SolveQuiz";
 
 function App() {
   return (
@@ -43,10 +45,15 @@ function App() {
             element={<InstructorDashboard />}
           ></Route>
           <Route
+            path="/student/dashboard"
+            element={<StudentDashboard />}
+          ></Route>
+          <Route
             path="/instructor/addSchedule"
             element={<AddSchedule />}
           ></Route>
           <Route path="/instructor/addQuiz" element={<AddQuiz />}></Route>
+          <Route path="/solve/quiz/:quiz_id" element={<SolveQuiz />}></Route>
         </Routes>
       </AuthProvider>
     </Router>
