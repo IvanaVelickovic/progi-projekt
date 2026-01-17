@@ -1,5 +1,5 @@
 import Calendar from "react-calendar";
-import appointmentsData from "../assets/appointments.json";
+//import appointmentsData from "../assets/appointments.json";
 import { useNavigate } from "react-router-dom";
 import EditSchedule from "./EditSchedule";
 import { useEffect, useState } from "react";
@@ -67,7 +67,7 @@ const Schedule = () => {
     };
 
     fetchAppointments();
-    setAppointments(appointmentsData);
+    //setAppointments(appointmentsData);
   }, []);
 
   const appointmentDates = appointments.map(
