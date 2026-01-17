@@ -37,7 +37,7 @@ const AddToSchedule = ({
 
   const toggleSelected = (id: number) => {
     setSelected((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
   };
 
@@ -87,12 +87,10 @@ const AddToSchedule = ({
               key={item.id}
               className="flex items-center min-h-[90px] shrink-0 bg-green-light border-2 border-blue-dark rounded-2xl px-5 gap-x-3 cursor-pointer"
               onClick={() => toggleSelected(item.id)}
-              onChange={() => toggleSelected(item.id)}
             >
               <input
                 type="checkbox"
                 checked={selected.includes(item.id)}
-                onChange={() => toggleSelected(item.id)}
                 className="h-5 w-5 cursor-pointer"
               ></input>
               <div className="flex justify-between items-center w-full">
