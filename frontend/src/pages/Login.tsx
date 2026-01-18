@@ -6,7 +6,11 @@ import SocialButtons from "../components/SocialButtons";
 import { useAuth } from "../context/AuthContext";
 import api from "../api";
 
-const Login = () => {
+type LoginProps = {
+  onSubmit?: (email: string, password: string) => void;
+};
+
+const Login = ({ onSubmit }: LoginProps) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,6 +24,12 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (onSubmit) {
+      onSubmit(formData.email, formData.password);
+      return;
+    }
+
     setLoading(true);
     try {
       const loginRes = await api.post("/auth/login", {
@@ -50,7 +60,7 @@ const Login = () => {
         }
       }
     } catch (err: any) {
-      if (err.response.status === 401) {
+      if (err?.response?.status === 401) {
         window.alert("Krivi email ili lozinka");
       }
       console.error("Greška u komunikaciji s backendom", err);
