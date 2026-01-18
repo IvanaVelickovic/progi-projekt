@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import api from "../api";
 import { useAppointments } from "../context/AppointmentsContext";
 
@@ -6,34 +5,18 @@ interface AddToScheduleProps {
   quizId: number;
   quizName: string;
   setAddToSchedule: React.Dispatch<React.SetStateAction<boolean>>;
+  selected: number[];
+  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 const AddToSchedule = ({
   quizId,
   quizName,
   setAddToSchedule,
+  selected,
+  setSelected,
 }: AddToScheduleProps) => {
   const { appointments } = useAppointments();
-  const [selected, setSelected] = useState<number[]>([]);
-
-  useEffect(() => {
-    const scheduleIds = appointments.map((a) => a.id);
-    const fetchSelectedSchedules = async () => {
-      try {
-        const res = await api.get("/instructor/selectedSchedules", {
-          params: {
-            quiz_id: quizId,
-            instructor_schedule_ids: scheduleIds,
-          },
-        });
-        setSelected(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchSelectedSchedules();
-  }, [quizId]);
 
   const toggleSelected = (id: number) => {
     setSelected((prev) =>
@@ -42,6 +25,7 @@ const AddToSchedule = ({
   };
 
   const handleAddToSchedule = async () => {
+    console.log(selected);
     try {
       await api.post("/instructor/addToSchedule", {
         quiz_id: quizId, //id kviza
@@ -54,9 +38,6 @@ const AddToSchedule = ({
     } finally {
       setAddToSchedule(false);
     }
-
-    window.alert("Neuspjeh - kviz nije pridodijeljen terminima.");
-    setAddToSchedule(false);
   };
 
   return (
@@ -70,7 +51,8 @@ const AddToSchedule = ({
               Dodijeli kviz terminu
             </h1>
             <p className="text-blue-dark">
-              Kliknite na ime termina kojemu želite dodijeliti kviz - {quizName}
+              Kliknite na kvadratić (checkbox) kod termina kojemu želite
+              dodijeliti kviz - {quizName}
             </p>
           </div>
           <button
@@ -86,12 +68,15 @@ const AddToSchedule = ({
             <div
               key={item.id}
               className="flex items-center min-h-[90px] shrink-0 bg-green-light border-2 border-blue-dark rounded-2xl px-5 gap-x-3 cursor-pointer"
-              onClick={() => toggleSelected(item.id)}
             >
               <input
                 type="checkbox"
                 checked={selected.includes(item.id)}
                 className="h-5 w-5 cursor-pointer"
+                onChange={(e) => {
+                  e.stopPropagation();
+                  toggleSelected(item.id);
+                }}
               ></input>
               <div className="flex justify-between items-center w-full">
                 <div className="text-blue-dark text-xl font-bold">

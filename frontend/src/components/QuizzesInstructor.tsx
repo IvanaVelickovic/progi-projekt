@@ -1,9 +1,9 @@
-//import appointmentsData from "../assets/appointments.json";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 //import quizzesData from "../assets/quizzes.json";
 import AddToSchedule from "./AddToSchedule";
 import api from "../api";
+import { useAppointments } from "../context/AppointmentsContext";
 
 export interface QuizzesInstructor {
   quiz_id: number;
@@ -15,6 +15,7 @@ export interface QuizzesInstructor {
 
 const QuizzesInstructor = () => {
   const navigate = useNavigate();
+  const { appointments } = useAppointments();
 
   const [quizzes, setQuizzes] = useState<QuizzesInstructor[]>([]);
 
@@ -23,6 +24,8 @@ const QuizzesInstructor = () => {
     id: -1,
     name: "",
   });
+
+  const [selected, setSelected] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -37,7 +40,24 @@ const QuizzesInstructor = () => {
     fetchAppointments();
   }, []);
 
-  const addQuizToSchedule = (id: number, name: string) => {
+  const addQuizToSchedule = async (id: number, name: string) => {
+    if (appointments.length === 0) {
+      console.log("Appointments not loaded yet");
+      return;
+    }
+    const scheduleIds = appointments.map((a) => a.id);
+    try {
+      const res = await api.get("/instructor/selectedSchedules", {
+        params: {
+          quiz_id: id,
+          instructor_schedule_ids: scheduleIds,
+        },
+      });
+      setSelected(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+
     setquiz_name({ id: id, name: name });
     setAddToSchedule(true);
   };
@@ -113,6 +133,8 @@ const QuizzesInstructor = () => {
           quizId={quiz_name.id}
           quizName={quiz_name.name}
           setAddToSchedule={setAddToSchedule}
+          selected={selected}
+          setSelected={setSelected}
         ></AddToSchedule>
       )}
     </div>
