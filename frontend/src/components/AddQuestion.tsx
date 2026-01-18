@@ -33,22 +33,27 @@ const AddQuestion = ({
   ) => {
     const { name, value } = e.target;
 
-    setQuestions((prevQuestions) =>
-      prevQuestions.map((q) =>
-        q.id === id
-          ? { ...q, [name]: value } // spojimo postojeće i nove vrijednosti
-          : q,
-      ),
-    );
-
     if (name === "type") {
       setQuestions((prev) =>
-        prev.map((q) => (q.id === id ? { ...q, options: [] } : q)),
+        prev.map((q) =>
+          q.id === id
+            ? {
+                ...q,
+                type: value as "input" | "options",
+                options: value === "options" ? ["", ""] : [],
+                correct: "",
+              }
+            : q,
+        ),
       );
-      if (value === "options") {
-        addOption(id);
-        addOption(id);
-      }
+    } else {
+      setQuestions((prevQuestions) =>
+        prevQuestions.map((q) =>
+          q.id === id
+            ? { ...q, [name]: value } // spojimo postojeće i nove vrijednosti
+            : q,
+        ),
+      );
     }
   };
 
@@ -120,7 +125,7 @@ const AddQuestion = ({
     setNextId(nextId + 1);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(questions);
     try {
@@ -155,10 +160,10 @@ const AddQuestion = ({
           + Dodaj pitanje
         </button>
       </div>
-      <form className="">
+      <form method="POST" onSubmit={handleSubmit}>
         {questions.map((item, i) => (
           <div
-            key={i}
+            key={item.id}
             className="border-2 border-blue-dark rounded-2xl bg-green-light mb-4"
           >
             <div className="flex justify-between items-center p-5">
@@ -275,7 +280,6 @@ const AddQuestion = ({
           <button
             className="bg-blue-light rounded-xl text-white text-lg px-12 py-3 cursor-pointer"
             type="submit"
-            onSubmit={(e) => handleSubmit(e)}
           >
             Objavi kviz
           </button>
