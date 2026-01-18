@@ -23,7 +23,7 @@ interface ProfileSection {
   href?: string;
 }
 
-type Tab = "about" | "schedule" | "reviews";
+type Tab = "about" | "reviews";
 
 type Review = {
   id: number;
@@ -146,19 +146,23 @@ const InstructorProfile = () => {
           />
           <ul className="list-group text-blue-dark text-2xl flex-col mt-8 p-5">
             <li
-              className="list-group-item bg-green-dark/50 rounded-3xl cursor-pointer text-center font-semibold p-3 active"
+              className={`list-group-item bg-green-dark/50 rounded-3xl cursor-pointer text-center font-semibold p-3 ${
+                activeTab === "about" ? "active" : ""
+              }`}
               onClick={() => setActiveTab("about")}
             >
               O instruktoru
             </li>
             <li
               className="list-group-item mt-5 p-3 cursor-pointer text-center"
-              onClick={() => setActiveTab("schedule")}
+              onClick={() => setActiveTab("about")}
             >
               Dostupni termini
             </li>
             <li
-              className="list-group-item mt-5 p-3 cursor-pointer text-center"
+              className={`list-group-item mt-5 p-3 cursor-pointer text-center ${
+                activeTab === "reviews" ? "active" : ""
+              }`}
               onClick={() => setActiveTab("reviews")}
             >
               Ocjene i recenzije
@@ -166,7 +170,7 @@ const InstructorProfile = () => {
           </ul>
         </aside>
 
-        <section className="flex-1 pt-5 px-15 space-y-10 my-5 mr-5">
+        <section className="flex-1 pt-5 px-15 space-y-10 my-5 mr-5 bg-white rounded-xl p-6">
           {activeTab === "about" &&
             profileSections.map((profileSection, index) => {
               return (
@@ -179,12 +183,6 @@ const InstructorProfile = () => {
                 />
               );
             })}
-
-          {activeTab === "schedule" && (
-            <div className="text-blue-dark text-2xl font-semibold">
-              Dostupni termini (još nije implementirano)
-            </div>
-          )}
 
           {activeTab === "reviews" && (
             <ReviewsList reviews={reviews} loading={reviewsLoading} />
@@ -239,10 +237,7 @@ function ReviewsList({
   return (
     <div className="space-y-6">
       {reviews.map((review) => (
-        <div
-          key={review.id}
-          className="bg-green-dark/30 p-6 rounded-2xl shadow"
-        >
+        <div key={review.id} className="bg-white rounded-2xl shadow p-6">
           <div className="flex items-center justify-between mb-3">
             <div className="text-blue-dark text-2xl font-semibold">
               {review.authorFirstName} {review.authorLastName}
