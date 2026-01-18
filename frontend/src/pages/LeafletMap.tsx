@@ -3,8 +3,8 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 interface Props {
-  lat: number | null;
-  lng: number | null;
+  lat?: number | null;
+  lng?: number | null;
   height?: string;
   zoom?: number;
 }
@@ -19,10 +19,9 @@ export default function LeafletMap({
   const markerRef = useRef<L.Marker | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // INIT MAP
   useEffect(() => {
-    if (!containerRef.current || mapRef.current || lat === null || lng === null)
-      return;
+    if (!containerRef.current || mapRef.current) return;
+    if (lat == null || lng == null) return;
 
     const map = L.map(containerRef.current, {
       zoomControl: true,
@@ -40,22 +39,19 @@ export default function LeafletMap({
     markerRef.current = L.marker([lat, lng]).addTo(map);
     mapRef.current = map;
 
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 0);
+    map.invalidateSize();
   }, [lat, lng, zoom]);
 
   useEffect(() => {
-    if (!mapRef.current || lat === null || lng === null) return;
+    if (!mapRef.current) return;
+    if (lat == null || lng == null) return;
 
     const pos: L.LatLngExpression = [lat, lng];
 
     mapRef.current.setView(pos);
     markerRef.current?.setLatLng(pos);
 
-    setTimeout(() => {
-      mapRef.current?.invalidateSize();
-    }, 0);
+    mapRef.current.invalidateSize();
   }, [lat, lng]);
 
   return (
