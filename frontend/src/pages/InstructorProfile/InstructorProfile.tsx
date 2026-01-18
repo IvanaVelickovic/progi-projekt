@@ -167,7 +167,7 @@ function ProfileRow({ icon, label, value, href }: ProfileRowProps) {
 }
 
 // prikaz zvjezdica
-function StarRating({ rating, count }: { rating: number; count: number }) {
+function StarRating({ rating = 0, count }: { rating: number; count: number }) {
   const totalStars = 5;
   const fullStars = Math.floor(rating); // cijeli dio ocjene
   const hasHalfStar = rating % 1 >= 0.5; // "polovicne" zvjezdice
