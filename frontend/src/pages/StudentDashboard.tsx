@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import StudentSchedule from "../components/StudentSchedule";
-//import appointmentsData from "../assets/appointments.json";
-import api from "../api";
+import StudentOnlineSessions from "../components/StudentOnlineSessions";
+import { getStudentVideoSessions } from "../services/sessionService";
 
 interface Appointment {
   id: number;
@@ -17,6 +17,16 @@ interface Appointment {
   instructorId: number;
 }
 
+interface OnlineSession {
+  id: number;
+  studentName: string;
+  subject: string;
+  date: string;
+  time: string;
+  duration: number;
+  status: "upcoming" | "live" | "completed";
+}
+
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const [selected, setSelected] = useState(1);
@@ -25,22 +35,67 @@ const StudentDashboard = () => {
   const defaultStyle = "flex items-center w-[89%] h-[80%]";
 
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [onlineSessions, setOnlineSessions] = useState<OnlineSession[]>([]);
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const params = new URLSearchParams();
-        const dataRes = await api.get("/api/student/schedules", {
-          params,
-        });
-        setAppointments(dataRes.data);
+        // Mock data - u produkciji bi se koristio pravi API
+        const mockAppointments = [
+          {
+            id: 1,
+            dateTime: "2026-01-20T16:00:00",
+            format: "uživo",
+            duration: 90,
+            price: 35,
+            filled: 2,
+            maxParticipants: 4,
+            subject: "Matematika - Integrali",
+            instructorName: "Marko Horvat",
+            instructorId: 101,
+          },
+          {
+            id: 2,
+            dateTime: "2026-01-22T14:00:00",
+            format: "online",
+            duration: 60,
+            price: 25,
+            filled: 3,
+            maxParticipants: 5,
+            subject: "Fizika - Mehanika",
+            instructorName: "Ana Kovač",
+            instructorId: 102,
+          },
+        ];
+        setAppointments(mockAppointments);
       } catch (error) {
         console.error("Greška pri dohvaćanju korisničkih podataka:", error);
       }
     };
-    //setAppointments(appointmentsData);
 
     fetchAppointments();
+  }, []);
+
+  useEffect(() => {
+    const fetchOnlineSessions = async () => {
+      try {
+        // Dohvaćanje podataka iz backenda
+        const sessions = await getStudentVideoSessions();
+        // Validacija da je odgovor niz
+        if (Array.isArray(sessions)) {
+          setOnlineSessions(sessions);
+        } else {
+          console.warn("Backend nije vratio niz sesija:", sessions);
+          setOnlineSessions([]);
+        }
+      } catch (error) {
+        console.error("Greška pri dohvaćanju online sesija:", error);
+        // Postavi prazan niz u slučaju greške
+        setOnlineSessions([]);
+      }
+    };
+
+    fetchOnlineSessions();
   }, []);
 
   return (
@@ -121,8 +176,10 @@ const StudentDashboard = () => {
               appointments={appointments}
             ></StudentSchedule>
           )}
-          {selected == 2 && <p>Video sesije</p>}
-          {selected == 3 && <p>Kvizovi</p>}
+          {selected == 2 && (
+            <StudentOnlineSessions sessions={onlineSessions} />
+          )}
+          {selected == 3 && <p className="p-8 text-blue-dark text-2xl">Kvizovi - uskoro!</p>}
         </div>
       </div>
     </div>

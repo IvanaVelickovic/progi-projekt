@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Schedule from "../components/Schedule";
+import InstructorVideoSessions from "../components/InstructorVideoSessions";
 
 const InstructorDashboard = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const InstructorDashboard = () => {
       </div>
 
       <div className="flex h-5/6">
-        <div className="flex justify-center w-1/5 bg-[#F8FFFC] ">
+        <div className="flex justify-center w-1/5 bg-[#F8FFFC]">
           <div className="bg-green-light h-5/12 mt-22 w-11/12 rounded-2xl drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]">
             <ul className="h-full p-1">
               <li
@@ -76,8 +77,8 @@ const InstructorDashboard = () => {
         </div>
 
         <div className="w-4/5">
-          {selected == 1 && <Schedule></Schedule>}
-          {selected == 2 && <p>Video sesije</p>}
+          {selected == 1 && <Schedule />}
+          {selected == 2 && <InstructorVideoSessions />}
           {selected == 3 && <p>Kvizovi</p>}
         </div>
       </div>
