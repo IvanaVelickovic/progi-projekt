@@ -14,7 +14,7 @@ import {
   type InstructorSummary,
 } from "./InstructorProfile.utils";
 import LeafletMap from "../LeafletMap";
-
+import api from "../../api";
 
 interface ProfileSection {
   icon: string;
@@ -23,9 +23,22 @@ interface ProfileSection {
   href?: string;
 }
 
+type Tab = "about" | "schedule" | "reviews";
+
+type Review = {
+  id: number;
+  rating: number;
+  text: string;
+  authorFirstName: string;
+  authorLastName: string;
+  createdAt: string;
+};
+
 const InstructorProfile = () => {
   const navigate = useNavigate();
   const { instructorId } = useParams();
+
+  const [activeTab, setActiveTab] = useState<Tab>("about");
 
   const [instructorSummary, setInstructorSummary] = useState<InstructorSummary>(
     getEmptyInstructorSummary()
@@ -35,6 +48,9 @@ const InstructorProfile = () => {
     getEmptyInstructorObject()
   );
 
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+
   useEffect(() => {
     fetchInstructorSummary(instructorId).then((fetchedInstructorSummary) => {
       setInstructorSummary(fetchedInstructorSummary);
@@ -43,6 +59,21 @@ const InstructorProfile = () => {
       setInstructorData(fetchedInstructorData);
     });
   }, []);
+
+  useEffect(() => {
+    if (activeTab !== "reviews") return;
+
+    setReviewsLoading(true);
+
+    api
+      .get(`/api/instructors/${instructorId}/reviews`)
+      .then((res) => {
+        setReviews(res.data);
+      })
+      .finally(() => {
+        setReviewsLoading(false);
+      });
+  }, [activeTab]);
 
   const profileSections: Array<ProfileSection> = [
     {
@@ -114,30 +145,50 @@ const InstructorProfile = () => {
             count={instructorSummary.reviewCount}
           />
           <ul className="list-group text-blue-dark text-2xl flex-col mt-8 p-5">
-            <li className="list-group-item bg-green-dark/50 rounded-3xl cursor-pointer text-center font-semibold p-3 active">
+            <li
+              className="list-group-item bg-green-dark/50 rounded-3xl cursor-pointer text-center font-semibold p-3 active"
+              onClick={() => setActiveTab("about")}
+            >
               O instruktoru
             </li>
-            <li className="list-group-item mt-5 p-3 cursor-pointer text-center">
+            <li
+              className="list-group-item mt-5 p-3 cursor-pointer text-center"
+              onClick={() => setActiveTab("schedule")}
+            >
               Dostupni termini
             </li>
-            <li className="list-group-item mt-5 p-3 cursor-pointer text-center">
+            <li
+              className="list-group-item mt-5 p-3 cursor-pointer text-center"
+              onClick={() => setActiveTab("reviews")}
+            >
               Ocjene i recenzije
             </li>
           </ul>
         </aside>
 
         <section className="flex-1 pt-5 px-15 space-y-10 my-5 mr-5">
-          {profileSections.map((profileSection, index) => {
-            return (
-              <ProfileRow
-                icon={profileSection.icon}
-                label={profileSection.label}
-                value={profileSection.value}
-                href={profileSection.href}
-                key={index}
-              />
-            );
-          })}
+          {activeTab === "about" &&
+            profileSections.map((profileSection, index) => {
+              return (
+                <ProfileRow
+                  icon={profileSection.icon}
+                  label={profileSection.label}
+                  value={profileSection.value}
+                  href={profileSection.href}
+                  key={index}
+                />
+              );
+            })}
+
+          {activeTab === "schedule" && (
+            <div className="text-blue-dark text-2xl font-semibold">
+              Dostupni termini (još nije implementirano)
+            </div>
+          )}
+
+          {activeTab === "reviews" && (
+            <ReviewsList reviews={reviews} loading={reviewsLoading} />
+          )}
         </section>
       </main>
     </div>
@@ -166,15 +217,58 @@ function ProfileRow({ icon, label, value, href }: ProfileRowProps) {
   );
 }
 
-// prikaz zvjezdica
+function ReviewsList({
+  reviews,
+  loading,
+}: {
+  reviews: Review[];
+  loading: boolean;
+}) {
+  if (loading) {
+    return <div className="text-blue-dark text-2xl">Učitavanje...</div>;
+  }
+
+  if (reviews.length === 0) {
+    return (
+      <div className="text-blue-dark text-2xl">
+        Instruktor još nema recenzija
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {reviews.map((review) => (
+        <div
+          key={review.id}
+          className="bg-green-dark/30 p-6 rounded-2xl shadow"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-blue-dark text-2xl font-semibold">
+              {review.authorFirstName} {review.authorLastName}
+            </div>
+            <div className="text-gray-600 text-xl">
+              {new Date(review.createdAt).toLocaleDateString()}
+            </div>
+          </div>
+
+          <StarRating rating={review.rating} count={0} />
+
+          <div className="text-gray-700 text-xl mt-4">{review.text}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function StarRating({ rating = 0, count }: { rating: number; count: number }) {
   const totalStars = 5;
-  const fullStars = Math.floor(rating); // cijeli dio ocjene
-  const hasHalfStar = rating % 1 >= 0.5; // "polovicne" zvjezdice
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
   const emptyStars = totalStars - fullStars - (hasHalfStar ? 1 : 0);
+
   return (
     <div className="flex items-center text-2xl">
-      {/* zuta */}
       {Array(fullStars)
         .fill(0)
         .map((_, i) => (
@@ -182,10 +276,7 @@ function StarRating({ rating = 0, count }: { rating: number; count: number }) {
             ★
           </span>
         ))}
-      {/* Polovicna (zuti rub) */}
       {hasHalfStar && <span className="text-yellow-500">☆</span>}
-
-      {/* Prazne (sive) */}
       {Array(emptyStars)
         .fill(0)
         .map((_, i) => (
@@ -193,9 +284,9 @@ function StarRating({ rating = 0, count }: { rating: number; count: number }) {
             ★
           </span>
         ))}
-
-      {/* Broj recenzija */}
-      <span className="text-gray-600 ml-2 text-xl">({count})</span>
+      <span className="text-gray-600 ml-2 text-xl">
+        {count > 0 ? `(${count})` : ""}
+      </span>
     </div>
   );
 }
