@@ -23,22 +23,17 @@ interface ProfileSection {
   href?: string;
 }
 
-type Tab = "about" | "reviews";
-
 type Review = {
-  id: number;
   rating: number;
   text: string;
-  authorFirstName: string;
-  authorLastName: string;
-  createdAt: string;
+  author: string;
 };
 
 const InstructorProfile = () => {
   const navigate = useNavigate();
   const { instructorId } = useParams();
 
-  const [activeTab, setActiveTab] = useState<Tab>("about");
+  const [activeTab, setActiveTab] = useState<"about" | "reviews">("about");
 
   const [instructorSummary, setInstructorSummary] = useState<InstructorSummary>(
     getEmptyInstructorSummary()
@@ -49,7 +44,6 @@ const InstructorProfile = () => {
   );
 
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [reviewsLoading, setReviewsLoading] = useState(false);
 
   useEffect(() => {
     fetchInstructorSummary(instructorId).then((fetchedInstructorSummary) => {
@@ -58,22 +52,24 @@ const InstructorProfile = () => {
     fetchInstructorData(instructorId).then((fetchedInstructorData) => {
       setInstructorData(fetchedInstructorData);
     });
-  }, []);
-
-  useEffect(() => {
-    if (activeTab !== "reviews") return;
-
-    setReviewsLoading(true);
 
     api
       .get(`/api/instructors/${instructorId}/reviews`)
       .then((res) => {
-        setReviews(res.data);
+        const data = res.data;
+
+        if (Array.isArray(data)) {
+          setReviews(data);
+        } else if (Array.isArray(data.reviews)) {
+          setReviews(data.reviews);
+        } else if (Array.isArray(data.data)) {
+          setReviews(data.data);
+        } else {
+          setReviews([]);
+        }
       })
-      .finally(() => {
-        setReviewsLoading(false);
-      });
-  }, [activeTab]);
+      .catch(() => setReviews([]));
+  }, [instructorId]);
 
   const profileSections: Array<ProfileSection> = [
     {
@@ -133,7 +129,7 @@ const InstructorProfile = () => {
       </header>
 
       <main className="flex h-5/6">
-        <aside className="bg-green-dark/30 m-5 rounded-lg  w-50 lg:w-75 justify-items-center">
+        <aside className="bg-green-dark/30 m-5 rounded-lg w-50 lg:w-75 justify-items-center">
           <div className="flex justify-center items-center w-45 h-45 mt-6 rounded-full bg-green-dark">
             {instructorSummary.photo}
           </div>
@@ -146,8 +142,8 @@ const InstructorProfile = () => {
           />
           <ul className="list-group text-blue-dark text-2xl flex-col mt-8 p-5">
             <li
-              className={`list-group-item bg-green-dark/50 rounded-3xl cursor-pointer text-center font-semibold p-3 ${
-                activeTab === "about" ? "active" : ""
+              className={`list-group-item rounded-3xl cursor-pointer text-center font-semibold p-3 ${
+                activeTab === "about" ? "bg-green-dark/50" : ""
               }`}
               onClick={() => setActiveTab("about")}
             >
@@ -160,8 +156,8 @@ const InstructorProfile = () => {
               Dostupni termini
             </li>
             <li
-              className={`list-group-item mt-5 p-3 cursor-pointer text-center ${
-                activeTab === "reviews" ? "active" : ""
+              className={`list-group-item mt-5 p-3 cursor-pointer text-center font-semibold rounded-3xl ${
+                activeTab === "reviews" ? "bg-green-dark/50" : ""
               }`}
               onClick={() => setActiveTab("reviews")}
             >
@@ -170,22 +166,19 @@ const InstructorProfile = () => {
           </ul>
         </aside>
 
-        <section className="flex-1 pt-5 px-15 space-y-10 my-5 mr-5 bg-white rounded-xl p-6">
-          {activeTab === "about" &&
-            profileSections.map((profileSection, index) => {
-              return (
-                <ProfileRow
-                  icon={profileSection.icon}
-                  label={profileSection.label}
-                  value={profileSection.value}
-                  href={profileSection.href}
-                  key={index}
-                />
-              );
-            })}
-
-          {activeTab === "reviews" && (
-            <ReviewsList reviews={reviews} loading={reviewsLoading} />
+        <section className="flex-1 pt-5 px-15 space-y-10 my-5 mr-5">
+          {activeTab === "about" ? (
+            profileSections.map((profileSection, index) => (
+              <ProfileRow
+                icon={profileSection.icon}
+                label={profileSection.label}
+                value={profileSection.value}
+                href={profileSection.href}
+                key={index}
+              />
+            ))
+          ) : (
+            <ReviewsList reviews={reviews} />
           )}
         </section>
       </main>
@@ -208,25 +201,16 @@ function ProfileRow({ icon, label, value, href }: ProfileRowProps) {
         <div className="text-blue-dark font-semibold mb-2 text-3xl">{label}</div>
         <div className="text-gray-700 text-xl">
           {value && <>{value}</>}
-          {href && <a href={href} />}
+          {href && <a href={href} />
+          }
         </div>
       </div>
     </div>
   );
 }
 
-function ReviewsList({
-  reviews,
-  loading,
-}: {
-  reviews: Review[];
-  loading: boolean;
-}) {
-  if (loading) {
-    return <div className="text-blue-dark text-2xl">Učitavanje...</div>;
-  }
-
-  if (reviews.length === 0) {
+function ReviewsList({ reviews }: { reviews: Review[] }) {
+  if (!Array.isArray(reviews) || reviews.length === 0) {
     return (
       <div className="text-blue-dark text-2xl">
         Instruktor još nema recenzija
@@ -235,27 +219,29 @@ function ReviewsList({
   }
 
   return (
-    <div className="space-y-6">
-      {reviews.map((review) => (
-        <div key={review.id} className="bg-white rounded-2xl shadow p-6">
-          <div className="flex items-center justify-between mb-3">
-            <div className="text-blue-dark text-2xl font-semibold">
-              {review.authorFirstName} {review.authorLastName}
+    <div className="space-y-4">
+      {reviews.map((review, index) => (
+        <div
+          key={index}
+          className="bg-white rounded-3xl p-6 shadow-md border border-gray-200"
+        >
+          <div className="flex justify-between items-center mb-3">
+            <div className="text-blue-dark font-bold text-2xl">
+              {review.author}
             </div>
-            <div className="text-gray-600 text-xl">
-              {new Date(review.createdAt).toLocaleDateString()}
+            <div className="text-yellow-400 text-2xl">
+              {"★".repeat(review.rating)}
+              {"☆".repeat(5 - review.rating)}
             </div>
           </div>
-
-          <StarRating rating={review.rating} count={0} />
-
-          <div className="text-gray-700 text-xl mt-4">{review.text}</div>
+          <div className="text-gray-700 text-xl">{review.text}</div>
         </div>
       ))}
     </div>
   );
 }
 
+// prikaz zvjezdica
 function StarRating({ rating = 0, count }: { rating: number; count: number }) {
   const totalStars = 5;
   const fullStars = Math.floor(rating);
@@ -279,9 +265,7 @@ function StarRating({ rating = 0, count }: { rating: number; count: number }) {
             ★
           </span>
         ))}
-      <span className="text-gray-600 ml-2 text-xl">
-        {count > 0 ? `(${count})` : ""}
-      </span>
+      <span className="text-gray-600 ml-2 text-xl">({count})</span>
     </div>
   );
 }
