@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import AdminUsers from "./AdminUsers"
 //import appointmentsData from "../assets/appointments.json";
 
 const AdminDashboard = () => {
