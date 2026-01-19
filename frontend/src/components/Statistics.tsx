@@ -10,17 +10,10 @@ import {
 } from "recharts";
 import api from "../api";
 
-interface BarData {
-  month: number;
-  year: number;
-  count: number;
-}
-
 interface StatisticsData {
-  barData: BarData[];
-  avgRating: number;
-  fiveStarReviews: number; //ukupni broj 5-star reviewa
-  allReviews: number; //ukupan broj svih reviewa
+  overallAverageRating: number;
+  fiveStarRatingsCount: number; //ukupni broj 5-star reviewa
+  totalRatingsCount: number; //ukupan broj svih reviewa
 }
 
 interface ChartData {
@@ -28,89 +21,104 @@ interface ChartData {
   count: number;
 }
 
+const monthsCro = [
+  "sij.",
+  "velj.",
+  "ožu.",
+  "tra.",
+  "svi.",
+  "lip.",
+  "srp.",
+  "kol.",
+  "lis.",
+  "stu.",
+  "pro.",
+];
+
 const Statistics = () => {
   const [data, setData] = useState<StatisticsData>();
+  const [rawChartData, setRawChartData] = useState<ChartData[]>([]);
   const [chartData, setChartData] = useState<ChartData[]>([]);
 
-  const monthsCro = [
-    "sij.",
-    "velj.",
-    "ožu.",
-    "tra.",
-    "svi.",
-    "lip.",
-    "srp.",
-    "kol.",
-    "lis.",
-    "stu.",
-    "pro.",
+  const dummyData = {
+    overallAverageRating: 4.21,
+    fiveStarRatingsCount: 96,
+    totalRatingsCount: 234,
+  };
+
+  const chartDummyData = [
+    { month: "04-2025", count: 2 },
+    { month: "01-2026", count: 12 },
+    { month: "02-2025", count: 1 },
+    { month: "03-2025", count: 11 },
+    { month: "05-2025", count: 4 },
+    { month: "06-2025", count: 7 },
+    { month: "07-2025", count: 5 },
+    { month: "09-2025", count: 8 },
+    { month: "10-2025", count: 10 },
+    { month: "11-2025", count: 3 },
+    { month: "12-2025", count: 11 },
+    { month: "08-2025", count: 6 },
   ];
 
-  const dummyData = {
-    barData: [
-      { month: 4, year: 2025, count: 2 },
-      { month: 1, year: 2026, count: 12 },
-      { month: 2, year: 2025, count: 1 },
-      { month: 3, year: 2025, count: 11 },
-      { month: 5, year: 2025, count: 4 },
-      { month: 6, year: 2025, count: 7 },
-      { month: 7, year: 2025, count: 5 },
-      { month: 9, year: 2025, count: 8 },
-      { month: 10, year: 2025, count: 10 },
-      { month: 11, year: 2025, count: 3 },
-      { month: 12, year: 2025, count: 11 },
-      { month: 8, year: 2025, count: 6 },
-    ],
-    avgRating: 4.21,
-    fiveStarReviews: 96,
-    allReviews: 234,
-  };
-
-  const handleData = () => {
-    if (!data) {
-      return;
-    }
-    const sortedData = {
-      ...data,
-      barData: [...data.barData].sort((a, b) => a.month - b.month),
-    };
-
-    const years = sortedData.barData.map((d) => d.year);
-    const prevYear = Math.min(...years);
-    const currYear = Math.max(...years);
-
-    const prevYearData = sortedData.barData.filter((d) => d.year === prevYear);
-    const currYearData = sortedData.barData.filter((d) => d.year === currYear);
-
-    const merged = [...prevYearData, ...currYearData].map((d) => ({
-      month: monthsCro[d.month - 1],
-      count: d.count,
-    }));
-
-    if (merged.length > 0) {
-      merged[0].month += " " + prevYear;
-      merged[merged.length - 1].month += " " + currYear;
-    }
-
-    setChartData(merged);
-  };
-
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchSummary = async () => {
       try {
-        const res = await api.get("/statistics/data");
+        const res = await api.get("/api/admin/stats/summary");
         setData(res.data);
       } catch (error) {
         console.error(error);
       }
     };
-    fetchData();
-    //setData(dummyData as StatisticsData);
+
+    fetchSummary();
+    //setData(dummyData);
   }, []);
 
   useEffect(() => {
-    handleData();
-  }, [data]);
+    const fetchChartData = async () => {
+      try {
+        const res = await api.get("/api/admin/stats/reservation-chart");
+        setRawChartData(res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchChartData();
+    //setRawChartData(chartDummyData);
+  }, []);
+
+  useEffect(() => {
+    if (!rawChartData.length) {
+      return;
+    }
+
+    //parsiranje na mjesec i godinu
+    const parsed = rawChartData.map((p) => {
+      const [month, year] = p.month.split("-").map(Number);
+      return { month, year, count: p.count };
+    });
+
+    //sortiranje od najstarijeg do najnovijeg mjeseca
+    const sortedData = [...parsed].sort((a, b) =>
+      a.year === b.year ? a.month - b.month : a.year - b.year,
+    );
+
+    //dodavanje hrvatskih imena mjesecima
+    const merged = sortedData.map((d) => ({
+      month: monthsCro[d.month - 1],
+      count: d.count,
+    }));
+
+    //dodavanje godine za prvi i zadnji mjesec
+    if (merged.length > 0) {
+      merged[0].month += " " + sortedData.at(0)?.year;
+      merged[merged.length - 1].month +=
+        " " + sortedData.at(sortedData.length - 1)?.year;
+    }
+
+    setChartData(merged);
+  }, [rawChartData]);
 
   return (
     <div className="max-w-7xl mx-auto px-8 py-8 text-blue-dark">
@@ -142,7 +150,7 @@ const Statistics = () => {
 
           <div className="flex items-center justify-center gap-0 mb-4 pt-8">
             <div className="flex items-center text-6xl font-bold">
-              <div className="text-[#2B7A78]">{data?.avgRating}</div>
+              <div className="text-[#2B7A78]">{data?.overallAverageRating}</div>
               <img src="/images/star.png" className="h-12"></img>
             </div>
           </div>
@@ -150,7 +158,7 @@ const Statistics = () => {
           <div className="text-center pr-6">
             <p className=" text-lg">od ukupno 5 zvjezdica</p>
             <p className=" text-sm mt-2">
-              na temelju {data?.allReviews} recenzija
+              na temelju {data?.totalRatingsCount} recenzija
             </p>
           </div>
 
@@ -164,7 +172,7 @@ const Statistics = () => {
 
           <div className="flex flex-col items-center justify-center">
             <div className="text-6xl font-bold text-[#2B7A78] mb-4">
-              {data?.fiveStarReviews}
+              {data?.fiveStarRatingsCount}
             </div>
 
             <div className="text-center mb-6">
@@ -179,12 +187,13 @@ const Statistics = () => {
                 <div
                   className="bg-[#2B7A78] h-full flex items-center justify-center transition-all duration-500"
                   style={{
-                    width: `${((data?.fiveStarReviews ?? 0) / (data?.allReviews ?? 1)) * 100}%`,
+                    width: `${((data?.fiveStarRatingsCount ?? 0) / (data?.totalRatingsCount ?? 1)) * 100}%`,
                   }}
                 >
                   <span className="text-white text-sm font-semibold">
                     {Math.round(
-                      ((data?.fiveStarReviews ?? 0) / (data?.allReviews ?? 1)) *
+                      ((data?.fiveStarRatingsCount ?? 0) /
+                        (data?.totalRatingsCount ?? 1)) *
                         100,
                     )}
                     %
