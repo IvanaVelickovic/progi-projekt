@@ -12,8 +12,8 @@ import StudentDashboard from "./pages/StudentDashboard";
 import Search from "./pages/Search";
 import ProfileViewStudent from "./pages/ProfileViewStudent";
 import ProfileEditInstructor from "./pages/ProfileEditInstructor";
-import BookingConfirmation from "./pages/reservation";
-import Payment from "./pages/payment";
+import BookingConfirmation from "./pages/BookingConfirmation";
+import Payment from "./pages/Payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
 
 function App() {
@@ -50,27 +50,16 @@ function App() {
           <Route path="/students/:id" element={<ProfileViewStudent />} />
           <Route
             path="/profileInstructor"
-            element={
-                <ProfileEditInstructor />
-            }
+            element={<ProfileEditInstructor />}
           ></Route>
           <Route
-            path="/BookingConfirmation"
-            element={
-                <BookingConfirmation />
-            }
+            path="/booking-confirmation/:id"
+            element={<BookingConfirmation />}
           ></Route>
+          <Route path="/payment/:id" element={<Payment />}></Route>
           <Route
-            path="/payment"
-            element={
-                <Payment />
-            }
-          ></Route>
-          <Route
-            path="/payment-success"
-            element={
-                <PaymentSuccess />
-            }
+            path="/payment-success/:id"
+            element={<PaymentSuccess />}
           ></Route>
         </Routes>
       </AuthProvider>

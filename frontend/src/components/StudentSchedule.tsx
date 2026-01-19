@@ -23,7 +23,7 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
   const navigate = useNavigate();
 
   const appointmentDates = appointments.map(
-    (item) => item.dateTime.split("T")[0]
+    (item) => item.dateTime.split("T")[0],
   );
 
   return (
@@ -66,7 +66,7 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
                     className="text-blue-dark/93 text-xl font-bold ml-1 cursor-pointer hover:text-blue-dark/70"
                     onClick={() => {
                       navigate(
-                        `instructor/viewProfile/id?=${item.instructorId}`
+                        `instructor/viewProfile/id?=${item.instructorId}`,
                       );
                     }}
                   >
@@ -98,7 +98,12 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
                       Popunjenost: {item.filled}/{item.maxParticipants}
                     </div>
                     {search && (
-                      <button className="bg-blue-light p-2.5 rounded-3xl text-lg text-white text-center px-6 cursor-pointer w-full">
+                      <button
+                        className="bg-blue-light p-2.5 rounded-3xl text-lg text-white text-center px-6 cursor-pointer w-full"
+                        onClick={() => {
+                          navigate(`/booking-confirmation/${item.id}`);
+                        }}
+                      >
                         Rezerviraj
                       </button>
                     )}

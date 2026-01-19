@@ -25,3 +25,8 @@ dist-ssr
 
 
 .env
+appointments.json
+appointments_s.json
+quizzes.json
+quizzes_s.json
+questions.json
