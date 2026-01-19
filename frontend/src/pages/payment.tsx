@@ -29,7 +29,7 @@ const Payment = () => {
   };
 
   const handleCancel = () => {
-    navigate("/schedule/search");
+    navigate("/schedules/search");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
