@@ -64,7 +64,7 @@ const AdminDashboard = () => {
 
         <div className="w-4/5">
           {selected == 1 && <p>Statistika</p>}
-          {selected == 2 && <p>Korisnici</p>}
+          {selected == 2 && <AdminUsers/>}
           {selected == 3 && <p>Recenzije</p>}
         </div>
       </div>
