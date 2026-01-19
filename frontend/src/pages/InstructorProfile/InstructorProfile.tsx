@@ -14,10 +14,7 @@ import {
   type InstructorSummary,
 } from "./InstructorProfile.utils";
 import LeafletMap from "../LeafletMap";
-<<<<<<< HEAD
 import api from "../../api";
-=======
->>>>>>> da375d19d5f051ffed85758d0741004afbc5afe5
 
 interface ProfileSection {
   icon: string;
