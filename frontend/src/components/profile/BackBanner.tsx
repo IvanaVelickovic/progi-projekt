@@ -27,7 +27,7 @@ const BackBanner = ({
     <div className="flex items-center p-8 bg-green-dark/50 shadow">
       <h1
         onClick={handleGoBack}
-        className="text-blue-dark text-5xl font-bold cursor-pointer hover:opacity-80 transition"
+        className="text-blue-dark text-[2.7rem] font-bold cursor-pointer hover:opacity-80 transition"
       >
         STEM tutorstvo
       </h1>

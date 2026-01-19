@@ -3,12 +3,12 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import "leaflet/dist/leaflet.css";
-import { StudentSearchProvider } from "./context/StudentSearchContext.tsx";
+import { AppointmentsProvider } from "./context/AppointmentsContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <StudentSearchProvider>
+    <AppointmentsProvider>
       <App />
-    </StudentSearchProvider>
-  </StrictMode>,
+    </AppointmentsProvider>
+  </StrictMode>
 );

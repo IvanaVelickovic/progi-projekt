@@ -12,6 +12,10 @@ import StudentDashboard from "./pages/StudentDashboard";
 import Search from "./pages/Search";
 import ProfileViewStudent from "./pages/ProfileViewStudent";
 import ProfileEditInstructor from "./pages/ProfileEditInstructor";
+import InstructorDashboard from "./pages/InstructorDashboard";
+import AddSchedule from "./pages/AddSchedule";
+import InstructorProfile from "./pages/InstructorProfile/InstructorProfile";
+import AdminDashboard from "./pages/AdminDashboard";
 import BookingConfirmation from "./pages/BookingConfirmation";
 import Payment from "./pages/Payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
@@ -53,6 +57,22 @@ function App() {
             element={<ProfileEditInstructor />}
           ></Route>
           <Route
+            path="/instructor/dashboard"
+            element={<InstructorDashboard />}
+          ></Route>
+          <Route
+            path="/instructor/addSchedule"
+            element={<AddSchedule />}
+          ></Route>
+          <Route
+            path="/instructors/:instructorId"
+            element={
+              //<ProtectedRoute>
+              <InstructorProfile />
+              //</ProtectedRoute>
+            }
+          ></Route>
+          <Route
             path="/booking-confirmation/:id"
             element={<BookingConfirmation />}
           ></Route>
@@ -60,6 +80,10 @@ function App() {
           <Route
             path="/payment-success/:id"
             element={<PaymentSuccess />}
+          ></Route>
+          <Route
+            path="/admin/dashboard"
+            element={<AdminDashboard></AdminDashboard>}
           ></Route>
         </Routes>
       </AuthProvider>

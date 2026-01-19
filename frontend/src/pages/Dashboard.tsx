@@ -3,7 +3,6 @@ import { useAuth } from "../context/AuthContext";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="flex flex-col bg-[#F8FFFC] h-screen w-screen">
@@ -17,9 +16,7 @@ const Dashboard = () => {
           </button>
         </div>
         <div className="flex justify-around items-center h-4/5 ">
-          <div className="text-blue-dark text-4xl font-bold">
-            Dobro došli, {user?.name}!
-          </div>
+          <div className="text-blue-dark text-4xl font-bold">Dobro došli!</div>
           <img
             src="/images/home_page.png"
             alt="logo homepagea"

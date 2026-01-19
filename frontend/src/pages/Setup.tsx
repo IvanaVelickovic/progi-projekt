@@ -21,7 +21,7 @@ const Setup = () => {
       sessionStorage.setItem("stemtutor-token", newToken);
 
       setLoading(false);
-      navigate("/dashboard");
+      navigate(`/${role}/dashboard`);
     } catch (err) {
       console.error("Error while updating role", err);
       setLoading(false);

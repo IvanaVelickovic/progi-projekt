@@ -1,47 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import StudentSchedule from "../components/StudentSchedule";
-//import appointmentsData from "../assets/appointments.json";
-import api from "../api";
+import Schedule from "../components/Schedule";
 
-interface Appointment {
-  id: number;
-  dateTime: string;
-  format: string;
-  duration: number;
-  price: number;
-  filled: number;
-  maxParticipants: number;
-  subject: string;
-  instructorName: string;
-  instructorId: number;
-}
-
-const StudentDashboard = () => {
+const InstructorDashboard = () => {
   const navigate = useNavigate();
   const [selected, setSelected] = useState(1);
   const clickedStyle =
     "flex items-center w-[89%] h-[80%] bg-[#ADEBC8]/67 rounded-4xl";
   const defaultStyle = "flex items-center w-[89%] h-[80%]";
-
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const params = new URLSearchParams();
-        const dataRes = await api.get("/api/student/schedules", {
-          params,
-        });
-        setAppointments(dataRes.data);
-      } catch (error) {
-        console.error("Greška pri dohvaćanju korisničkih podataka:", error);
-      }
-    };
-    //setAppointments(appointmentsData);
-
-    fetchAppointments();
-  }, []);
 
   return (
     <div className="h-screen">
@@ -51,18 +17,13 @@ const StudentDashboard = () => {
         </h1>
         <div className="flex items-center bg-[#D9D9D9] w-5/12 rounded-3xl cursor-pointer">
           <img src="/images/search_icon.png" className="w-11 ml-2"></img>
-          <p
-            className="text-blue-dark/60 font-bold text-xl ml-1"
-            onClick={() => {
-              navigate("/schedules/search");
-            }}
-          >
-            Pretražite termine
+          <p className="text-blue-dark/60 font-bold text-xl ml-1">
+            Pretražite profile
           </p>
         </div>
         <button
           className="bg-blue-light text-white text-xl p-3 px-15 rounded-lg cursor-pointer"
-          onClick={() => navigate("/profile")}
+          onClick={() => navigate("/profileInstructor")}
         >
           Profil
         </button>
@@ -115,12 +76,7 @@ const StudentDashboard = () => {
         </div>
 
         <div className="w-4/5">
-          {selected == 1 && (
-            <StudentSchedule
-              search={false}
-              appointments={appointments}
-            ></StudentSchedule>
-          )}
+          {selected == 1 && <Schedule></Schedule>}
           {selected == 2 && <p>Video sesije</p>}
           {selected == 3 && <p>Kvizovi</p>}
         </div>
@@ -129,4 +85,4 @@ const StudentDashboard = () => {
   );
 };
 
-export default StudentDashboard;
+export default InstructorDashboard;

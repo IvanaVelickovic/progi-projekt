@@ -43,7 +43,15 @@ const Login = () => {
           name: decoded.name,
         });
 
-        navigate("/dashboard");
+        if (formData.email === "admin@gmail.com") {
+          navigate("/admin/dashboard");
+        }
+
+        if (decoded.role === "instructor" || decoded.role === "student") {
+          navigate(`/${decoded.role}/dashboard`);
+        } else {
+          navigate("/dashboard");
+        }
       }
     } catch (err: any) {
       if (err.response.status === 401) {

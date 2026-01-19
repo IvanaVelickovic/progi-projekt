@@ -51,7 +51,7 @@ const Search = () => {
     if (filters.subject) params.append("subject", filters.subject);
 
     if (filters.formatLive && !filters.formatOnline)
-      params.append("format", "live");
+      params.append("format", "in_person");
     if (filters.formatOnline && !filters.formatLive)
       params.append("format", "online");
 
@@ -151,8 +151,10 @@ const Search = () => {
   return (
     <>
       <div className="min-h-screen overflow-y-auto bg-white">
-        <div className="flex justify-between items-center content-end p-10 bg-green-dark/50 h-1/6 shadow">
-          <h1 className="text-blue-dark text-5xl font-bold">STEM tutorstvo</h1>
+        <div className="flex justify-between items-center content-end p-10 bg-green-dark/50 h-1/6 max-h-[100px] shadow">
+          <h1 className="text-blue-dark text-[2.7rem] font-bold">
+            STEM tutorstvo
+          </h1>
           <div className="flex justify-between gap-4 w-1/4">
             <button
               className="bg-blue-light text-white text-xl p-3 rounded-lg cursor-pointer w-1/2"

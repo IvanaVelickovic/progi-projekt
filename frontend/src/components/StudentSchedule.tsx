@@ -22,9 +22,9 @@ interface StudentScheduleProps {
 const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
   const navigate = useNavigate();
 
-  const appointmentDates = appointments.map(
-    (item) => item.dateTime.split("T")[0],
-  );
+  const appointmentDates = Array.isArray(appointments)
+    ? appointments.map((item) => item.dateTime.split("T")[0])
+    : [];
 
   return (
     <div className={search ? "flex h-full w-3/4" : "flex h-full"}>
@@ -66,7 +66,7 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
                     className="text-blue-dark/93 text-xl font-bold ml-1 cursor-pointer hover:text-blue-dark/70"
                     onClick={() => {
                       navigate(
-                        `instructor/viewProfile/id?=${item.instructorId}`,
+                        `/instructors/${item.instructorId}`
                       );
                     }}
                   >
@@ -112,7 +112,9 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
               </div>
             ))
           ) : (
-            <p>Nema termina</p>
+            <p className="self-start ml-4 text-blue-dark text-xl">
+              Nema termina.
+            </p>
           )}
         </div>
       </div>
