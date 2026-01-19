@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Statistics from "../components/Statistics";
 //import appointmentsData from "../assets/appointments.json";
 
 const AdminDashboard = () => {
@@ -15,11 +16,14 @@ const AdminDashboard = () => {
         <h1 className="text-blue-dark text-[2.7rem] font-bold">
           STEM tutorstvo
         </h1>
+        <div className="text-xl text-blue-dark">
+          Ulogiran kao: <span className="font-bold">Administrator</span>
+        </div>
       </div>
 
-      <div className="flex h-[86%]">
+      <div className="flex h-auto min-h-[86%]">
         <div className="flex justify-center w-1/5 bg-[#F8FFFC] ">
-          <div className="bg-green-light h-5/12 mt-22 w-11/12 rounded-2xl drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]">
+          <div className="bg-green-light h-[260px] mt-22 w-11/12 rounded-2xl drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]">
             <ul className="h-full p-1">
               <li
                 className="flex items-center justify-center h-1/3 cursor-pointer"
@@ -62,7 +66,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="w-4/5">
-          {selected == 1 && <p>Statistika</p>}
+          {selected == 1 && <Statistics />}
           {selected == 2 && <p>Korisnici</p>}
           {selected == 3 && <p>Recenzije</p>}
         </div>
