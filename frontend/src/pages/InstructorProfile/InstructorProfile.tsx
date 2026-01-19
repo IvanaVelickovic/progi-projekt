@@ -14,7 +14,10 @@ import {
   type InstructorSummary,
 } from "./InstructorProfile.utils";
 import LeafletMap from "../LeafletMap";
+<<<<<<< HEAD
 import api from "../../api";
+=======
+>>>>>>> da375d19d5f051ffed85758d0741004afbc5afe5
 
 interface ProfileSection {
   icon: string;
@@ -36,11 +39,11 @@ const InstructorProfile = () => {
   const [activeTab, setActiveTab] = useState<"about" | "reviews">("about");
 
   const [instructorSummary, setInstructorSummary] = useState<InstructorSummary>(
-    getEmptyInstructorSummary()
+    getEmptyInstructorSummary(),
   );
 
   const [instructorData, setInstructorData] = useState<InstructorData>(
-    getEmptyInstructorObject()
+    getEmptyInstructorObject(),
   );
 
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -95,7 +98,10 @@ const InstructorProfile = () => {
       label: "Lokacija:",
       value: (
         <div className="w-full min-h-[220px]">
-          <LeafletMap lat={instructorData.latitude} lng={instructorData.longitude} />
+          <LeafletMap
+            lat={instructorData.latitude}
+            lng={instructorData.longitude}
+          />
         </div>
       ),
       href: undefined,
@@ -198,7 +204,9 @@ function ProfileRow({ icon, label, value, href }: ProfileRowProps) {
     <div className="grid grid-cols-[60px_1fr] gap-4 items-start">
       <img src={icon} alt="" className="w-12 h-12 object-contain" />
       <div>
-        <div className="text-blue-dark font-semibold mb-2 text-3xl">{label}</div>
+        <div className="text-blue-dark font-semibold mb-2 text-3xl">
+          {label}
+        </div>
         <div className="text-gray-700 text-xl">
           {value && <>{value}</>}
           {href && <a href={href} />

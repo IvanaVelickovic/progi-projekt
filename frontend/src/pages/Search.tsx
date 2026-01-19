@@ -102,7 +102,7 @@ const Search = () => {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFilterData((prev) => ({ ...prev, [name]: value }));
@@ -121,7 +121,7 @@ const Search = () => {
     e.preventDefault();
 
     setFilterData((prev) => {
-      const newPage = 1;
+      const newPage = 0;
       fetchAppointments({ ...prev, page: newPage }); // odmah šalje novu vrijednost
       return { ...prev, page: newPage };
     });
@@ -140,7 +140,7 @@ const Search = () => {
         console.log(err);
         setLocationAccess(false);
         alert("Za pretraživanje po udaljenosti je potrebna lokacija");
-      }
+      },
     );
   };
 
@@ -403,7 +403,7 @@ const Search = () => {
       </div>
       <div className="bg-white ">
         <div className="flex place-self-end justify-center items-center h-10 w-3/4 pb-4">
-          {filterData.page != 1 && (
+          {filterData.page != 0 && (
             <button
               className="flex justify-center items-center text-blue-dark text-xl font-bold bg-green-light w-10 h-10 border-2 border-r-0 border-blue-dark cursor-pointer"
               onClick={handlePrevPage}
@@ -413,7 +413,7 @@ const Search = () => {
           )}
 
           <div className="flex justify-center items-center text-blue-dark text-xl font-bold bg-green-light/30 w-10 h-10 border-2 border-blue-dark">
-            {filterData.page}
+            {filterData.page + 1}
           </div>
           <button
             className="flex justify-center items-center text-blue-dark text-xl font-bold bg-green-light w-10 h-10 border-2 border-l-0 border-blue-dark cursor-pointer"

@@ -68,7 +68,7 @@ const StudentDashboard = () => {
         </button>
       </div>
 
-      <div className="flex h-5/6">
+      <div className="flex h-[86%]">
         <div className="flex justify-center w-1/5 bg-[#F8FFFC] ">
           <div className="bg-green-light h-5/12 mt-22 w-11/12 rounded-2xl drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]">
             <ul className="h-full p-1">
