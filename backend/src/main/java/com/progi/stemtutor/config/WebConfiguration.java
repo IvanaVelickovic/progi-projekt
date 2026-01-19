@@ -40,7 +40,7 @@ public class WebConfiguration {
                         })
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/oauth2/**", "/login/**", "/setup", "/profile", "api/reviews/**", "api/Instructor/**").permitAll()
+                        .requestMatchers("/auth/**", "/oauth2/**", "/login/**", "/setup", "/profile", "api/reviews/**", "api/Instructor/**", "api/instructors/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
