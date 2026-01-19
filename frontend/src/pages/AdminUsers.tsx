@@ -34,7 +34,19 @@ const AdminUsers: React.FC = () => {
         if (!res.ok) throw new Error("err");
         return res.json();
       })
-      .then((data: AdminUser[]) => setUsers(data))
+      .then((data) =>
+        setUsers(
+          data.map((u: any) => ({
+            id: u.id,
+            firstName: u.firstName,
+            lastName: u.lastName,
+            role: u.role,
+            verified: u.verified,
+            suspended: u.suspended,
+            lastActive: u.lastLogin,
+          }))
+        )
+      )
       .catch(() => setUsers(mockUsers));
   }, []);
 
@@ -92,28 +104,28 @@ const AdminUsers: React.FC = () => {
             </p>
 
             <div className="flex flex-col gap-3 mt-6">
-  <button
-    onClick={() => verifyUser(user.id)}
-    disabled={user.verified}
-    className="bg-blue-dark text-white px-6 py-2 rounded-full disabled:opacity-50 w-56 flex justify-center"
-  >
-    Verificiraj profil
-  </button>
+              <button
+                onClick={() => verifyUser(user.id)}
+                disabled={user.verified}
+                className="bg-blue-dark text-white px-6 py-2 rounded-full disabled:opacity-50 w-56 flex justify-center"
+              >
+                Verificiraj profil
+              </button>
 
-  <button
-    onClick={() => toggleSuspendUser(user.id)}
-    className="bg-blue-dark text-white px-6 py-2 rounded-full w-56 flex justify-center"
-  >
-    {user.suspended ? "Aktiviraj profil" : "Suspendiraj profil"}
-  </button>
+              <button
+                onClick={() => toggleSuspendUser(user.id)}
+                className="bg-blue-dark text-white px-6 py-2 rounded-full w-56 flex justify-center"
+              >
+                {user.suspended ? "Aktiviraj profil" : "Suspendiraj profil"}
+              </button>
 
-  <button
-    onClick={() => deleteUser(user.id)}
-    className="bg-blue-dark text-white px-6 py-2 rounded-full w-56 flex justify-center"
-  >
-    Obriši profil
-  </button>
-</div>
+              <button
+                onClick={() => deleteUser(user.id)}
+                className="bg-blue-dark text-white px-6 py-2 rounded-full w-56 flex justify-center"
+              >
+                Obriši profil
+              </button>
+            </div>
           </div>
 
           <div className="flex items-end">
