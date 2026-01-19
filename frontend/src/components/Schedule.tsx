@@ -56,10 +56,10 @@ const Schedule = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const userRes = await api.get("/api/google/user");
+        const userRes = await api.get("/api/google/status");
         sessionStorage.setItem("googleUser", JSON.stringify(userRes.data));
 
-        const dataRes = await api.get("/api/user/appointments");
+        const dataRes = await api.get("/api/instructor-schedules/my-appointments");
         setAppointments(dataRes.data);
       } catch (error) {
         console.error("Greška pri dohvaćanju korisničkih podataka:", error);
@@ -81,7 +81,7 @@ const Schedule = () => {
         <div className="flex flex-col items-center mt-5 overflow-y-scroll">
           {appointments.map((item, index) => (
             <div
-              key={item.id}
+              key={item.scheduleId}
               id={item.datetime.split("T")[0]}
               className="flex justify-between bg-[#ADEBC8] border-2 border-blue-dark rounded-2xl w-11/12 h-[250px] mb-6 shrink-0 drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]"
             >
@@ -92,11 +92,11 @@ const Schedule = () => {
                 <div className="p-5 pt-7 text-blue-dark font-semibold text-xl">
                   <div className="flex justify-between ">
                     <span>• Održavanje</span>
-                    <span>{item.format}</span>
+                    <span>{item.attendanceMode}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>• Trajanje</span>
-                    <span>{item.duration} min</span>
+                    <span>{item.durationMin} min</span>
                   </div>
                   <div className="flex justify-between">
                     <span>• Cijena po terminu:</span>
@@ -118,7 +118,7 @@ const Schedule = () => {
                     className="bg-blue-light text-white text-lg p-2 rounded-3xl text-center w-8/12 cursor-pointer mt-1.5"
                     onClick={() =>
                       goToEditSchedule(
-                        item.id,
+                        item.scheduleId,
                         index + 1,
                         item.filled,
                         googleUser,

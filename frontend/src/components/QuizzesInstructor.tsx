@@ -45,8 +45,11 @@ const QuizzesInstructor = () => {
       console.log("Appointments not loaded yet");
       return;
     }
-    const scheduleIds = appointments.map((a) => a.id);
+    const scheduleIds = appointments.map((a) => a.scheduleId);
     try {
+      console.log("Appointments:", appointments);
+      console.log("Schedule IDs:", scheduleIds);
+      
       const res = await api.get("/instructor/selectedSchedules", {
         params: {
           quiz_id: id,
@@ -54,6 +57,8 @@ const QuizzesInstructor = () => {
         },
       });
       setSelected(res.data);
+      console.log("selectedSchedules response:", res.data);
+console.log("isArray:", Array.isArray(res.data));
     } catch (err) {
       console.error(err);
     }

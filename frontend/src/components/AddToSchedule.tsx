@@ -66,16 +66,16 @@ const AddToSchedule = ({
         <div className="flex-1 grid grid-cols-1 gap-4 overflow-y-auto p-5">
           {appointments.map((item, id) => (
             <div
-              key={item.id}
+              key={item.scheduleId}
               className="flex items-center min-h-[90px] shrink-0 bg-green-light border-2 border-blue-dark rounded-2xl px-5 gap-x-3 cursor-pointer"
             >
               <input
                 type="checkbox"
-                checked={selected.includes(item.id)}
+                checked={selected.includes(item.scheduleId)}
                 className="h-5 w-5 cursor-pointer"
                 onChange={(e) => {
                   e.stopPropagation();
-                  toggleSelected(item.id);
+                  toggleSelected(item.scheduleId);
                 }}
               ></input>
               <div className="flex justify-between items-center w-full">
