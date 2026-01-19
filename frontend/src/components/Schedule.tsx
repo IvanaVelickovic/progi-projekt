@@ -22,7 +22,7 @@ const Schedule = () => {
   const [editSchedule, setEditSchedule] = useState(false);
   const navigate = useNavigate();
   const googleUser = JSON.parse(
-    sessionStorage.getItem("googleUser") || "false"
+    sessionStorage.getItem("googleUser") || "false",
   );
 
   const { appointments, setAppointments } = useAppointments();
@@ -42,7 +42,7 @@ const Schedule = () => {
     index: number,
     filled: number,
     googleUser: boolean,
-    googleCalendar: boolean
+    googleCalendar: boolean,
   ) => {
     setScheduleData({
       scheduleId: scheduleId,
@@ -70,7 +70,7 @@ const Schedule = () => {
         // 2. THIS IS THE IMPORTANT CHANGE:
         // Calling the specific instructor schedule endpoint
         const dataRes = await api.get(
-          "/api/instructor-schedules/my-appointments"
+          "/api/instructor-schedules/my-appointments",
         );
         setAppointments(dataRes.data);
       } catch (error) {
@@ -83,7 +83,7 @@ const Schedule = () => {
   }, []);
 
   const appointmentDates = safeAppointments.map(
-    (item) => item.datetime?.split("T")[0] || ""
+    (item) => item.datetime?.split("T")[0] || "",
   );
 
   return (
@@ -135,7 +135,7 @@ const Schedule = () => {
                           index + 1,
                           item.filled,
                           googleUser,
-                          item.googleCalendar
+                          item.googleCalendar,
                         )
                       }
                     >

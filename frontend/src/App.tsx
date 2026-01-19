@@ -15,6 +15,7 @@ import ProfileEditInstructor from "./pages/ProfileEditInstructor";
 import InstructorDashboard from "./pages/InstructorDashboard";
 import AddSchedule from "./pages/AddSchedule";
 import InstructorProfile from "./pages/InstructorProfile/InstructorProfile";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -67,6 +68,10 @@ function App() {
               <InstructorProfile />
               //</ProtectedRoute>
             }
+          ></Route>
+          <Route
+            path="/admin/dashboard"
+            element={<AdminDashboard></AdminDashboard>}
           ></Route>
         </Routes>
       </AuthProvider>
