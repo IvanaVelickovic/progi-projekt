@@ -30,6 +30,7 @@ const monthsCro = [
   "lip.",
   "srp.",
   "kol.",
+  "ruj.",
   "lis.",
   "stu.",
   "pro.",
@@ -47,18 +48,18 @@ const Statistics = () => {
   };
 
   const chartDummyData = [
-    { month: "04-2025", count: 2 },
-    { month: "01-2026", count: 12 },
-    { month: "02-2025", count: 1 },
-    { month: "03-2025", count: 11 },
-    { month: "05-2025", count: 4 },
-    { month: "06-2025", count: 7 },
-    { month: "07-2025", count: 5 },
-    { month: "09-2025", count: 8 },
-    { month: "10-2025", count: 10 },
-    { month: "11-2025", count: 3 },
-    { month: "12-2025", count: 11 },
-    { month: "08-2025", count: 6 },
+    { month: "2025-04", count: 2 },
+    { month: "2026-01", count: 12 },
+    //{ month: "2025-02", count: 1 },
+    { month: "2025-03", count: 11 },
+    { month: "2025-05", count: 4 },
+    { month: "2025-06", count: 7 },
+    { month: "2025-07", count: 5 },
+    { month: "2025-09", count: 8 },
+    { month: "2025-10", count: 10 },
+    // { month: "11-2025", count: 3 },
+    // { month: "12-2025", count: 11 },
+    { month: "2025-08", count: 6 },
   ];
 
   useEffect(() => {
@@ -70,7 +71,6 @@ const Statistics = () => {
         console.error(error);
       }
     };
-
     fetchSummary();
     //setData(dummyData);
   }, []);
@@ -79,7 +79,7 @@ const Statistics = () => {
     const fetchChartData = async () => {
       try {
         const res = await api.get("/api/admin/stats/reservation-chart");
-        setRawChartData(res.data);
+        setRawChartData(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         console.error(error);
       }
@@ -95,9 +95,26 @@ const Statistics = () => {
 
     //parsiranje na mjesec i godinu
     const parsed = rawChartData.map((p) => {
-      const [month, year] = p.month.split("-").map(Number);
+      const [year, month] = p.month.split("-").map(Number);
       return { month, year, count: p.count };
     });
+
+    const current = new Date();
+    let month = current.getMonth() + 1;
+    let year = current.getFullYear();
+
+    //dodavanje podataka za mjesece koji nedostaju
+    for (let i = 0; i < 12; i++) {
+      if (month == 0) {
+        month = 12;
+        year -= 1;
+      }
+
+      if (!parsed.find((p) => p.month === month)) {
+        parsed.push({ month: month, year: year, count: 0 });
+      }
+      month = month - 1;
+    }
 
     //sortiranje od najstarijeg do najnovijeg mjeseca
     const sortedData = [...parsed].sort((a, b) =>
@@ -132,7 +149,7 @@ const Statistics = () => {
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3"></CartesianGrid>
-              <XAxis dataKey="month"></XAxis>
+              <XAxis dataKey="month" interval={0}></XAxis>
               <YAxis></YAxis>
               <Tooltip></Tooltip>
               <Bar dataKey="count" fill="#2B7A78"></Bar>
