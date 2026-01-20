@@ -8,6 +8,11 @@ import StudentOnlineSessions from "../components/StudentOnlineSessions";
 import SessionSummaries from "../components/SessionSummaries";
 import { getStudentVideoSessions } from "../services/sessionService";
 import type { VideoSession } from "../services/sessionService";
+import {
+  getStudentSummaries,
+  type SessionSummary,
+} from "../services/sessionSummaryService";
+import SessionSummaryList from "../components/SessionSummaryList";
 
 interface Appointment {
   id: number;
@@ -29,7 +34,7 @@ interface OnlineSession {
   date: string;
   time: string;
   duration: number;
-  status: "upcoming" | "live" | "completed";
+  status: "pending" | "live" | "completed";
 }
 
 const StudentDashboard = () => {
@@ -41,6 +46,12 @@ const StudentDashboard = () => {
 
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [onlineSessions, setOnlineSessions] = useState<OnlineSession[]>([]);
+
+  const [summaries, setSummaries] = useState<SessionSummary[]>([]);
+
+  useEffect(() => {
+    getStudentSummaries().then(setSummaries);
+  }, []);
 
   /* ================= ACTIVE SESSION REDIRECT ================= */
   // Preusmjerava korisnika na session-complete ako se vratio iz video sesije

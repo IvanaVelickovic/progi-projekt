@@ -32,13 +32,18 @@ const VideoSession = () => {
       });
   }, [sessionId, role, navigate]);
 
-  const handleMeetingEnd = () => {
-    if (role === "student") {
-      navigate("/student/dashboard");
-    } else {
-      navigate("/instructor/dashboard");
-    }
-  };
+  const handleMeetingEnd = async () => {
+  await fetch(
+    `http://localhost:3001/api/video-sessions/${sessionId}/end`,
+    { method: "POST" }
+  );
+
+  if (role === "student") {
+    navigate("/student/dashboard");
+  } else {
+    navigate("/instructor/dashboard");
+  }
+};
 
   if (!jaas) return <p className="p-8">Učitavanje video sesije...</p>;
 

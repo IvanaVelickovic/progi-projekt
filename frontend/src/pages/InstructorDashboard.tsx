@@ -5,7 +5,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Schedule from "../components/Schedule";
 import InstructorVideoSessions from "../components/InstructorVideoSessions";
-import SessionSummaries from "../components/SessionSummaries";
+import {
+  getInstructorSummaries,
+  type SessionSummary,
+} from "../services/sessionSummaryService";
+import SessionSummaryList from "../components/SessionSummaryList";
 
 // ===== Glavna komponenta =====
 const InstructorDashboard = () => {
@@ -15,68 +19,11 @@ const InstructorDashboard = () => {
     "flex items-center w-[89%] h-[80%] bg-[#ADEBC8]/67 rounded-4xl";
   const defaultStyle = "flex items-center w-[89%] h-[80%]";
 
-  /* ================= ACTIVE SESSION REDIRECT ================= */
-  // Preusmjerava korisnika na session-complete ako se vratio iz video sesije
-  useEffect(() => {
-    const checkActiveSession = () => {
-      const returnPending = localStorage.getItem('session_return_pending');
-      if (returnPending !== 'true') return;
+    const [summaries, setSummaries] = useState<SessionSummary[]>([]);
 
-      const sessionId = localStorage.getItem('active_session_id');
-      if (!sessionId) {
-        localStorage.removeItem('session_return_pending');
-        return;
-      }
-
-      const status = localStorage.getItem(`session_${sessionId}_status`);
-      if (status !== 'in_progress') {
-        localStorage.removeItem('session_return_pending');
-        return;
-      }
-
-      // ===== PROVJERA: Mora proći barem 10 sekundi od starta =====
-      const startTime = localStorage.getItem(`session_${sessionId}_start`);
-      if (startTime) {
-        const start = new Date(startTime);
-        const now = new Date();
-        const secondsElapsed = (now.getTime() - start.getTime()) / 1000;
-        
-        if (secondsElapsed < 10) {
-          console.log(`⏱️ Sesija još nije počela (${Math.round(secondsElapsed)}s) - preskačem redirect`);
-          return;
-        }
-      }
-
-      console.log('🔁 InstructorDashboard → redirect na session-complete');
-      localStorage.removeItem('session_return_pending'); // Potroši flag da nema loopa
-      navigate(`/session-complete/${sessionId}`, { replace: true });
-    };
-
-    // 1️⃣ Provjeri ODMAH pri mount-u
-    checkActiveSession();
-
-    // 2️⃣ Provjeri kada korisnik vrati FOKUS na tab
-    const handleFocus = () => {
-      console.log('👁️ Window focus event - provjeravam aktivne sesije');
-      checkActiveSession();
-    };
-
-    // 3️⃣ Provjeri kada tab postane VISIBLE
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        console.log('👁️ Visibility change - provjeravam aktivne sesije');
-        checkActiveSession();
-      }
-    };
-
-    window.addEventListener('focus', handleFocus);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [navigate]);
+    useEffect(() => {
+      getInstructorSummaries().then(setSummaries);
+    }, []);
 
   return (
     <div className="h-screen">
@@ -171,7 +118,7 @@ const InstructorDashboard = () => {
           {selected == 1 && <Schedule />}
           {selected == 2 && <InstructorVideoSessions />}
           {selected == 3 && <p className="p-8 text-blue-dark text-2xl">Kvizovi - uskoro!</p>}
-          {selected == 4 && <SessionSummaries userType="instructor" />}
+          {selected == 4 && <SessionSummaryList summaries={summaries} />}
         </div>
       </div>
     </div>
