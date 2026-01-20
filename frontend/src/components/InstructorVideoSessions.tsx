@@ -1,3 +1,6 @@
+/* ================= INSTRUCTOR VIDEO SESSIONS ================= */
+// Komponenta za prikaz video sesija instruktora - isti izgled kao StudentOnlineSessions
+
 import { useState, useEffect } from "react";
 import { getInstructorVideoSessions, type InstructorVideoSession } from "../services/sessionService";
 
@@ -6,6 +9,7 @@ const InstructorVideoSessions = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  /* ================= FETCH DATA ================= */
   useEffect(() => {
     const fetchSessions = async () => {
       try {
@@ -27,6 +31,15 @@ const InstructorVideoSessions = () => {
   /* ================= HELPER FUNCTIONS ================= */
   // ===== Direktan ulazak u Jitsi Meet =====
   const handleJoinSession = (sessionId: number) => {
+    // ===== Spremanje start time u localStorage =====
+    const startTime = new Date().toISOString();
+    localStorage.setItem(`session_${sessionId}_start`, startTime);
+    localStorage.setItem('active_session_id', sessionId.toString());
+    localStorage.setItem(`session_${sessionId}_status`, 'in_progress');
+    localStorage.setItem('session_return_pending', 'true'); // 🔑 KLJUČNO za redirect
+    
+    console.log(`🟢 Session ${sessionId} started at ${startTime}`);
+    
     const roomName = `STEMTutoring-Session-${sessionId}`;
     const jitsiUrl = `https://meet.jit.si/${roomName}#config.prejoinPageEnabled=false&config.startWithAudioMuted=false&config.startWithVideoMuted=false&userInfo.displayName=${encodeURIComponent("Instruktor")}`;
     
@@ -57,6 +70,7 @@ const InstructorVideoSessions = () => {
     );
   };
 
+  /* ================= LOADING STATE ================= */
   if (loading) {
     return (
       <div className="p-8">
@@ -70,6 +84,7 @@ const InstructorVideoSessions = () => {
     );
   }
 
+  /* ================= ERROR STATE ================= */
   if (error) {
     return (
       <div className="p-8">
@@ -81,6 +96,7 @@ const InstructorVideoSessions = () => {
     );
   }
 
+  /* ================= RENDER ================= */
   return (
     <div className="p-8">
       <div className="flex items-center gap-3 mb-6">
@@ -120,6 +136,7 @@ const InstructorVideoSessions = () => {
                       {getStatusBadge(session)}
                     </div>
                     
+                    {/* Prikaz studenata */}
                     <div className="mb-2">
                       <p className="text-blue-dark/80 text-lg font-semibold mb-1">
                         Studenti ({session.students.length}/{session.maxParticipants}):

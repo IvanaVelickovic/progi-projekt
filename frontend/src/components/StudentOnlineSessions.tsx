@@ -1,3 +1,6 @@
+/* ================= STUDENT ONLINE SESSIONS COMPONENT ================= */
+// Komponenta za prikaz online video sesija studenta
+
 import type { VideoSession } from "../services/sessionService";
 
 interface StudentOnlineSessionsProps {
@@ -8,6 +11,15 @@ const StudentOnlineSessions = ({ sessions }: StudentOnlineSessionsProps) => {
   /* ================= HELPER FUNCTIONS ================= */
   // ===== Direktan ulazak u Jitsi Meet =====
   const handleJoinSession = (sessionId: number, studentName: string) => {
+    // ===== Spremanje start time u localStorage =====
+    const startTime = new Date().toISOString();
+    localStorage.setItem(`session_${sessionId}_start`, startTime);
+    localStorage.setItem('active_session_id', sessionId.toString());
+    localStorage.setItem(`session_${sessionId}_status`, 'in_progress');
+    localStorage.setItem('session_return_pending', 'true'); // 🔑 KLJUČNO za redirect
+    
+    console.log(`🟢 Session ${sessionId} started at ${startTime}`);
+    
     const roomName = `STEMTutoring-Session-${sessionId}`;
     const jitsiUrl = `https://meet.jit.si/${roomName}#config.prejoinPageEnabled=false&config.startWithAudioMuted=false&config.startWithVideoMuted=false&userInfo.displayName=${encodeURIComponent(studentName)}`;
     
@@ -42,6 +54,7 @@ const StudentOnlineSessions = ({ sessions }: StudentOnlineSessionsProps) => {
   // Osiguraj da je sessions uvijek niz
   const safeSessions = Array.isArray(sessions) ? sessions : [];
 
+  /* ================= RENDER ================= */
   return (
     <div className="p-8">
       <div className="flex items-center gap-3 mb-6">

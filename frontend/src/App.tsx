@@ -14,6 +14,8 @@ import ProfileViewStudent from "./pages/ProfileViewStudent";
 import ProfileEditInstructor from "./pages/ProfileEditInstructor";
 import InstructorDashboard from "./pages/InstructorDashboard";
 import AddSchedule from "./pages/AddSchedule";
+import SessionComplete from "./pages/SessionComplete";
+import VideoSession from "./pages/videoSession";
 
 function App() {
   return (
@@ -59,6 +61,8 @@ function App() {
             path="/instructor/addSchedule"
             element={<AddSchedule />}
           ></Route>
+          <Route path="/session-complete/:sessionId" element={<SessionComplete />} />
+          <Route path="/video-session/:sessionId" element={<VideoSession />} />
         </Routes>
       </AuthProvider>
     </Router>
