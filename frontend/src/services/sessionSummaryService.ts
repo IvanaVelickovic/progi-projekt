@@ -10,11 +10,11 @@ export interface SessionSummary {
 }
 
 export async function getStudentSummaries(): Promise<SessionSummary[]> {
-  const res = await fetch("http://localhost:3001/api/student/summaries");
+  const res = await fetch("/api/student/summaries");
   return res.json();
 }
 
 export async function getInstructorSummaries(): Promise<SessionSummary[]> {
-  const res = await fetch("http://localhost:3001/api/instructor/summaries");
+  const res = await fetch("/api/instructor/summaries");
   return res.json();
 }
