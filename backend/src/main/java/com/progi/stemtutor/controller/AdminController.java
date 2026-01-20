@@ -1,9 +1,8 @@
 package com.progi.stemtutor.controller;
 
-import com.progi.stemtutor.dto.AdminReviewResponseDto;
-import com.progi.stemtutor.dto.AdminUserResponseDto;
-import com.progi.stemtutor.dto.AdminUserStatusUpdateDto;
+import com.progi.stemtutor.dto.*;
 import com.progi.stemtutor.service.AdminService;
+import com.progi.stemtutor.service.AdminStatsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,7 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
+    private final AdminStatsService adminStatsService;
 
     // Dohvat korisnika uz paginaciju
     @GetMapping("/users")
@@ -44,7 +44,7 @@ public class AdminController {
     // Upravljanje statusom korisnika
     @PutMapping("/users/{id}/status")
     public ResponseEntity<Void> updateUserStatus(@PathVariable Long id, @RequestBody AdminUserStatusUpdateDto dto) {
-        adminService.updateUserStatus(id, dto.getStatus());
+        adminService.updateUserStatus(id, dto);
         return ResponseEntity.ok().build();
     }
 
@@ -53,5 +53,27 @@ public class AdminController {
     public ResponseEntity<Void> verifyUser(@PathVariable Long id) {
         adminService.verifyUser(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/stats/summary")
+    public ResponseEntity<AdminDashboardStatsDto> getSummary() {
+        return ResponseEntity.ok(adminStatsService.getSummaryStats());
+    }
+
+    @GetMapping("/stats/reservations-chart")
+    public ResponseEntity<List<MonthlyReservationDto>> getChartData() {
+        return ResponseEntity.ok(adminStatsService.getMonthlyReservations());
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        adminService.hardDeleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/reviews/{id}")
+    public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
+        adminService.deleteReview(id);
+        return ResponseEntity.noContent().build();
     }
 }

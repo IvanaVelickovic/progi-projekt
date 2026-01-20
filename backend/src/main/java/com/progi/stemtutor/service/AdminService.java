@@ -2,6 +2,7 @@ package com.progi.stemtutor.service;
 
 import com.progi.stemtutor.dto.AdminReviewResponseDto;
 import com.progi.stemtutor.dto.AdminUserResponseDto;
+import com.progi.stemtutor.dto.AdminUserStatusUpdateDto;
 import com.progi.stemtutor.model.Review;
 import com.progi.stemtutor.model.User;
 import com.progi.stemtutor.model.enums.UserStatus;
@@ -9,12 +10,15 @@ import com.progi.stemtutor.repository.ReviewRepository;
 import com.progi.stemtutor.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,22 +33,6 @@ public class AdminService {
         return userRepository.findAll();
     }
 
-    @Transactional
-    public void updateUserStatus(Long userId, String status) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Korisnik nije pronađen"));
-        user.setStatus(UserStatus.valueOf(status.toLowerCase()));
-        userRepository.save(user);
-    }
-
-    @Transactional
-    public void verifyUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Korisnik nije pronađen"));
-        user.setVerified(true);
-        userRepository.save(user);
-    }
-
     public List<AdminReviewResponseDto> getAllReviews() {
         return reviewRepository.findAll().stream().map(review -> {
             AdminReviewResponseDto dto = new AdminReviewResponseDto();
@@ -53,7 +41,6 @@ public class AdminService {
             dto.setComment(review.getComment());
             dto.setRemoved(review.isReviewRemoved());
 
-            // Izvlačenje imena preko relacija
             dto.setStudentName(review.getReservationParticipation().getStudent().getUser().getFirstName());
             dto.setInstructorName(review.getReservationParticipation().getReservation().getSchedule().getInstructor().getUser().getFirstName());
             return dto;
@@ -79,8 +66,39 @@ public class AdminService {
                 .role(user.getRole().name())
                 .status(user.getStatus().name())
                 .isVerified(user.isVerified())
-                .createdAt(user.getCreatedAt())
-                .lastLogin(user.getLastLogin())
+                .createdAt(LocalDateTime.ofInstant(user.getCreatedAt(), ZoneId.systemDefault()))
+                .lastLogin(LocalDateTime.ofInstant(user.getLastLogin(), ZoneId.systemDefault()))
                 .build());
+    }
+
+    @Transactional
+    public void verifyUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Korisnik nije pronađen"));
+
+        user.setVerified(true); // Koristi metodu koju smo upravo dodali
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateUserStatus(Long userId, AdminUserStatusUpdateDto dto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Korisnik nije pronađen"));
+
+        user.setStatus(UserStatus.valueOf(dto.getStatus().toLowerCase()));
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void hardDeleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new RuntimeException("Korisnik nije pronađen.");
+        }
+        userRepository.deleteById(userId);
+    }
+
+    @Transactional
+    public void deleteReview(Long reviewId) {
+        reviewRepository.deleteById(reviewId);
     }
 }
