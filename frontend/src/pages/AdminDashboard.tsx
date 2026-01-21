@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Statistics from "../components/Statistics";
+import ReviewControl from "../components/ReviewControl";
 //import appointmentsData from "../assets/appointments.json";
 
 const AdminDashboard = () => {
@@ -68,7 +69,7 @@ const AdminDashboard = () => {
         <div className="w-4/5">
           {selected == 1 && <Statistics />}
           {selected == 2 && <p>Korisnici</p>}
-          {selected == 3 && <p>Recenzije</p>}
+          {selected == 3 && <ReviewControl />}
         </div>
       </div>
     </div>
