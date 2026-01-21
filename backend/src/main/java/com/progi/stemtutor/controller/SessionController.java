@@ -9,21 +9,19 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/sessions")
-@RequiredArgsConstructor
+@RequestMapping("/api/video-sessions")
+@RequiredArgsConstructor // Ovo rješava "Cannot resolve symbol jaasTokenService"
 public class SessionController {
 
     private final JaaSTokenService jaasTokenService;
 
     @GetMapping("/{reservationId}/join")
-    public ResponseEntity<?> joinSession(
+    public ResponseEntity<JaaSTokenResponse> joinSession(
             @PathVariable Long reservationId,
             @AuthenticationPrincipal User user
     ) throws Exception {
 
-        // Ovdje možeš dohvatiti reservation iz DB da dobiješ naziv room-a
         String roomName = "stemtutor-reservation-" + reservationId;
-
         boolean isInstructor = user.getRole().name().equalsIgnoreCase("instructor");
 
         JaaSTokenResponse response = jaasTokenService.generateToken(

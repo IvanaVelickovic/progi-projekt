@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashMap;
 
 @Service
 public class JaaSTokenService {
@@ -27,11 +28,10 @@ public class JaaSTokenService {
     private String kid;
 
     public JaaSTokenResponse generateToken(String roomName, String displayName, boolean isInstructor) throws Exception {
-        // učitaj privatni ključ iz fajla
         PrivateKey privateKey = loadPrivateKeyFromFile("jitsi_private_key.pem");
 
         Instant now = Instant.now();
-        Instant exp = now.plusSeconds(3600); // 1h
+        Instant exp = now.plusSeconds(3600);
 
         String jwt = Jwts.builder()
                 .setHeaderParam("kid", kid)
@@ -39,8 +39,8 @@ public class JaaSTokenService {
                 .setAudience("jitsi")
                 .setSubject(appId)
                 .claim("room", roomName)
-                .claim("context", new java.util.HashMap<>() {{
-                    put("user", new java.util.HashMap<>() {{
+                .claim("context", new HashMap<String, Object>() {{
+                    put("user", new HashMap<String, Object>() {{
                         put("name", displayName);
                         put("moderator", isInstructor);
                     }});
@@ -50,10 +50,10 @@ public class JaaSTokenService {
                 .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
 
-        return new JaaSTokenResponse(roomName, displayName, isInstructor, jwt);
+        // Vraća točno tri polja koja si tražio
+        return new JaaSTokenResponse(roomName, appId, jwt);
     }
 
-    // funkcija koja učitava ključ iz resources
     private PrivateKey loadPrivateKeyFromFile(String resourceName) throws Exception {
         String pem = new String(Files.readAllBytes(Paths.get(getClass()
                 .getClassLoader()
@@ -61,14 +61,11 @@ public class JaaSTokenService {
 
         try (PEMParser parser = new PEMParser(new StringReader(pem))) {
             Object obj = parser.readObject();
-            if (obj == null) throw new IllegalArgumentException("Private key PEM is empty or invalid!");
             JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
             if (obj instanceof PrivateKeyInfo) {
                 return converter.getPrivateKey((PrivateKeyInfo) obj);
-            } else if (obj instanceof PEMKeyPair) {
-                return converter.getKeyPair((PEMKeyPair) obj).getPrivate();
             } else {
-                throw new IllegalArgumentException("Unsupported key format: " + obj.getClass());
+                return converter.getKeyPair((PEMKeyPair) obj).getPrivate();
             }
         }
     }
