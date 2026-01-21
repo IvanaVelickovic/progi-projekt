@@ -17,7 +17,7 @@ export interface VideoSession {
 
 export interface InstructorVideoSession {
   id: number;
-  students: string[]; // Lista studenata koji su rezervirali termin
+  studentNames: string[]; // Lista studenata koji su rezervirali termin
   subject: string;
   date: string;
   time: string;
