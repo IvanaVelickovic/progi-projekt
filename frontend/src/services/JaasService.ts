@@ -1,25 +1,16 @@
+import api from "../api";
+
 export async function joinVideoSession(
-  reservationId: number,
-  role: "student" | "instructor"
+  reservationId: number
 ) {
-  const res = await fetch(
-    `/api/video-sessions/${reservationId}/join`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ role }),
-    }
+  const res = await api.get(
+    `/api/video-sessions/${reservationId}/join`
   );
 
-  if (!res.ok) {
-    throw new Error("Failed to join video session");
-  }
-
-  return res.json() as Promise<{
+  // axios -> res.data je već JSON
+  return res.data as {
     appId: string;
     roomName: string;
     jwt: string;
-  }>;
+  };
 }

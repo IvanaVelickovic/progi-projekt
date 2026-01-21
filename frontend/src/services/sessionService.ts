@@ -6,7 +6,7 @@ import api from "../api";
 
 // ===== TIPOVI =====
 export interface VideoSession {
-  id: number;
+  reservationId: number;
   InstructorName: string;
   subject: string;
   date: string;
@@ -16,7 +16,7 @@ export interface VideoSession {
 }
 
 export interface InstructorVideoSession {
-  id: number;
+  reservationId: number;
   studentNames: string[]; // Lista studenata koji su rezervirali termin
   subject: string;
   date: string;
@@ -60,10 +60,10 @@ export const getInstructorVideoSessions = async (): Promise<InstructorVideoSessi
 };
 
 // ===== DOHVAĆANJE POJEDINAČNE VIDEO SESIJE =====
-export const getVideoSessionById = async (id: string) => {
+export const getVideoSessionById = async (reservationId: string) => {
   
  
-  const response = await api.get(`/api/student/video-session/${id}`);
+  const response = await api.get(`/api/student/video-sessions/${reservationId}`);
   const data = response.data;
   
   // Formatiraj datum i vrijeme
@@ -80,7 +80,7 @@ export const getVideoSessionById = async (id: string) => {
   });
   
   return {
-    id: data.id,
+    reservationId: data.reservationId,
     tutorName: data.instructorName,
     subject: data.subject,
     date: date,
@@ -94,7 +94,7 @@ export const getVideoSessionById = async (id: string) => {
 export const completeVideoSession = async (reservationId: string, duration: number) => {
   
   try {
-    const response = await api.post(`/api/student/video-session/${reservationId}/complete`, {
+    const response = await api.post(`/api/student/video-sessions/${reservationId}/complete`, {
       duration,
     });
     return response.data;
@@ -108,7 +108,7 @@ export const completeVideoSession = async (reservationId: string, duration: numb
 // ===== ZAVRŠETAK VIDEO SESIJE I DOHVAĆANJE REDIRECT URL-a =====
 export const endVideoSession = async (reservationId: string) => {
   try {
-    const response = await api.post(`/api/video-session/${reservationId}/end/`);
+    const response = await api.post(`/api/video-sessions/${reservationId}/end`);
     return response.data; // { redirect_to: "/payment/12" } ili { redirect_to: "/dashboard" }
   } catch (error) {
     console.error("Greška pri završavanju sesije:", error);

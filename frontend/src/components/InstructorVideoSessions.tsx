@@ -120,7 +120,7 @@ const InstructorVideoSessions = () => {
 
             return (
               <div
-                key={session.id}
+                key={session.reservationId}
                 className={`rounded-2xl p-6 shadow-md hover:shadow-lg transition-all ${
                   isLive
                     ? "bg-red-50 border-2 border-red-500"
@@ -173,7 +173,7 @@ const InstructorVideoSessions = () => {
 
                   <div className="text-right">
                     <button
-                      onClick={() => handleJoinSession(session.id)}
+                      onClick={() => handleJoinSession(session.reservationId)}
                       className={`px-8 py-4 rounded-lg font-bold text-lg transition-all flex items-center gap-2 w-full mb-2 justify-center ${
                         isLive
                           ? "bg-red-500 hover:bg-red-600 text-white animate-pulse"
