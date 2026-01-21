@@ -7,11 +7,11 @@ import api from "../api";
 // ===== TIPOVI =====
 export interface VideoSession {
   id: number;
-  studentName: string;
+  InstructorName: string;
   subject: string;
   date: string;
   time: string;
-  duration: number;
+  durationMin: number;
   status: "pending" | "live" | "completed";
 }
 
@@ -21,9 +21,8 @@ export interface InstructorVideoSession {
   subject: string;
   date: string;
   time: string;
-  duration: number;
+  durationMin: number;
   status: "pending" | "live" | "completed";
-  maxParticipants: number; // Maksimalan broj studenata
 }
 
 // ===== DOHVAĆANJE STUDENTSKIH VIDEO SESIJA =====
@@ -92,10 +91,10 @@ export const getVideoSessionById = async (id: string) => {
 };
 
 // ===== OZNAČAVANJE SESIJE KAO ZAVRŠENE =====
-export const completeVideoSession = async (sessionId: string, duration: number) => {
+export const completeVideoSession = async (reservationId: string, duration: number) => {
   
   try {
-    const response = await api.post(`/api/student/video-session/${sessionId}/complete`, {
+    const response = await api.post(`/api/student/video-session/${reservationId}/complete`, {
       duration,
     });
     return response.data;
@@ -107,9 +106,9 @@ export const completeVideoSession = async (sessionId: string, duration: number) 
 };
 
 // ===== ZAVRŠETAK VIDEO SESIJE I DOHVAĆANJE REDIRECT URL-a =====
-export const endVideoSession = async (sessionId: string) => {
+export const endVideoSession = async (reservationId: string) => {
   try {
-    const response = await api.post(`/api/lessons/${sessionId}/end/`);
+    const response = await api.post(`/api/video-session/${reservationId}/end/`);
     return response.data; // { redirect_to: "/payment/12" } ili { redirect_to: "/dashboard" }
   } catch (error) {
     console.error("Greška pri završavanju sesije:", error);
@@ -119,12 +118,12 @@ export const endVideoSession = async (sessionId: string) => {
 };
 
 // ===== DOHVAĆANJE JAAS JWT TOKENA =====
-export const getJaasToken = async (sessionId: string) => {
+export const getJaasToken = async (reservationId: string) => {
   
 
   
   try {
-    const response = await api.get(`/api/lessons/${sessionId}/jaas-token/`);
+    const response = await api.get(`/api/lessons/${reservationId}/jaas-token/`);
     return response.data; 
   } catch (error) {
     console.error("Greška pri dohvaćanju JaaS tokena:", error);

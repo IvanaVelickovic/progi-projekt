@@ -2,6 +2,7 @@
 // Komponenta za prikaz video sesija instruktora - isti izgled kao StudentOnlineSessions
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getInstructorVideoSessions, type InstructorVideoSession } from "../services/sessionService";
 
 const InstructorVideoSessions = () => {
@@ -30,20 +31,19 @@ const InstructorVideoSessions = () => {
 
   /* ================= HELPER FUNCTIONS ================= */
   // ===== Direktan ulazak u Jitsi Meet =====
-  const handleJoinSession = (sessionId: number) => {
-    // ===== Spremanje start time u localStorage =====
+  const navigate = useNavigate();
+  const handleJoinSession = (reservationId: number) => {
     const startTime = new Date().toISOString();
-    localStorage.setItem(`session_${sessionId}_start`, startTime);
-    localStorage.setItem('active_session_id', sessionId.toString());
-    localStorage.setItem(`session_${sessionId}_status`, 'in_progress');
-    localStorage.setItem('session_return_pending', 'true'); // 🔑 KLJUČNO za redirect
-    
-    console.log(`🟢 Session ${sessionId} started at ${startTime}`);
-    
-    const roomName = `STEMTutoring-Session-${sessionId}`;
-    const jitsiUrl = `https://meet.jit.si/${roomName}#config.prejoinPageEnabled=false&config.startWithAudioMuted=false&config.startWithVideoMuted=false&userInfo.displayName=${encodeURIComponent("Instruktor")}`;
-    
-    window.open(jitsiUrl, '_blank');
+
+    localStorage.setItem(`session_${reservationId}_start`, startTime);
+    localStorage.setItem("active_session_id", reservationId.toString());
+    localStorage.setItem(`session_${reservationId}_status`, "in_progress");
+    localStorage.setItem("session_return_pending", "true");
+
+    console.log(`🟢 Session ${reservationId} started at ${startTime}`);
+
+    // ✅ redirect na stranicu s JaaSMeeting komponentom
+    navigate(`/video-session/${reservationId}`);
   };
 
   const getStatusBadge = (session: InstructorVideoSession) => {
@@ -139,7 +139,7 @@ const InstructorVideoSessions = () => {
                     {/* Prikaz studenata */}
                     <div className="mb-2">
                       <p className="text-blue-dark/80 text-lg font-semibold mb-1">
-                        Studenti ({session.students.length}/{session.maxParticipants}):
+                        Studenti koji su rezervirali termin:
                       </p>
                       {session.students.length > 0 ? (
                         <div className="flex flex-wrap gap-2">

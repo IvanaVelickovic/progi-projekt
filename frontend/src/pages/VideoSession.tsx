@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import JaasMeeting from "../components/JaasMeeting";
-import { getJaasToken } from "../services/JaasService";
+import { joinVideoSession } from "../services/JaasService";
 
 type UserRole = "student" | "instructor";
 
@@ -12,7 +12,7 @@ interface JaasData {
 }
 
 const VideoSession = () => {
-  const { sessionId } = useParams();
+  const { reservationId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -22,19 +22,19 @@ const VideoSession = () => {
   const [jaas, setJaas] = useState<JaasData | null>(null);
 
   useEffect(() => {
-    if (!sessionId || !role) return;
+  if (!reservationId || !role) return;
 
-    getJaasToken(Number(sessionId), role)
-      .then(setJaas)
-      .catch((err) => {
-        console.error(err);
-        navigate("/");
-      });
-  }, [sessionId, role, navigate]);
+  joinVideoSession(Number(reservationId), role)
+    .then(setJaas)
+    .catch((err) => {
+      console.error(err);
+      navigate("/");
+    });
+}, [reservationId, role, navigate]);
 
   const handleMeetingEnd = async () => {
   await fetch(
-    `http://localhost:3001/api/video-sessions/${sessionId}/end`,
+    `/api/video-sessions/${reservationId}/end`,
     { method: "POST" }
   );
 

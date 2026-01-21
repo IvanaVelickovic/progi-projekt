@@ -1,14 +1,25 @@
-export async function getJaasToken(
-  sessionId: number,
+export async function joinVideoSession(
+  reservationId: number,
   role: "student" | "instructor"
 ) {
   const res = await fetch(
-    `http://localhost:3001/api/jaas-token?sessionId=${sessionId}&role=${role}`
+    `/api/video-sessions/${reservationId}/join`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ role }),
+    }
   );
 
   if (!res.ok) {
-    throw new Error("Failed to fetch JaaS token");
+    throw new Error("Failed to join video session");
   }
 
-  return res.json();
+  return res.json() as Promise<{
+    appId: string;
+    roomName: string;
+    jwt: string;
+  }>;
 }

@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import StudentSchedule from "../components/StudentSchedule";
 import StudentOnlineSessions from "../components/StudentOnlineSessions";
-import SessionSummaries from "../components/SessionSummaries";
 import { getStudentVideoSessions } from "../services/sessionService";
 import type { VideoSession } from "../services/sessionService";
 import {
@@ -29,7 +28,7 @@ interface Appointment {
 
 interface OnlineSession {
   id: number;
-  studentName: string;
+  InstructorName: string;
   subject: string;
   date: string;
   time: string;
@@ -52,69 +51,6 @@ const StudentDashboard = () => {
   useEffect(() => {
     getStudentSummaries().then(setSummaries);
   }, []);
-
-  /* ================= ACTIVE SESSION REDIRECT ================= */
-  // Preusmjerava korisnika na session-complete ako se vratio iz video sesije
-  useEffect(() => {
-    const checkActiveSession = () => {
-      const returnPending = localStorage.getItem('session_return_pending');
-      if (returnPending !== 'true') return;
-
-      const sessionId = localStorage.getItem('active_session_id');
-      if (!sessionId) {
-        localStorage.removeItem('session_return_pending');
-        return;
-      }
-
-      const status = localStorage.getItem(`session_${sessionId}_status`);
-      if (status !== 'in_progress') {
-        localStorage.removeItem('session_return_pending');
-        return;
-      }
-
-      // ===== PROVJERA: Mora proći barem 10 sekundi od starta =====
-      const startTime = localStorage.getItem(`session_${sessionId}_start`);
-      if (startTime) {
-        const start = new Date(startTime);
-        const now = new Date();
-        const secondsElapsed = (now.getTime() - start.getTime()) / 1000;
-        
-        if (secondsElapsed < 10) {
-          console.log(`⏱️ Sesija još nije počela (${Math.round(secondsElapsed)}s) - preskačem redirect`);
-          return;
-        }
-      }
-
-      console.log('🔁 StudentDashboard → redirect na session-complete');
-      localStorage.removeItem('session_return_pending'); // Potroši flag da nema loopa
-      navigate(`/session-complete/${sessionId}`, { replace: true });
-    };
-
-    // 1️⃣ Provjeri ODMAH pri mount-u
-    checkActiveSession();
-
-    // 2️⃣ Provjeri kada korisnik vrati FOKUS na tab
-    const handleFocus = () => {
-      console.log('👁️ Window focus event - provjeravam aktivne sesije');
-      checkActiveSession();
-    };
-
-    // 3️⃣ Provjeri kada tab postane VISIBLE
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        console.log('👁️ Visibility change - provjeravam aktivne sesije');
-        checkActiveSession();
-      }
-    };
-
-    window.addEventListener('focus', handleFocus);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [navigate]);
 
   /* ================= FETCH DATA ================= */
   useEffect(() => {
@@ -273,7 +209,7 @@ const StudentDashboard = () => {
             <StudentOnlineSessions sessions={onlineSessions} />
           )}
           {selected == 3 && <p className="p-8 text-blue-dark text-2xl">Kvizovi - uskoro!</p>}
-          {selected == 4 && <SessionSummaries userType="student" />}
+          {selected == 4 && <SessionSummaryList summaries={summaries} />}
         </div>
       </div>
     </div>
