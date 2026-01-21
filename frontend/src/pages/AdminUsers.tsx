@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import api from "../api";
 
-type UserRole = "INSTRUCTOR" | "STUDENT";
+type UserRole = "instructor" | "student";
 
 interface AdminUser {
   id: number;
@@ -8,7 +9,7 @@ interface AdminUser {
   lastName: string;
   role: UserRole;
   verified: boolean;
-  suspended: boolean;
+  status: string;
   lastActive: string;
 }
 
@@ -17,9 +18,9 @@ const mockUsers: AdminUser[] = [
     id: 1,
     firstName: "Ime",
     lastName: "Prezime",
-    role: "INSTRUCTOR",
+    role: "instructor",
     verified: false,
-    suspended: false,
+    status: "",
     lastActive: "xx.yy.zzzz.",
   },
 ];
@@ -29,53 +30,77 @@ const AdminUsers: React.FC = () => {
   const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
-    fetch("/api/admin/users")
-      .then((res) => {
-        if (!res.ok) throw new Error("err");
-        return res.json();
-      })
-      .then((data) =>
+    const fetchUsers = async () => {
+      try {
+        const res = await api.get("/api/admin/users?page=1&size=20");
+        const content = res.data.content;
+
         setUsers(
-          data.map((u: any) => ({
-            id: u.id,
+          content.map((u: any) => ({
+            id: u.userId,
             firstName: u.firstName,
             lastName: u.lastName,
             role: u.role,
             verified: u.verified,
-            suspended: u.suspended,
+            status: u.status,
             lastActive: u.lastLogin,
-          }))
-        )
-      )
-      .catch(() => setUsers(mockUsers));
+          })),
+        );
+      } catch (error) {
+        setUsers(mockUsers);
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   const verifyUser = async (userId: number) => {
-    await fetch(`/api/admin/users/${userId}/verify`, { method: "PUT" });
-    setUsers((prev) =>
-      prev.map((u) => (u.id === userId ? { ...u, verified: true } : u))
-    );
+    try {
+      await api.put(`/api/admin/users/${userId}/verify`);
+
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, verified: true } : u)),
+      );
+    } catch (error) {
+      console.error("Verification failed", error);
+      // eventualno obavijest korisnika
+    }
   };
 
   const toggleSuspendUser = async (userId: number) => {
-    await fetch(`/api/admin/users/${userId}/status`, { method: "PUT" });
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === userId ? { ...u, suspended: !u.suspended } : u
-      )
-    );
+    const user = users.filter((prev) => prev.id === userId).at(0);
+    let status = user?.status === "banned" ? "active" : "banned";
+
+    try {
+      await api.put(`/api/admin/users/${userId}/status`, {
+        status: status,
+      });
+
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, status: status } : u)),
+      );
+    } catch (error) {
+      console.error("Failed to toggle suspend status", error);
+    }
   };
 
   const deleteUser = async (userId: number) => {
-    const confirmed = window.confirm("Jeste li sigurni da želite obrisati profil?");
+    const confirmed = window.confirm(
+      "Jeste li sigurni da želite obrisati profil?",
+    );
     if (!confirmed) return;
 
-    await fetch(`/api/admin/users/${userId}`, { method: "DELETE" });
-    setUsers((prev) => prev.filter((u) => u.id !== userId));
+    try {
+      await api.delete(`/api/admin/users/${userId}`);
+
+      setUsers((prev) => prev.filter((u) => u.id !== userId));
+    } catch (error) {
+      console.error("Brisanje korisnika nije uspjelo", error);
+    }
   };
 
   const filteredUsers = users.filter((u) =>
-    `${u.firstName} ${u.lastName}`.toLowerCase().includes(search.toLowerCase())
+    `${u.firstName} ${u.lastName}`.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -100,28 +125,30 @@ const AdminUsers: React.FC = () => {
               {user.firstName} {user.lastName}
             </h2>
             <p className="text-blue-dark mt-1">
-              {user.role === "INSTRUCTOR" ? "Instruktor" : "Učenik"}
+              {user.role === "instructor" ? "Instruktor" : "Učenik"}
             </p>
 
             <div className="flex flex-col gap-3 mt-6">
               <button
                 onClick={() => verifyUser(user.id)}
                 disabled={user.verified}
-                className="bg-blue-dark text-white px-6 py-2 rounded-full disabled:opacity-50 w-56 flex justify-center"
+                className="bg-blue-dark text-white px-6 py-2 rounded-full disabled:opacity-50 w-56 flex justify-center cursor-pointer"
               >
                 Verificiraj profil
               </button>
 
               <button
                 onClick={() => toggleSuspendUser(user.id)}
-                className="bg-blue-dark text-white px-6 py-2 rounded-full w-56 flex justify-center"
+                className="bg-blue-dark text-white px-6 py-2 rounded-full w-56 flex justify-center cursor-pointer"
               >
-                {user.suspended ? "Aktiviraj profil" : "Suspendiraj profil"}
+                {user.status === "banned"
+                  ? "Aktiviraj profil"
+                  : "Suspendiraj profil"}
               </button>
 
               <button
                 onClick={() => deleteUser(user.id)}
-                className="bg-blue-dark text-white px-6 py-2 rounded-full w-56 flex justify-center"
+                className="bg-blue-dark text-white px-6 py-2 rounded-full w-56 flex justify-center cursor-pointer"
               >
                 Obriši profil
               </button>

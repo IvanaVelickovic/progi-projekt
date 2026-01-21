@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AdminUsers from "./AdminUsers"
+import AdminUsers from "./AdminUsers";
 //import appointmentsData from "../assets/appointments.json";
 
 const AdminDashboard = () => {
@@ -19,7 +19,7 @@ const AdminDashboard = () => {
       </div>
 
       <div className="flex h-[86%]">
-        <div className="flex justify-center w-1/5 bg-[#F8FFFC] ">
+        <div className="flex justify-center w-1/5 bg-[#F8FFFC]">
           <div className="bg-green-light h-5/12 mt-22 w-11/12 rounded-2xl drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]">
             <ul className="h-full p-1">
               <li
@@ -62,9 +62,9 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="w-4/5">
+        <div className="w-4/5 overflow-y-auto bg-[#EFFFF6]">
           {selected == 1 && <p>Statistika</p>}
-          {selected == 2 && <AdminUsers/>}
+          {selected == 2 && <AdminUsers />}
           {selected == 3 && <p>Recenzije</p>}
         </div>
       </div>
