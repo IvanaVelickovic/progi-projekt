@@ -30,19 +30,21 @@ public class JaaSTokenService {
     public JaaSTokenResponse generateToken(String roomName, String displayName, boolean isInstructor) throws Exception {
         PrivateKey privateKey = loadPrivateKeyFromFile("jitsi_private_key.pem");
 
-        Instant now = Instant.now();
+        Instant now = Instant.now().minusSeconds(20); // Account for clock skew
         Instant exp = now.plusSeconds(3600);
 
         String jwt = Jwts.builder()
                 .setHeaderParam("kid", kid)
+                .setHeaderParam("typ", "JWT") // Added explicit type
                 .setIssuer("chat")
                 .setAudience("jitsi")
                 .setSubject(appId)
-                .claim("room", roomName)
+                .claim("room", "*") // Use wildcard for testing, then narrow to appId + "/" + roomName
                 .claim("context", new HashMap<String, Object>() {{
                     put("user", new HashMap<String, Object>() {{
                         put("name", displayName);
-                        put("moderator", isInstructor);
+                        put("moderator", isInstructor ? "true" : "false");
+                        put("id", java.util.UUID.randomUUID().toString());
                     }});
                 }})
                 .setIssuedAt(Date.from(now))
@@ -50,7 +52,6 @@ public class JaaSTokenService {
                 .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
 
-        // Vraća točno tri polja koja si tražio
         return new JaaSTokenResponse(roomName, appId, jwt);
     }
 
