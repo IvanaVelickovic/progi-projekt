@@ -59,7 +59,7 @@ const ReviewControl = () => {
         prevReviews.filter((prev) => prev.reviewId !== reviewId),
       );
       try {
-        await api.delete(`/api/reviews/${reviewId}`);
+        await api.delete(`/api/admin/reviews/${reviewId}`);
       } catch (error) {
         console.error(error);
       }
@@ -111,6 +111,7 @@ const ReviewControl = () => {
       <div className="flex flex-col gap-2">
         {filteredReviews?.map((item) => (
           <div
+            key={item.reviewId}
             className={
               !item.removed
                 ? "bg-white rounded-2xl border-2 text-blue-dark border-[#2B7A78] p-5 hover:shadow-lg transition-shadow mx-6"

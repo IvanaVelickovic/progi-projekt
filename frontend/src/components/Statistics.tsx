@@ -78,8 +78,9 @@ const Statistics = () => {
   useEffect(() => {
     const fetchChartData = async () => {
       try {
-        const res = await api.get("/api/admin/stats/reservation-chart");
+        const res = await api.get("/api/admin/stats/reservations-chart");
         setRawChartData(Array.isArray(res.data) ? res.data : []);
+        console.log(res.data);
       } catch (error) {
         console.error(error);
       }
@@ -167,7 +168,9 @@ const Statistics = () => {
 
           <div className="flex items-center justify-center gap-0 mb-4 pt-8">
             <div className="flex items-center text-6xl font-bold">
-              <div className="text-[#2B7A78]">{data?.overallAverageRating}</div>
+              <div className="text-[#2B7A78]">
+                {data?.overallAverageRating.toFixed(2)}
+              </div>
               <img src="/images/star.png" className="h-12"></img>
             </div>
           </div>
