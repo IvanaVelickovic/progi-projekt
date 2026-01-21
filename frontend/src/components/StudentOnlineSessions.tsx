@@ -1,6 +1,7 @@
 /* ================= STUDENT ONLINE SESSIONS COMPONENT ================= */
 // Komponenta za prikaz online video sesija studenta
 
+import { useNavigate } from "react-router-dom";
 import type { VideoSession } from "../services/sessionService";
 
 interface StudentOnlineSessionsProps {
@@ -10,22 +11,20 @@ interface StudentOnlineSessionsProps {
 const StudentOnlineSessions = ({ sessions }: StudentOnlineSessionsProps) => {
   /* ================= HELPER FUNCTIONS ================= */
   // ===== Direktan ulazak u Jitsi Meet =====
-  const handleJoinSession = (sessionId: number, studentName: string) => {
-    // ===== Spremanje start time u localStorage =====
+  const navigate = useNavigate();
+  const handleJoinSession = (reservationId: number) => {
     const startTime = new Date().toISOString();
-    localStorage.setItem(`session_${sessionId}_start`, startTime);
-    localStorage.setItem('active_session_id', sessionId.toString());
-    localStorage.setItem(`session_${sessionId}_status`, 'in_progress');
-    localStorage.setItem('session_return_pending', 'true'); // 🔑 KLJUČNO za redirect
-    
-    console.log(`🟢 Session ${sessionId} started at ${startTime}`);
-    
-    const roomName = `STEMTutoring-Session-${sessionId}`;
-    const jitsiUrl = `https://meet.jit.si/${roomName}#config.prejoinPageEnabled=false&config.startWithAudioMuted=false&config.startWithVideoMuted=false&userInfo.displayName=${encodeURIComponent(studentName)}`;
-    
-    window.open(jitsiUrl, '_blank');
-  };
 
+    localStorage.setItem(`session_${reservationId}_start`, startTime);
+    localStorage.setItem("active_session_id", reservationId.toString());
+    localStorage.setItem(`session_${reservationId}_status`, "in_progress");
+    localStorage.setItem("session_return_pending", "true");
+
+    console.log(`🟢 Session ${reservationId} started at ${startTime}`);
+
+    // ✅ redirect na stranicu s JaaSMeeting komponentom
+    navigate(`/video-session/${reservationId}`);
+  };
   const getStatusBadge = (session: VideoSession) => {
     if (session.status === "live") {
       return (
@@ -95,14 +94,14 @@ const StudentOnlineSessions = ({ sessions }: StudentOnlineSessionsProps) => {
                     </div>
                     
                     <p className="text-blue-dark/80 text-lg mb-2">
-                      Instruktor: {session.studentName}
+                      Instruktor: {session.InstructorName}
                     </p>
                     <p className="text-blue-dark/70 mb-1">
                       📅 {session.date} u{" "}
                       {session.time}
                     </p>
                     <p className="text-blue-dark/70 mb-1">
-                      ⏱️ Trajanje: {session.duration} min
+                      ⏱️ Trajanje: {session.durationMin} min
                     </p>
                     <p className="text-blue-dark/70">
                       💻 Online video poziv
@@ -111,7 +110,7 @@ const StudentOnlineSessions = ({ sessions }: StudentOnlineSessionsProps) => {
 
                   <div className="text-right">
                     <button
-                      onClick={() => handleJoinSession(session.id, "Student")}
+                      onClick={() => handleJoinSession(session.id)}
                       className={`px-8 py-4 rounded-lg font-bold text-lg transition-all flex items-center gap-2 w-full mb-2 justify-center ${
                         isLive
                           ? "bg-red-500 hover:bg-red-600 text-white animate-pulse"

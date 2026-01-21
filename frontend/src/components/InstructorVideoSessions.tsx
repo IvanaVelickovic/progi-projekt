@@ -141,9 +141,9 @@ const InstructorVideoSessions = () => {
                       <p className="text-blue-dark/80 text-lg font-semibold mb-1">
                         Studenti koji su rezervirali termin:
                       </p>
-                      {session.students.length > 0 ? (
+                      {session.studentNames.length > 0 ? (
                         <div className="flex flex-wrap gap-2">
-                          {session.students.map((student, index) => (
+                          {session.studentNames.map((student, index) => (
                             <span 
                               key={index}
                               className="bg-blue-light/20 text-blue-dark px-3 py-1 rounded-full text-sm"
@@ -164,7 +164,7 @@ const InstructorVideoSessions = () => {
                       {session.time}
                     </p>
                     <p className="text-blue-dark/70 mb-1">
-                      ⏱️ Trajanje: {session.duration} min
+                      ⏱️ Trajanje: {session.durationMin} min
                     </p>
                     <p className="text-blue-dark/70">
                       💻 Online video poziv
