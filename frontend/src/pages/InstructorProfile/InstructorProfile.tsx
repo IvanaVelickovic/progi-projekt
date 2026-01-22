@@ -14,6 +14,7 @@ import {
   type InstructorSummary,
 } from "./InstructorProfile.utils";
 import LeafletMap from "../LeafletMap";
+import api from "../../api";
 
 interface ProfileSection {
   icon: string;
@@ -22,9 +23,17 @@ interface ProfileSection {
   href?: string;
 }
 
+type Review = {
+  rating: number;
+  text: string;
+  author: string;
+};
+
 const InstructorProfile = () => {
   const navigate = useNavigate();
   const { instructorId } = useParams();
+
+  const [activeTab, setActiveTab] = useState<"about" | "reviews">("about");
 
   const [instructorSummary, setInstructorSummary] = useState<InstructorSummary>(
     getEmptyInstructorSummary(),
@@ -34,6 +43,8 @@ const InstructorProfile = () => {
     getEmptyInstructorObject(),
   );
 
+  const [reviews, setReviews] = useState<Review[]>([]);
+
   useEffect(() => {
     fetchInstructorSummary(instructorId).then((fetchedInstructorSummary) => {
       setInstructorSummary(fetchedInstructorSummary);
@@ -41,7 +52,24 @@ const InstructorProfile = () => {
     fetchInstructorData(instructorId).then((fetchedInstructorData) => {
       setInstructorData(fetchedInstructorData);
     });
-  }, []);
+
+    api
+      .get(`/api/instructors/${instructorId}/reviews`)
+      .then((res) => {
+        const data = res.data;
+
+        if (Array.isArray(data)) {
+          setReviews(data);
+        } else if (Array.isArray(data.reviews)) {
+          setReviews(data.reviews);
+        } else if (Array.isArray(data.data)) {
+          setReviews(data.data);
+        } else {
+          setReviews([]);
+        }
+      })
+      .catch(() => setReviews([]));
+  }, [instructorId]);
 
   const profileSections: Array<ProfileSection> = [
     {
@@ -104,7 +132,7 @@ const InstructorProfile = () => {
       </header>
 
       <main className="flex h-5/6">
-        <aside className="bg-green-dark/30 m-5 rounded-lg  w-50 lg:w-75 justify-items-center">
+        <aside className="bg-green-dark/30 m-5 rounded-lg w-50 lg:w-75 justify-items-center">
           <div className="flex justify-center items-center w-45 h-45 mt-6 rounded-full bg-green-dark">
             {instructorSummary.photo}
           </div>
@@ -116,21 +144,34 @@ const InstructorProfile = () => {
             count={instructorSummary.reviewCount}
           />
           <ul className="list-group text-blue-dark text-2xl flex-col mt-8 p-5">
-            <li className="list-group-item bg-green-dark/50 rounded-3xl cursor-pointer text-center font-semibold p-3 active">
+            <li
+              className={`list-group-item rounded-3xl cursor-pointer text-center font-semibold p-3 ${
+                activeTab === "about" ? "bg-green-dark/50" : ""
+              }`}
+              onClick={() => setActiveTab("about")}
+            >
               O instruktoru
             </li>
-            <li className="list-group-item mt-5 p-3 cursor-pointer text-center">
+            <li
+              className="list-group-item mt-5 p-3 cursor-pointer text-center"
+              onClick={() => setActiveTab("about")}
+            >
               Dostupni termini
             </li>
-            <li className="list-group-item mt-5 p-3 cursor-pointer text-center">
+            <li
+              className={`list-group-item mt-5 p-3 cursor-pointer text-center font-semibold rounded-3xl ${
+                activeTab === "reviews" ? "bg-green-dark/50" : ""
+              }`}
+              onClick={() => setActiveTab("reviews")}
+            >
               Ocjene i recenzije
             </li>
           </ul>
         </aside>
 
         <section className="flex-1 pt-5 px-15 space-y-10 my-5 mr-5">
-          {profileSections.map((profileSection, index) => {
-            return (
+          {activeTab === "about" ? (
+            profileSections.map((profileSection, index) => (
               <ProfileRow
                 icon={profileSection.icon}
                 label={profileSection.label}
@@ -138,8 +179,10 @@ const InstructorProfile = () => {
                 href={profileSection.href}
                 key={index}
               />
-            );
-          })}
+            ))
+          ) : (
+            <ReviewsList reviews={reviews} />
+          )}
         </section>
       </main>
     </div>
@@ -163,22 +206,55 @@ function ProfileRow({ icon, label, value, href }: ProfileRowProps) {
         </div>
         <div className="text-gray-700 text-xl">
           {value && <>{value}</>}
-          {href && <a href={href} />}
+          {href && <a href={href} />
+          }
         </div>
       </div>
     </div>
   );
 }
 
+function ReviewsList({ reviews }: { reviews: Review[] }) {
+  if (!Array.isArray(reviews) || reviews.length === 0) {
+    return (
+      <div className="text-blue-dark text-2xl">
+        Instruktor još nema recenzija
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {reviews.map((review, index) => (
+        <div
+          key={index}
+          className="bg-white rounded-3xl p-6 shadow-md border border-gray-200"
+        >
+          <div className="flex justify-between items-center mb-3">
+            <div className="text-blue-dark font-bold text-2xl">
+              {review.author}
+            </div>
+            <div className="text-yellow-400 text-2xl">
+              {"★".repeat(review.rating)}
+              {"☆".repeat(5 - review.rating)}
+            </div>
+          </div>
+          <div className="text-gray-700 text-xl">{review.text}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // prikaz zvjezdica
-function StarRating({ rating, count }: { rating: number; count: number }) {
+function StarRating({ rating = 0, count }: { rating: number; count: number }) {
   const totalStars = 5;
-  const fullStars = Math.floor(rating); // cijeli dio ocjene
-  const hasHalfStar = rating % 1 >= 0.5; // "polovicne" zvjezdice
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
   const emptyStars = totalStars - fullStars - (hasHalfStar ? 1 : 0);
+
   return (
     <div className="flex items-center text-2xl">
-      {/* zuta */}
       {Array(fullStars)
         .fill(0)
         .map((_, i) => (
@@ -186,10 +262,7 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
             ★
           </span>
         ))}
-      {/* Polovicna (zuti rub) */}
       {hasHalfStar && <span className="text-yellow-500">☆</span>}
-
-      {/* Prazne (sive) */}
       {Array(emptyStars)
         .fill(0)
         .map((_, i) => (
@@ -197,8 +270,6 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
             ★
           </span>
         ))}
-
-      {/* Broj recenzija */}
       <span className="text-gray-600 ml-2 text-xl">({count})</span>
     </div>
   );
