@@ -2,8 +2,11 @@ package com.progi.stemtutor.service;
 
 import com.progi.stemtutor.dto.InstructorProfileDto;
 import com.progi.stemtutor.dto.InstructorSummaryDto;
+import com.progi.stemtutor.dto.ReviewDto;
 import com.progi.stemtutor.model.Instructor;
+import com.progi.stemtutor.model.Review;
 import com.progi.stemtutor.repository.InstructorRepository;
+import com.progi.stemtutor.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InstructorProfileService {
     private final InstructorRepository instructorRepository;
+    private final ReviewRepository reviewRepository;
 
     public Optional<Object> getInstructorProfile(Long instructorId) {
 
@@ -70,5 +74,26 @@ public class InstructorProfileService {
                 .build();
 
         return Optional.of(dto);
+    }
+
+    public List<ReviewDto> getInstructorReviews(Long instructorId) {
+        return reviewRepository.findAllByInstructorId(instructorId)
+                .stream()
+                .map(this::mapToDto)
+                .toList();
+    }
+
+    private ReviewDto mapToDto(Review review) {
+        return new ReviewDto(
+                review.getReservationParticipation()
+                        .getStudent()
+                        .getUser().getFirstName()
+                        + " "
+                        + review.getReservationParticipation()
+                        .getStudent()
+                        .getUser().getLastName(),
+                review.getRating(),
+                review.getComment()
+        );
     }
 }
