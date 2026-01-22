@@ -1,10 +1,14 @@
 package com.progi.stemtutor.controller;
 
+import com.progi.stemtutor.dto.ReviewDto;
 import com.progi.stemtutor.service.InstructorProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/instructors")
@@ -38,4 +42,13 @@ public class InstructorProfileController {
                 );
     }
 
+    @GetMapping("/{instructorId}/reviews")
+    public ResponseEntity<List<ReviewDto>> getInstructorReviews(
+            @PathVariable Long instructorId) {
+
+        List<ReviewDto> reviews =
+                instructorProfileService.getInstructorReviews(instructorId);
+
+        return ResponseEntity.ok(reviews);
+    }
 }
