@@ -62,9 +62,13 @@ public class InstructorSchedule {
     private Integer instructorId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "instructor_subject_id", nullable = false)
+    @JoinColumn(name = "instructor_subject_id", nullable = false, insertable = false, updatable = false)
     private InstructorSubject instructorSubject;
 
     @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY)
     private List<Reservation> reservations;
+
+    @Column(name = "instructor_subject_id")
+    private Integer instructorSubjectId;
+
 }

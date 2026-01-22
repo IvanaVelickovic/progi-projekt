@@ -2,8 +2,11 @@ package com.progi.stemtutor.service;
 
 import com.progi.stemtutor.dto.InstructorScheduleRequestDTO;
 import com.progi.stemtutor.model.InstructorSchedule;
+import com.progi.stemtutor.model.InstructorSubject;
 import com.progi.stemtutor.model.User;
+import com.progi.stemtutor.model.enums.SubjectName;
 import com.progi.stemtutor.repository.InstructorScheduleRepository;
+import com.progi.stemtutor.repository.InstructorSubjectRepository;
 import com.progi.stemtutor.repository.UserRepository;
 import com.progi.stemtutor.responses.InstructorScheduleResponse;
 import jakarta.transaction.Transactional;
@@ -21,6 +24,7 @@ public class InstructorScheduleService {
     private final InstructorScheduleRepository instructorScheduleRepository;
     private final UserRepository userRepository;
     private final GoogleCalendarService googleCalendarService;
+    private final InstructorSubjectRepository instructorSubjectRepository;
 
     public List<InstructorScheduleResponse> getAllInstructorSchedules() {
         return instructorScheduleRepository.findAll().stream()
@@ -47,13 +51,23 @@ public class InstructorScheduleService {
 
     @Transactional
     public InstructorScheduleResponse createInstructorSchedule(InstructorScheduleRequestDTO dto, String email, Authentication auth) {
-        // googleCalendarId is currently null for testing
-        String googleId = null;
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Korisnik nije pronađen za email: " + email));
+                .orElseThrow(() -> new RuntimeException("Korisnik nije pronađen"));
 
-        System.out.println("DEBUG: DTO googleCalendar value: " + dto.getGoogleCalendar());
+        // 1. Pretvori String s frontenda u Enum (npr. "MATEMATIKA")
+        SubjectName subjectEnum;
+        try {
+            subjectEnum = SubjectName.valueOf(dto.getSubject());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Nepostojeći predmet: " + dto.getSubject());
+        }
 
+        // 2. Pronađi ID veze između instruktora i tog predmeta
+        InstructorSubject isub = instructorSubjectRepository
+                .findActiveByUserIdAndSubjectName(user.getId(), subjectEnum)
+                .orElseThrow(() -> new RuntimeException("Niste registrirani za predmet: " + dto.getSubject()));
+
+        // 3. Kreiraj termin sa spremljenim instructorSubjectId (isub.getId())
         InstructorSchedule instructorSchedule = InstructorSchedule.builder()
                 .datetime(dto.getDatetime())
                 .durationMin(dto.getDurationMin())
@@ -62,7 +76,8 @@ public class InstructorScheduleService {
                 .maxParticipants(dto.getMaxParticipants())
                 .status(dto.getStatus())
                 .instructorId(user.getId().intValue())
-                .googleCalendarId(googleId)
+                .instructorSubjectId(isub.getId().intValue()) // Ovo ide u bazu kao INT
+                .googleCalendarId(null)
                 .build();
 
         InstructorSchedule saved = instructorScheduleRepository.save(instructorSchedule);
@@ -82,7 +97,7 @@ public class InstructorScheduleService {
             System.out.println("DEBUG: Skipping Google Sync (value was false or null)");
         }
 
-        return convertToInstructorScheduleResponse(saved);
+        return convertToInstructorScheduleResponse(saved, isub.getSubjectName().name());
     }
 
     @Transactional
@@ -109,9 +124,21 @@ public class InstructorScheduleService {
     }
 
     private InstructorScheduleResponse convertToInstructorScheduleResponse(InstructorSchedule entity) {
+        String subjectName = "Nepoznato";
+
+        // Ako imaš relaciju u entitetu, samo je pozovi
+        if (entity.getInstructorSubject() != null) {
+            subjectName = entity.getInstructorSubject().getSubjectName().name();
+        }
+
+        return convertToInstructorScheduleResponse(entity, subjectName);
+    }
+
+    private InstructorScheduleResponse convertToInstructorScheduleResponse(InstructorSchedule entity, String subjectName) {
         return InstructorScheduleResponse.builder()
                 .scheduleId(entity.getScheduleId())
                 .datetime(entity.getDatetime().toString())
+                .subject(subjectName)
                 .durationMin(entity.getDurationMin())
                 .price(entity.getPrice())
                 .attendanceMode(entity.getAttendanceMode())

@@ -15,7 +15,6 @@ public class InstructorScheduleResponse {
 
     private Long scheduleId;
     private String datetime;
-
     private Integer durationMin;
     private BigDecimal price;
     private AttendanceMode attendanceMode;
@@ -23,4 +22,5 @@ public class InstructorScheduleResponse {
     private ScheduleStatus status;
     private String googleCalendarId;
     private Integer instructorId;
+    private String subject;
 }
