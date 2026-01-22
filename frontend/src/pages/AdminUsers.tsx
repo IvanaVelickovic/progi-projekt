@@ -1,51 +1,45 @@
 import { useEffect, useState } from "react";
 import api from "../api";
+import { useNavigate } from "react-router-dom";
 
 type UserRole = "instructor" | "student";
 
 interface AdminUser {
-  id: number;
+  userId: number;
   firstName: string;
   lastName: string;
+  email: string;
   role: UserRole;
   verified: boolean;
   status: string;
-  lastActive: string;
+  lastLogin: string;
+  createdAt: string;
 }
 
 const mockUsers: AdminUser[] = [
   {
-    id: 1,
+    userId: 1,
     firstName: "Ime",
     lastName: "Prezime",
     role: "instructor",
     verified: false,
     status: "",
-    lastActive: "xx.yy.zzzz.",
+    lastLogin: "xx.yy.zzzz.",
+    createdAt: "xx.yy.zzzz.",
+    email: "ime@prezime.com",
   },
 ];
 
 const AdminUsers: React.FC = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await api.get("/api/admin/users?page=1&size=20");
-        const content = res.data.content;
-
-        setUsers(
-          content.map((u: any) => ({
-            id: u.userId,
-            firstName: u.firstName,
-            lastName: u.lastName,
-            role: u.role,
-            verified: u.verified,
-            status: u.status,
-            lastActive: u.lastLogin,
-          })),
-        );
+        const res = await api.get("/api/admin/users");
+        setUsers(res.data);
       } catch (error) {
         setUsers(mockUsers);
       }
@@ -54,12 +48,17 @@ const AdminUsers: React.FC = () => {
     fetchUsers();
   }, []);
 
+  const formatDate = (datetime: string) => {
+    const [date, time] = datetime?.split("T");
+    return [date, time.substring(0, 7)];
+  };
+
   const verifyUser = async (userId: number) => {
     try {
       await api.put(`/api/admin/users/${userId}/verify`);
 
       setUsers((prev) =>
-        prev.map((u) => (u.id === userId ? { ...u, verified: true } : u)),
+        prev.map((u) => (u.userId === userId ? { ...u, verified: true } : u)),
       );
     } catch (error) {
       console.error("Verification failed", error);
@@ -68,7 +67,7 @@ const AdminUsers: React.FC = () => {
   };
 
   const toggleSuspendUser = async (userId: number) => {
-    const user = users.filter((prev) => prev.id === userId).at(0);
+    const user = users.filter((prev) => prev.userId === userId).at(0);
     let status = user?.status === "banned" ? "active" : "banned";
 
     try {
@@ -77,7 +76,7 @@ const AdminUsers: React.FC = () => {
       });
 
       setUsers((prev) =>
-        prev.map((u) => (u.id === userId ? { ...u, status: status } : u)),
+        prev.map((u) => (u.userId === userId ? { ...u, status: status } : u)),
       );
     } catch (error) {
       console.error("Failed to toggle suspend status", error);
@@ -93,7 +92,7 @@ const AdminUsers: React.FC = () => {
     try {
       await api.delete(`/api/admin/users/${userId}`);
 
-      setUsers((prev) => prev.filter((u) => u.id !== userId));
+      setUsers((prev) => prev.filter((u) => u.userId !== userId));
     } catch (error) {
       console.error("Brisanje korisnika nije uspjelo", error);
     }
@@ -117,20 +116,27 @@ const AdminUsers: React.FC = () => {
 
       {filteredUsers.map((user) => (
         <div
-          key={user.id}
+          key={user.userId}
           className="bg-[#CFF5DF] border-2 border-blue-dark rounded-2xl p-8 mb-8 flex justify-between"
         >
           <div>
             <h2 className="text-blue-dark font-bold text-2xl">
-              {user.firstName} {user.lastName}
+              <span
+                className="cursor-pointer hover:text-blue-dark/70"
+                onClick={() => navigate(`/${user.role}s/${user.userId}`)}
+              >
+                {user.firstName} {user.lastName}
+              </span>{" "}
+              <span className="font-normal text-sxl">
+                ({user.role === "instructor" ? "Instruktor" : "Učenik"})
+              </span>
             </h2>
-            <p className="text-blue-dark mt-1">
-              {user.role === "instructor" ? "Instruktor" : "Učenik"}
-            </p>
+
+            <p className="text-blue-dark mt-1 text-lg">{user.email}</p>
 
             <div className="flex flex-col gap-3 mt-6">
               <button
-                onClick={() => verifyUser(user.id)}
+                onClick={() => verifyUser(user.userId)}
                 disabled={user.verified}
                 className="bg-blue-dark text-white px-6 py-2 rounded-full disabled:opacity-50 w-56 flex justify-center cursor-pointer"
               >
@@ -138,7 +144,7 @@ const AdminUsers: React.FC = () => {
               </button>
 
               <button
-                onClick={() => toggleSuspendUser(user.id)}
+                onClick={() => toggleSuspendUser(user.userId)}
                 className="bg-blue-dark text-white px-6 py-2 rounded-full w-56 flex justify-center cursor-pointer"
               >
                 {user.status === "banned"
@@ -147,7 +153,7 @@ const AdminUsers: React.FC = () => {
               </button>
 
               <button
-                onClick={() => deleteUser(user.id)}
+                onClick={() => deleteUser(user.userId)}
                 className="bg-blue-dark text-white px-6 py-2 rounded-full w-56 flex justify-center cursor-pointer"
               >
                 Obriši profil
@@ -155,11 +161,18 @@ const AdminUsers: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-end">
-            <div className="bg-gray-200 px-6 py-3 rounded-xl text-sm text-blue-dark">
+          <div className="flex flex-col justify-end gap-2 ">
+            <div className="bg-gray-200 px-10 py-3 rounded-xl text-sm text-blue-dark">
+              Račun kreiran:
+              <br />
+              {formatDate(user.createdAt)[0]} {"  "}
+              {formatDate(user.createdAt)[1]}
+            </div>
+            <div className="bg-gray-100 px-10 py-3 rounded-xl text-sm text-blue-dark">
               Posljednja aktivnost:
               <br />
-              {user.lastActive}
+              {formatDate(user.lastLogin)[0]} {"  "}
+              {formatDate(user.lastLogin)[1]}
             </div>
           </div>
         </div>
