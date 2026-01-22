@@ -5,7 +5,7 @@ import googleLogo from "../assets/logos/google_logo.png";
 
 const AddSchedule = () => {
   const googleUser = JSON.parse(
-    sessionStorage.getItem("googleUser") || "false"
+    sessionStorage.getItem("googleUser") || "false",
   );
 
   const [formData, setFormData] = useState({
@@ -35,7 +35,7 @@ const AddSchedule = () => {
 
     if (!formEmpty) {
       const proceed = window.confirm(
-        "Ako se vratite natrag, vaši podaci neće biti spremljeni. Želite li nastaviti?"
+        "Ako se vratite natrag, vaši podaci neće biti spremljeni. Želite li nastaviti?",
       );
       if (proceed) {
         navigate("/instructor/dashboard");
@@ -57,7 +57,7 @@ const AddSchedule = () => {
   }, [isFormEmpty]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value, type } = e.target;
 
@@ -78,6 +78,7 @@ const AddSchedule = () => {
       maxParticipants: parseInt(formData.maxParticipants),
       status: "scheduled",
       googleCalendar: true,
+      subject: formData.subject,
     };
     try {
       const res = await api.post("/api/instructor-schedules", payload);
@@ -89,7 +90,7 @@ const AddSchedule = () => {
     } catch (err: any) {
       console.error("Greška u komunikaciji s backendom ", err);
       window.alert(
-        "Nismo uspjeli dodati vaš termin. Molimo pokušajte ponovno."
+        "Nismo uspjeli dodati vaš termin. Molimo pokušajte ponovno.",
       );
     }
   };
