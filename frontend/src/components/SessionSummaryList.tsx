@@ -3,6 +3,17 @@ import type { SessionSummary } from "../services/sessionSummaryService";
 interface Props {
   summaries: SessionSummary[];
 }
+const formatDate = (isoDate: string) => {
+  const d = new Date(isoDate);
+
+  return d.toLocaleString("hr-HR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 
 const SessionSummaryList = ({ summaries }: Props) => {
   if (summaries.length === 0) {
@@ -30,7 +41,9 @@ const SessionSummaryList = ({ summaries }: Props) => {
             ⏱ Trajanje: {s.durationMin} min
           </p>
 
-          <p className="text-xs text-gray-400">{s.date}</p>
+          <p className="text-xs text-gray-400">
+            📅 {formatDate(s.date)}
+          </p>
         </div>
       ))}
     </div>
