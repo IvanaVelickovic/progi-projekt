@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -46,6 +47,12 @@ public class Reservation {
         this.reservationCreatedAt = Instant.now();
     }
 
+    @Column(name = "reminder_24h_sent", nullable = false)
+    private boolean reminder24hSent = false;
+
+    @Column(name = "reminder_1h_sent", nullable = false)
+    private boolean reminder1hSent = false;
+
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private List<ReservationParticipation> participations;
+    private List<ReservationParticipation> participations = new ArrayList<>();
 }

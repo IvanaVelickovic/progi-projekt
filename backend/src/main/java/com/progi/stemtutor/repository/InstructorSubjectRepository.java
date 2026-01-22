@@ -19,4 +19,5 @@ public interface InstructorSubjectRepository extends JpaRepository<InstructorSub
     Optional<InstructorSubject> findActiveByUserIdAndSubjectName(
             @Param("userId") Long userId,
             @Param("subjectName") SubjectName subjectName);
+    Optional<InstructorSubject> findFirstByInstructorId(Long instructorId);
 }
