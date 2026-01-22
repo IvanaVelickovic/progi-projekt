@@ -1,5 +1,7 @@
 package com.progi.stemtutor.config;
 
+import com.progi.stemtutor.model.User;
+import com.progi.stemtutor.model.enums.UserStatus;
 import com.progi.stemtutor.service.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -42,6 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -55,6 +58,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (userEmail != null && existingAuth == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+
+                if (userDetails instanceof User user) {
+                    if (user.getStatus() == UserStatus.banned) {
+                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                        response.getWriter().write("Vaš račun je blokiran.");
+                        return;
+                    }
+                }
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {
                     // 1. Izvlačenje googleTokena iz JWT-a
