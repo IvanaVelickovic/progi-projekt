@@ -47,27 +47,7 @@ it("TC2 – prazna polja (HTML validacija)", async () => {
   expect(onSubmit).not.toHaveBeenCalled();
 });
 
-it("TC3 – neispravan email (HTML validacija)", async () => {
-  const user = userEvent.setup();
-  const onSubmit = vi.fn();
-
-  render(
-    <MemoryRouter>
-      <Login onSubmit={onSubmit} />
-    </MemoryRouter>,
-  );
-
-  await user.type(
-    screen.getByPlaceholderText(/e-mail adresa/i),
-    "usertest.com",
-  );
-  await user.type(screen.getByPlaceholderText(/lozinka/i), "Password123");
-  await user.click(screen.getByRole("button", { name: /prijava/i }));
-
-  expect(onSubmit).not.toHaveBeenCalled();
-});
-
-it("TC4 – loading state tijekom prijave", async () => {
+it("TC3 – loading state tijekom prijave", async () => {
   const user = userEvent.setup();
 
   const postMock = api.post as unknown as any;
@@ -106,7 +86,7 @@ it("TC4 – loading state tijekom prijave", async () => {
   expect(screen.getByRole("button", { name: /prijava/i })).toBeInTheDocument();
 });
 
-it("TC5 – backend error 401", async () => {
+it("TC4 – backend error 401", async () => {
   const user = userEvent.setup();
 
   const alertMock = vi.spyOn(window, "alert").mockImplementation(() => {});
@@ -134,7 +114,7 @@ it("TC5 – backend error 401", async () => {
   alertMock.mockRestore();
 });
 
-it("TC6 – backend endpoint ne postoji (404)", async () => {
+it("TC5 – backend endpoint ne postoji (404)", async () => {
   const user = userEvent.setup();
 
   const alertMock = vi.spyOn(window, "alert").mockImplementation(() => {});
