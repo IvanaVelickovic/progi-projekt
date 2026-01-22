@@ -74,7 +74,7 @@ public class ReservationService {
                 student.getUser().getFirstName(),
                 schedule.getInstructor().getUser().getFirstName(),
                 schedule.getInstructor().getUser().getLastName(),
-                SubjectName.Matematika,
+                schedule.getInstructorSubject().getSubjectName(),
                 schedule.getDatetime()
         );
     }
@@ -98,7 +98,7 @@ public class ReservationService {
         dto.setFormat(s.getAttendanceMode());
         dto.setMaxParticipants(s.getMaxParticipants());
         dto.setFilled((long) s.getReservations().size()); // ili druga logika
-        dto.setSubject(SubjectName.Matematika);
+        dto.setSubject(s.getInstructorSubject().getSubjectName());
         dto.setInstructorId(s.getInstructor().getId());
         dto.setInstructorName(
                 s.getInstructor().getUser().getFirstName() + " " + s.getInstructor().getUser().getLastName()
