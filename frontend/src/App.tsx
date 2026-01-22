@@ -2,6 +2,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AuthCallback from "./components/AuthCallback";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import { StudentSearchProvider } from "./context/StudentSearchContext";
 import Dashboard from "./pages/Dashboard";
 import LandingPage from "./pages/HomePage";
 import Login from "./pages/Login";
@@ -24,6 +25,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
+        <StudentSearchProvider>
         <Routes>
           <Route path="/" element={<LandingPage />}></Route>
           <Route path="/register" element={<Register />}></Route>
@@ -86,6 +88,7 @@ function App() {
             element={<AdminDashboard></AdminDashboard>}
           ></Route>
         </Routes>
+        </StudentSearchProvider>
       </AuthProvider>
     </Router>
   );

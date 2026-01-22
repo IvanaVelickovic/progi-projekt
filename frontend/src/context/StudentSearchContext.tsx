@@ -2,13 +2,14 @@ import type { ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
 
 export interface Appointment {
-  id: number;
-  dateTime: string;
-  format: string;
-  duration: number;
+  scheduleId: number;
+  datetime: string;
+  attendanceMode: string;
+  durationMin: number;
   price: number;
   filled: number;
   maxParticipants: number;
+  googleCalendar: boolean;
   subject: string;
   instructorName: string;
   instructorId: number;

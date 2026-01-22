@@ -36,8 +36,8 @@ const Payment = () => {
     e.preventDefault();
 
     try {
-      await api.post("/student/reservation", {
-        params: { schedule_id: parsedId },
+      await api.post("/api/student/reservation", {
+        schedule_id: parsedId,
       });
       navigate(`/payment-success/${parsedId}`);
     } catch (error) {
