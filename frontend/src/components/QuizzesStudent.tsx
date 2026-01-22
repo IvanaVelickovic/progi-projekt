@@ -48,11 +48,11 @@ const QuizzesStudent = () => {
               </h1>
               <p className="text-blue-dark text-lg">{item.quiz_description}</p>
               <div className="flex">
-                <div className="bg-[#567CA2] rounded-xl text-md text-white px-3 mr-1.5">
+                <div className="bg-[#567CA2] rounded-xl text-sm py-0.5 text-white px-3 mr-1.5">
                   Instrukcije: {item.schedule_datetime}
                 </div>
                 <div
-                  className="bg-[#567CA2] rounded-xl text-md text-white px-3 cursor-pointer hover:text-gray-200"
+                  className="bg-[#567CA2] rounded-xl text-sm text-white px-3 py-0.5 cursor-pointer hover:text-gray-200"
                   onClick={() => navigate(`/instructors/${item.instructor_id}`)}
                 >
                   Instruktor: {item.instructor_name}
