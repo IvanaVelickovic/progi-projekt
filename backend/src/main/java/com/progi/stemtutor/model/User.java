@@ -109,4 +109,8 @@ public class User implements UserDetails {
     public void setVerified(boolean verified) {
         this.isVerified = verified;
     }
+
+    public Long getUserId() {
+        return id;
+    }
 }

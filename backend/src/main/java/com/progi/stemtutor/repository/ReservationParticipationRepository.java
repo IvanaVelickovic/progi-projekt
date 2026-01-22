@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 @Repository
 public interface ReservationParticipationRepository extends JpaRepository<ReservationParticipation, Long> {
@@ -26,4 +29,18 @@ public interface ReservationParticipationRepository extends JpaRepository<Reserv
         where rp.student.id = :studentId
     """)
     List<InstructorSchedule> findSchedulesByStudentId(Long studentId);
+
+    @Query("""
+        SELECT rp
+        FROM ReservationParticipation rp
+        JOIN FETCH rp.reservation r
+        JOIN FETCH r.schedule s
+        JOIN FETCH s.instructor i
+        JOIN FETCH i.user u
+        JOIN FETCH s.instructorSubject isub
+        WHERE rp.student.id = :studentId
+    """)
+    List<ReservationParticipation> findForStudentDashboard(
+            @Param("studentId") Long studentId
+    );
 }
