@@ -22,6 +22,8 @@ import Payment from "./pages/payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import AddQuiz from "./pages/AddQuiz";
 import SolveQuiz from "./pages/SolveQuiz";
+import SessionComplete from "./pages/SessionComplete";
+import VideoSession from "./pages/VideoSession";
 
 function App() {
   return (
@@ -95,6 +97,14 @@ function App() {
           <Route path="/review" element={<Review />}></Route>
           <Route path="/instructor/addQuiz" element={<AddQuiz />}></Route>
           <Route path="/solve/quiz/:quiz_id" element={<SolveQuiz />}></Route>
+          <Route
+            path="/session-complete/:reservationId"
+            element={<SessionComplete />}
+          />
+          <Route
+            path="/video-session/:reservationId"
+            element={<VideoSession />}
+          />
         </Routes>
       </AuthProvider>
     </Router>
