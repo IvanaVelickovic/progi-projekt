@@ -26,16 +26,6 @@ interface Appointment {
   instructorId: number;
 }
 
-interface OnlineSession {
-  id: number;
-  InstructorName: string;
-  subject: string;
-  date: string;
-  time: string;
-  duration: number;
-  status: "pending" | "live" | "completed";
-}
-
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const [selected, setSelected] = useState(1);
@@ -44,7 +34,7 @@ const StudentDashboard = () => {
   const defaultStyle = "flex items-center w-[89%] h-[80%]";
 
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [onlineSessions, setOnlineSessions] = useState<OnlineSession[]>([]);
+  const [onlineSessions, setOnlineSessions] = useState<VideoSession[]>([]);
 
   const [summaries, setSummaries] = useState<SessionSummary[]>([]);
 
@@ -205,10 +195,10 @@ const StudentDashboard = () => {
               appointments={appointments}
             ></StudentSchedule>
           )}
-          {selected == 2 && (
-            <StudentOnlineSessions sessions={onlineSessions} />
+          {selected == 2 && <StudentOnlineSessions sessions={onlineSessions} />}
+          {selected == 3 && (
+            <p className="p-8 text-blue-dark text-2xl">Kvizovi - uskoro!</p>
           )}
-          {selected == 3 && <p className="p-8 text-blue-dark text-2xl">Kvizovi - uskoro!</p>}
           {selected == 4 && <SessionSummaryList summaries={summaries} />}
         </div>
       </div>
