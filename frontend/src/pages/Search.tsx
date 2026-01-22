@@ -1,22 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-//import appointmentsData from "../assets/appointments.json";
+//import appointmentsData from "../assets/appointments_s.json";
 import Slider from "rc-slider";
 import api from "../api";
 import StudentSchedule from "../components/StudentSchedule";
-
-interface Appointment {
-  id: number;
-  dateTime: string;
-  format: string;
-  duration: number;
-  price: number;
-  filled: number;
-  maxParticipants: number;
-  subject: string;
-  instructorName: string;
-  instructorId: number;
-}
+import { useStudentAppointments } from "../context/StudentSearchContext";
 
 const Search = () => {
   const navigate = useNavigate();
@@ -26,7 +14,7 @@ const Search = () => {
   const selectedStyle =
     "border border-1 border-blue-dark/80 text-blue-dark rounded-sm bg-white px-2 py-0.5 w-10/12 focus:outline-none focus:ring-1 focus:ring-[#1e3a56]";
 
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const { appointments, setAppointments } = useStudentAppointments();
   const [filterData, setFilterData] = useState({
     subject: "",
     formatOnline: false,

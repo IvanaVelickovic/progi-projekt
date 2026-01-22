@@ -65,9 +65,7 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
                   <h1
                     className="text-blue-dark/93 text-xl font-bold ml-1 cursor-pointer hover:text-blue-dark/70"
                     onClick={() => {
-                      navigate(
-                        `/instructors/${item.instructorId}`
-                      );
+                      navigate(`/instructors/${item.instructorId}`);
                     }}
                   >
                     Instruktor: <u>{item.instructorName}</u>
@@ -98,7 +96,12 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
                       Popunjenost: {item.filled}/{item.maxParticipants}
                     </div>
                     {search && (
-                      <button className="bg-blue-light p-2.5 rounded-3xl text-lg text-white text-center px-6 cursor-pointer w-full">
+                      <button
+                        className="bg-blue-light p-2.5 rounded-3xl text-lg text-white text-center px-6 cursor-pointer w-full"
+                        onClick={() => {
+                          navigate(`/booking-confirmation/${item.id}`);
+                        }}
+                      >
                         Rezerviraj
                       </button>
                     )}

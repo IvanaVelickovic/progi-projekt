@@ -4,11 +4,14 @@ import "./index.css";
 import App from "./App.tsx";
 import "leaflet/dist/leaflet.css";
 import { AppointmentsProvider } from "./context/AppointmentsContext.tsx";
+import { StudentSearchProvider } from "./context/StudentSearchContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AppointmentsProvider>
-      <App />
+      <StudentSearchProvider>
+        <App />
+      </StudentSearchProvider>
     </AppointmentsProvider>
-  </StrictMode>
+  </StrictMode>,
 );

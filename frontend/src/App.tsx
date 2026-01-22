@@ -17,6 +17,9 @@ import AddSchedule from "./pages/AddSchedule";
 import InstructorProfile from "./pages/InstructorProfile/InstructorProfile";
 import AdminDashboard from "./pages/AdminDashboard";
 import Review from "./pages/Reviews";
+import BookingConfirmation from "./pages/BookingConfirmation";
+import Payment from "./pages/Payment";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 function App() {
   return (
@@ -69,6 +72,13 @@ function App() {
               <InstructorProfile />
               //</ProtectedRoute>
             }
+            path="/booking-confirmation/:id"
+            element={<BookingConfirmation />}
+          ></Route>
+          <Route path="/payment/:id" element={<Payment />}></Route>
+          <Route
+            path="/payment-success/:id"
+            element={<PaymentSuccess />}
           ></Route>
           <Route
             path="/admin/dashboard"
