@@ -29,6 +29,14 @@ public class InstructorProfileEditController {
 
     // Pomoćna metoda za dohvaćanje ID-a iz Principal objekta
     private Long getUserId(UserDetails userDetails) {
+
+        /*
+        //if za testing
+        if (userDetails == null) {
+            log.warn("TESTNI MOD: UserDetails je null, vracam ID 3 za testiranje.");
+            return 3L;
+        }*/
+
         if (userDetails instanceof User) {
             return ((User) userDetails).getId();
         }
