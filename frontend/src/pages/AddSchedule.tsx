@@ -28,8 +28,6 @@ const AddSchedule = () => {
   const localTime = `${hours}:${minutes}`;
   const minDateTime = `${localDate}T${localTime}`;
 
-  const isFormEmpty = Object.values(formData).every((value) => value === ""); //initial value
-
   const goBack = () => {
     const formEmpty = Object.values(formData).every((value) => value === "");
 
@@ -44,17 +42,6 @@ const AddSchedule = () => {
       navigate("/instructor/dashboard");
     }
   };
-
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (!isFormEmpty) {
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [isFormEmpty]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,

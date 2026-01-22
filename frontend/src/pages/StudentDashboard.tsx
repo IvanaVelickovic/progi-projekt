@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StudentSchedule from "../components/StudentSchedule";
-//import appointmentsData from "../assets/appointments.json";
+//import appointmentsData from "../assets/appointments_s.json";
 import api from "../api";
+import QuizzesStudent from "../components/QuizzesStudent";
 
 interface Appointment {
   id: number;
@@ -116,13 +117,10 @@ const StudentDashboard = () => {
 
         <div className="w-4/5">
           {selected == 1 && (
-            <StudentSchedule
-              search={false}
-              appointments={appointments}
-            ></StudentSchedule>
+            <StudentSchedule search={false} appointments={appointments} />
           )}
           {selected == 2 && <p>Video sesije</p>}
-          {selected == 3 && <p>Kvizovi</p>}
+          {selected == 3 && <QuizzesStudent />}
         </div>
       </div>
     </div>

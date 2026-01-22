@@ -20,6 +20,8 @@ import Review from "./pages/Reviews";
 import BookingConfirmation from "./pages/BookingConfirmation";
 import Payment from "./pages/payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import AddQuiz from "./pages/AddQuiz";
+import SolveQuiz from "./pages/SolveQuiz";
 
 function App() {
   return (
@@ -62,6 +64,10 @@ function App() {
             element={<InstructorDashboard />}
           ></Route>
           <Route
+            path="/student/dashboard"
+            element={<StudentDashboard />}
+          ></Route>
+          <Route
             path="/instructor/addSchedule"
             element={<AddSchedule />}
           ></Route>
@@ -87,6 +93,8 @@ function App() {
             element={<AdminDashboard></AdminDashboard>}
           ></Route>
           <Route path="/review" element={<Review />}></Route>
+          <Route path="/instructor/addQuiz" element={<AddQuiz />}></Route>
+          <Route path="/solve/quiz/:quiz_id" element={<SolveQuiz />}></Route>
         </Routes>
       </AuthProvider>
     </Router>

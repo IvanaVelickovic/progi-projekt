@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Schedule from "../components/Schedule";
+import QuizzesInstructor from "../components/QuizzesInstructor";
 
 const InstructorDashboard = () => {
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ const InstructorDashboard = () => {
         <div className="w-4/5">
           {selected == 1 && <Schedule></Schedule>}
           {selected == 2 && <p>Video sesije</p>}
-          {selected == 3 && <p>Kvizovi</p>}
+          {selected == 3 && <QuizzesInstructor></QuizzesInstructor>}
         </div>
       </div>
     </div>
