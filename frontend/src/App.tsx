@@ -74,7 +74,7 @@ function App() {
             path="/admin/dashboard"
             element={<AdminDashboard></AdminDashboard>}
           ></Route>
-          <Route path="/recenzija" element={<Review />}></Route>
+          <Route path="/review" element={<Review />}></Route>
         </Routes>
       </AuthProvider>
     </Router>

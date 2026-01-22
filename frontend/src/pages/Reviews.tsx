@@ -60,28 +60,19 @@ const Review = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#e9f7f1] flex flex-col">
-      <header className="bg-[#9bd7b6] px-8 py-4 flex items-center justify-between">
-        <h1
-          className="text-xl font-bold text-[#0b3b2e] cursor-pointer"
-          onClick={() => navigate("/")}
-        >
+    <div className="h-screen bg-[#e9f7f1] flex flex-col">
+      <div className="flex justify-between items-center content-end p-10 bg-green-dark/50 h-[14%] shadow">
+        <h1 className="text-blue-dark text-[2.7rem] font-bold">
           STEM tutorstvo
         </h1>
-        <button
-          className="bg-[#0b3b2e] text-white px-6 py-2 rounded-lg"
-          onClick={() => navigate("/profile")}
-        >
-          Profil
-        </button>
-      </header>
+      </div>
 
-      <main className="flex-1 flex items-center justify-center px-6 py-10">
+      <main className="flex-1 flex items-center justify-center px-6 py-10 text-blue-dark">
         <div className="w-full max-w-4xl bg-[#dff3ea] rounded-2xl shadow-lg p-10">
-          <h2 className="text-2xl font-semibold text-[#0b3b2e] mb-2 text-center">
+          <h2 className="text-2xl font-semibold mb-2 text-center">
             Kako vam se svidjela instrukcija?
           </h2>
-          <p className="text-center text-[#0b3b2e] mb-6 opacity-80">
+          <p className="text-center mb-6 opacity-80">
             Instruktor: {instructorData.firstName} {instructorData.lastName}
           </p>
 
@@ -114,7 +105,7 @@ const Review = () => {
             <button
               onClick={sendReview}
               disabled={!rating || !reviewText || loading}
-              className="bg-[#0b3b2e] text-white px-10 py-3 rounded-xl font-medium disabled:opacity-50 hover:bg-[#082d23] transition-colors"
+              className="bg-blue-light text-white px-10 py-3 rounded-xl font-medium disabled:opacity-50 hover:bg-[#082d23] transition-colors"
             >
               {loading ? "Slanje..." : "Pošalji recenziju"}
             </button>
