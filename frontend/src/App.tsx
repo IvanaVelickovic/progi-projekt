@@ -16,6 +16,7 @@ import InstructorDashboard from "./pages/InstructorDashboard";
 import AddSchedule from "./pages/AddSchedule";
 import InstructorProfile from "./pages/InstructorProfile/InstructorProfile";
 import AdminDashboard from "./pages/AdminDashboard";
+import Review from "./pages/Reviews";
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
             path="/admin/dashboard"
             element={<AdminDashboard></AdminDashboard>}
           ></Route>
+          <Route path="/recenzija" element={<Review />}></Route>
         </Routes>
       </AuthProvider>
     </Router>
