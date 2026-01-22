@@ -72,6 +72,8 @@ function App() {
               <InstructorProfile />
               //</ProtectedRoute>
             }
+          />
+          <Route
             path="/booking-confirmation/:id"
             element={<BookingConfirmation />}
           ></Route>
