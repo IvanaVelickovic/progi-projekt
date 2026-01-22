@@ -7,7 +7,9 @@ interface Review {
   rating: number;
   comment: string;
   studentName: string;
+  studentLastName: string;
   instructorName: string;
+  instructorLastName: string;
   removed: boolean;
 }
 
@@ -123,7 +125,8 @@ const ReviewControl = () => {
                 <div className=" w-[95%]">
                   <div className="flex gap-5">
                     <h3 className=" text-xl font-semibold pt-1">
-                      Instruktor: {item.instructorName}
+                      Instruktor: {item.instructorName}{" "}
+                      {item.instructorLastName}
                     </h3>
                     <div className="flex justify-center items-start">
                       {[1, 2, 3, 4, 5].map((star) => (
@@ -142,7 +145,8 @@ const ReviewControl = () => {
                     </div>
                   </div>
                   <p className=" text-md">
-                    Recenziju ostavio/la: {item.studentName}
+                    Recenziju ostavio/la: {item.studentName}{" "}
+                    {item.studentLastName}
                   </p>
                   <div className=" border-blue-dark/50 rounded-lg p-3 mb-2 bg-green-light/50 w-full">
                     {item.comment}
