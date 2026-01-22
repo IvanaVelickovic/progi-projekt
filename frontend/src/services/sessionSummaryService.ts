@@ -1,20 +1,24 @@
+import api from "../api";
+
 export interface SessionSummary {
-  id: number;
-  sessionId: number;
+  summaryId: number;
+  reservationId: number;
   subject: string;
   date: string;
-  durationMinutes: number;
-  studentName: string;
+  durationMin: number;
+
   instructorName: string;
-  role: "student" | "instructor";
+  studentNames: string[];
+
+  role: string;
 }
 
 export async function getStudentSummaries(): Promise<SessionSummary[]> {
-  const res = await fetch("/api/student/summaries");
-  return res.json();
+  const res = await api.get("/api/student/summaries");
+  return res.data;
 }
 
 export async function getInstructorSummaries(): Promise<SessionSummary[]> {
-  const res = await fetch("/api/instructor/summaries");
-  return res.json();
+  const res = await api.get("/api/instructor/summaries");
+  return res.data;
 }

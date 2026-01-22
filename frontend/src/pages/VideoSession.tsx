@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import JaasMeeting from "../components/JaasMeeting";
 import { joinVideoSession } from "../services/JaasService";
 import api from "../api";
+
 
 interface JaasData {
   appId: string;
@@ -10,48 +11,43 @@ interface JaasData {
   jwt: string;
 }
 
+
+
 const VideoSession = () => {
   const { reservationId } = useParams();
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
   const [role, setRole] = useState("");
-  useEffect(() => {
-    const fetchRole = async () => {
-        try {
-            const res = await api.post(`/api/video-sessions/${reservationId}/end`);
-            setRole(res.data);
-        } catch(error) {
-            console.error(error);
-        }
-    }
-
-    fetchRole();
-}, []);
 
   const [jaas, setJaas] = useState<JaasData | null>(null);
 
   useEffect(() => {
-  if (!reservationId || !role) return;
 
   joinVideoSession(Number(reservationId))
     .then(setJaas)
     .catch((err) => {
       console.error(err);
-      navigate("/instructor/dashboard");
+      navigate("/");
     });
-}, [reservationId, role, navigate]);
+}, [reservationId, navigate]);
 
   const handleMeetingEnd = async () => {
-  await fetch(
-    `/api/video-sessions/${reservationId}/end`,
-    { method: "POST" }
-  );
+  try {
+    const res = await api.get(
+      `/api/video-sessions/${reservationId}/end`
+    );
 
-  if (role === "student") {
-    navigate("/student/dashboard");
-  } else {
-    navigate("/instructor/dashboard");
+    const roleFromApi = res.data; 
+    // ili ako backend vraća objekt:
+    // const roleFromApi = res.data.role;
+
+    if (roleFromApi === "student") {
+      navigate("/student/dashboard");
+    } else {
+      navigate("/instructor/dashboard");
+    }
+  } catch (error) {
+    console.error("Failed to end meeting", error);
+    navigate("/");
   }
 };
 
