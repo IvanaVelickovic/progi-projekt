@@ -24,4 +24,5 @@ public class InstructorScheduleRequestDTO {
     private ScheduleStatus status;
     private Integer instructorId;
     public Boolean googleCalendar;
+    private String subject;
 }
