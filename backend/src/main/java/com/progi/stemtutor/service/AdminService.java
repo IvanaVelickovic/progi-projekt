@@ -29,8 +29,21 @@ public class AdminService {
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<AdminUserResponseDto> getAllUsers() {
+        return userRepository.findAll().stream().map(user -> AdminUserResponseDto.builder()
+                .userId(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .role(String.valueOf(user.getRole()))
+                .status(String.valueOf(user.getStatus()))
+                .isVerified(user.isVerified())
+                .createdAt(user.getCreatedAt() != null ?
+                        LocalDateTime.ofInstant(user.getCreatedAt(), ZoneId.systemDefault()) : null)
+                .lastLogin(user.getLastLogin() != null ?
+                        LocalDateTime.ofInstant(user.getLastLogin(), ZoneId.systemDefault()) : null)
+                .build()
+        ).collect(Collectors.toList());
     }
 
     public List<AdminReviewResponseDto> getAllReviews() {
@@ -41,8 +54,37 @@ public class AdminService {
             dto.setComment(review.getComment());
             dto.setRemoved(review.isReviewRemoved());
 
-            dto.setStudentName(review.getReservationParticipation().getStudent().getUser().getFirstName());
-            dto.setInstructorName(review.getReservationParticipation().getReservation().getSchedule().getInstructor().getUser().getFirstName());
+            // Sigurnije izvlacenje podataka
+            String sFirstName = "Nepoznato";
+            String sLastName = "";
+            String iFirstName = "Nepoznato";
+            String iLastName = "";
+
+            var participation = review.getReservationParticipation();
+            if (participation != null) {
+                // Podaci o studentu
+                if (participation.getStudent() != null && participation.getStudent().getUser() != null) {
+                    sFirstName = participation.getStudent().getUser().getFirstName();
+                    sLastName = participation.getStudent().getUser().getLastName();
+                }
+
+                // Podaci o instruktoru
+                if (participation.getReservation() != null &&
+                        participation.getReservation().getSchedule() != null &&
+                        participation.getReservation().getSchedule().getInstructor() != null &&
+                        participation.getReservation().getSchedule().getInstructor().getUser() != null) {
+
+                    var instructorUser = participation.getReservation().getSchedule().getInstructor().getUser();
+                    iFirstName = instructorUser.getFirstName();
+                    iLastName = instructorUser.getLastName();
+                }
+            }
+
+            dto.setStudentName(sFirstName);
+            dto.setStudentLastName(sLastName);
+            dto.setInstructorName(iFirstName);
+            dto.setInstructorLastName(iLastName);
+
             return dto;
         }).collect(Collectors.toList());
     }
@@ -99,6 +141,11 @@ public class AdminService {
 
     @Transactional
     public void deleteReview(Long reviewId) {
+        if (!reviewRepository.existsById(reviewId)) {
+            throw new RuntimeException("Recenzija nije pronađena.");
+        }
+
+        // Koristimo native query da zaobiđemo Hibernate Transient error
         reviewRepository.deleteById(reviewId);
     }
 }

@@ -22,10 +22,8 @@ public class AdminController {
 
     // Dohvat korisnika uz paginaciju
     @GetMapping("/users")
-    public ResponseEntity<Page<AdminUserResponseDto>> getUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(adminService.getUsersPaged(page, size));
+    public ResponseEntity<List<AdminUserResponseDto>> getAllUsers() {
+        return ResponseEntity.ok(adminService.getAllUsers());
     }
 
     // Dohvat svih recenzija (uključujući obrisane)
