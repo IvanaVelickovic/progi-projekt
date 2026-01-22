@@ -18,7 +18,7 @@ import InstructorProfile from "./pages/InstructorProfile/InstructorProfile";
 import AdminDashboard from "./pages/AdminDashboard";
 import Review from "./pages/Reviews";
 import BookingConfirmation from "./pages/BookingConfirmation";
-import Payment from "./pages/Payment";
+import Payment from "./pages/payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
 
 function App() {
