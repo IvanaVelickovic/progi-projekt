@@ -153,12 +153,6 @@ const InstructorProfile = () => {
               O instruktoru
             </li>
             <li
-              className="list-group-item mt-5 p-3 cursor-pointer text-center"
-              onClick={() => setActiveTab("about")}
-            >
-              Dostupni termini
-            </li>
-            <li
               className={`list-group-item mt-5 p-3 cursor-pointer text-center font-semibold rounded-3xl ${
                 activeTab === "reviews" ? "bg-green-dark/50" : ""
               }`}
@@ -206,8 +200,7 @@ function ProfileRow({ icon, label, value, href }: ProfileRowProps) {
         </div>
         <div className="text-gray-700 text-xl">
           {value && <>{value}</>}
-          {href && <a href={href} />
-          }
+          {href && <a href={href} />}
         </div>
       </div>
     </div>
