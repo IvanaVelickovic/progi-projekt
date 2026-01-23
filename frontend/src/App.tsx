@@ -2,7 +2,6 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AuthCallback from "./components/AuthCallback";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
-import Dashboard from "./pages/Dashboard";
 import LandingPage from "./pages/HomePage";
 import Login from "./pages/Login";
 import ProfileEdit from "./pages/ProfileEdit";
@@ -39,14 +38,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <Setup />
-              </ProtectedRoute>
-            }
-          ></Route>
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
               </ProtectedRoute>
             }
           ></Route>

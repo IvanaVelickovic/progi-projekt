@@ -35,9 +35,9 @@ const ProfileLayoutInstructor = ({
       </div>
 
       {/* Right section */}
-      <div className="bg-green-light flex flex-col justify-center w-[60%] h-[80%] min-h-[600px]">
+      <div className="bg-green-light flex flex-col justify-center w-[80%] h-full">
         {/* Tab buttons */}
-        <div className="flex justify-top w-[42%] bg-white rounded-md">
+        <div className="flex justify-top w-[42%] bg-white rounded-t-md">
           <button
             className={`px-4 py-2 font-semibold text-sm ${
               activeTab === "personal"
@@ -70,7 +70,7 @@ const ProfileLayoutInstructor = ({
           </button>
         </div>
         {/* Info section */}
-        <div className="bg-white w-[90%] max-w-[800px] min-h-[400px] h-[500px] max-h-[80vh] rounded-md shadow-sm p-6 text-[#1e3a56] transition-all duration-300">
+        <div className="bg-white w-[90%] max-w-[800px] min-h-[400px] h-[500px] max-h-[80vh] rounded-b-md rounded-tr-md shadow-sm p-6 text-[#1e3a56] transition-all duration-300">
           {children}
         </div>
       </div>

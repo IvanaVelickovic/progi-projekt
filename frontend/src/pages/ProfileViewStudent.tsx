@@ -70,9 +70,7 @@ const ProfileViewStudent = () => {
             {/* LIJEVI PANEL */}
             <div className="w-[260px] bg-[#e9f7f1] rounded-2xl p-6 flex flex-col items-center text-center">
               <div className="h-44 w-44 rounded-full bg-[#9bd7b6] flex items-center justify-center mb-4">
-                Slika
-                <br />
-                učenika
+                <img src="/images/student_bigger.png" className="h-32"></img>
               </div>
               <p className="font-semibold text-blue-dark text-lg">
                 {studentName || "NEMA IMENA"}
@@ -105,7 +103,7 @@ const ProfileViewStudent = () => {
                 ].map(([name, value]) => (
                   <div key={name}>
                     <p className="text-base font-medium mb-2">{name}:</p>
-                    <div className="bg-gray-100 rounded-lg px-5 py-3 text-lg min-h-[48px]">
+                    <div className="bg-gray-100 rounded-lg px-5 py-3 text-lg min-h-12">
                       {value}
                     </div>
                   </div>
@@ -122,7 +120,7 @@ const ProfileViewStudent = () => {
                 ].map(([name, value]) => (
                   <div key={name}>
                     <p className="text-base font-medium mb-2">{name}:</p>
-                    <div className="bg-gray-100 rounded-md px-4 py-3 text-base min-h-[80px]">
+                    <div className="bg-gray-100 rounded-md px-4 py-3 text-base min-h-12">
                       {value}
                     </div>
                   </div>

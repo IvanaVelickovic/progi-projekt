@@ -10,7 +10,7 @@ const SessionComplete = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
-  const [currentTime, setCurrentTime] = useState<Date>(new Date());
+  const [, setCurrentTime] = useState<Date>(new Date());
   const [duration, setDuration] = useState<number>(0); // u minutama
 
   /* ================= DOHVAĆANJE START TIME IZ LOCALSTORAGE ================= */
@@ -18,7 +18,7 @@ const SessionComplete = () => {
     if (!sessionId) return;
 
     const storedStartTime = localStorage.getItem(`session_${sessionId}_start`);
-    
+
     if (!storedStartTime) {
       console.warn("⚠️ Nema start time za ovu sesiju");
       // Ako nema start time, vrati korisnika na dashboard
@@ -28,7 +28,7 @@ const SessionComplete = () => {
 
     const start = new Date(storedStartTime);
     setStartTime(start);
-    
+
     // Automatski računanje trajanja
     const now = new Date();
     const durationMs = now.getTime() - start.getTime();
@@ -63,19 +63,19 @@ const SessionComplete = () => {
     }
 
     setLoading(true);
-    
+
     try {
       // ===== API poziv za označavanje sesije kao završene =====
       await completeVideoSession(sessionId, duration);
-      
+
       // ===== Očisti localStorage =====
       localStorage.removeItem(`session_${sessionId}_start`);
-      localStorage.removeItem('active_session_id');
+      localStorage.removeItem("active_session_id");
       localStorage.removeItem(`session_${sessionId}_status`);
-      localStorage.removeItem('session_return_pending');
-      
+      localStorage.removeItem("session_return_pending");
+
       console.log(`✅ Sesija ${sessionId} završena. Trajanje: ${duration} min`);
-      
+
       // ===== Routing na dashboard =====
       navigate("/dashboard");
     } catch (error) {
@@ -90,10 +90,10 @@ const SessionComplete = () => {
   const handleStillOngoing = () => {
     // Korisnik kaže da sesija još traje, vrati ga na dashboard BEZ redirecta
     if (!sessionId) return;
-    
+
     // Spremi flag da ne redirecta automatski
-    localStorage.setItem('session_return_pending', 'false');
-    
+    localStorage.setItem("session_return_pending", "false");
+
     navigate("/dashboard");
   };
 
@@ -101,7 +101,7 @@ const SessionComplete = () => {
   const formatTime = (minutes: number): string => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    
+
     if (hours > 0) {
       return `${hours}h ${mins}min`;
     }
@@ -117,7 +117,9 @@ const SessionComplete = () => {
           <div className="flex items-center gap-3">
             <span className="text-3xl">✅</span>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Sesija završena</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Sesija završena
+              </h1>
               <p className="text-sm text-gray-500">Molimo potvrdite detalje</p>
             </div>
           </div>
@@ -154,10 +156,11 @@ const SessionComplete = () => {
           {/* Start time info */}
           <div className="mb-6 text-center text-sm text-gray-600">
             <p>
-              Započeto: {startTime?.toLocaleTimeString('hr-HR', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                second: '2-digit'
+              Započeto:{" "}
+              {startTime?.toLocaleTimeString("hr-HR", {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
               })}
             </p>
           </div>
@@ -171,8 +174,8 @@ const SessionComplete = () => {
                   Zašto je ovo važno?
                 </h3>
                 <p className="text-sm text-blue-800">
-                  Ove informacije nam pomažu da poboljšamo kvalitetu usluge i omogućavaju
-                  točnu naknadu instruktorima.
+                  Ove informacije nam pomažu da poboljšamo kvalitetu usluge i
+                  omogućavaju točnu naknadu instruktorima.
                 </p>
               </div>
             </div>

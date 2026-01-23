@@ -57,7 +57,7 @@ const ProfileEditInstructor = () => {
     const fetchInstructorData = async () => {
       try {
         const response = await api.get(
-          "http://localhost:8080/api/Instructor/profile"
+          "http://localhost:8080/api/Instructor/profile",
         );
         const data = response.data;
 
@@ -108,13 +108,13 @@ const ProfileEditInstructor = () => {
 
   /* ================= RENDER ================= */
   return (
-    <div className="bg-[#f6fefb] min-h-screen">
+    <div className="bg-[#f6fefb] h-screen">
       {/* BACK BANNER */}
       <BackBanner formEmpty={formEmpty} backPath="/instructor/dashboard" />
 
       {/* GLAVNI SADRŽAJ */}
-      <div className="flex justify-center items-center">
-        <div className="w-[90vw] h-[90vh] min-w-[90%] min-h-[400px] max-h-[600px] max-w-[1732px] lg:h-[90%] bg-[#dff2ea] rounded-2xl shadow-md flex flex-col lg:flex-row items-center p-8 lg:p-12 gap-10 mt-2">
+      <div className="flex justify-center items-center h-[86%]">
+        <div className="w-[90%] h-[95%] bg-[#dff2ea] rounded-2xl shadow-md flex flex-col lg:flex-row items-center p-8 gap-10 mt-2">
           <ProfileLayoutInstructor
             activeTab={activeTab}
             setActiveTab={setActiveTab}
