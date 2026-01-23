@@ -41,27 +41,6 @@ const Statistics = () => {
   const [rawChartData, setRawChartData] = useState<ChartData[]>([]);
   const [chartData, setChartData] = useState<ChartData[]>([]);
 
-  const dummyData = {
-    overallAverageRating: 4.21,
-    fiveStarRatingsCount: 96,
-    totalRatingsCount: 234,
-  };
-
-  const chartDummyData = [
-    { month: "2025-04", count: 2 },
-    { month: "2026-01", count: 12 },
-    //{ month: "2025-02", count: 1 },
-    { month: "2025-03", count: 11 },
-    { month: "2025-05", count: 4 },
-    { month: "2025-06", count: 7 },
-    { month: "2025-07", count: 5 },
-    { month: "2025-09", count: 8 },
-    { month: "2025-10", count: 10 },
-    // { month: "11-2025", count: 3 },
-    // { month: "12-2025", count: 11 },
-    { month: "2025-08", count: 6 },
-  ];
-
   useEffect(() => {
     const fetchSummary = async () => {
       try {

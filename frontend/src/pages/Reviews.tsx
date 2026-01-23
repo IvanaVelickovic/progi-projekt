@@ -13,7 +13,7 @@ const Review = () => {
   const [reviewText, setReviewText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [instructorData, setInstructorData] = useState({
+  const [, setInstructorData] = useState({
     firstName: "",
     lastName: "",
   });

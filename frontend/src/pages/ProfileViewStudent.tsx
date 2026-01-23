@@ -103,7 +103,7 @@ const ProfileViewStudent = () => {
                 ].map(([name, value]) => (
                   <div key={name}>
                     <p className="text-base font-medium mb-2">{name}:</p>
-                    <div className="bg-gray-100 rounded-lg px-5 py-3 text-lg min-h-[48px]">
+                    <div className="bg-gray-100 rounded-lg px-5 py-3 text-lg min-h-12">
                       {value}
                     </div>
                   </div>
@@ -120,7 +120,7 @@ const ProfileViewStudent = () => {
                 ].map(([name, value]) => (
                   <div key={name}>
                     <p className="text-base font-medium mb-2">{name}:</p>
-                    <div className="bg-gray-100 rounded-md px-4 py-3 text-base min-h-[80px]">
+                    <div className="bg-gray-100 rounded-md px-4 py-3 text-base min-h-12">
                       {value}
                     </div>
                   </div>
