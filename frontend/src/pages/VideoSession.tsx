@@ -32,16 +32,16 @@ const VideoSession = () => {
 
   const handleMeetingEnd = async () => {
   try {
-    const res = await api.get(
+    const res = await api.post(
       `/api/video-sessions/${reservationId}/end`
     );
 
-    const roleFromApi = res.data; 
+    const roleFromApi = res.data.role; 
     // ili ako backend vraća objekt:
     // const roleFromApi = res.data.role;
 
     if (roleFromApi === "student") {
-      navigate("/student/dashboard");
+      //navigate(`/review?instructorId=${instructorId}&participationId=${participationId}`);
     } else {
       navigate("/instructor/dashboard");
     }
