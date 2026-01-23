@@ -97,7 +97,6 @@ public class InstructorProfileEditController {
         }
     }
 
-    // AŽURIRANJE OBRAZOVANJA/RAZINE ZNANJA (POST /api/user/update-education)
     @PostMapping("/update-biography")
     public ResponseEntity<?> updateStudentEducation(
             @AuthenticationPrincipal UserDetails userDetails,

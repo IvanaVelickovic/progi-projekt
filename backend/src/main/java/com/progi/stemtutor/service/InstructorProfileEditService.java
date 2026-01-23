@@ -118,6 +118,9 @@ public class InstructorProfileEditService {
             return false; // Profil studenta nije pronađen
         }
         Instructor instructor = instructorOpt.get();
+
+        System.out.println(dto.getLatitude());
+        System.out.println(dto.getLongitude());
         instructor.setBiography(dto.getBiography());
         instructor.setLatitude(dto.getLatitude());
         instructor.setLongitude(dto.getLongitude());
