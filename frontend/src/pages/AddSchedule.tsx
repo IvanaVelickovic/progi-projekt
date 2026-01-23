@@ -113,7 +113,7 @@ const AddSchedule = () => {
           </div>
           <form
             method="POST"
-            className="w-4/5 rounded-r-3xl bg-[#C8F1DA] p-[7%] text-blue-dark text-xl"
+            className="w-4/5 rounded-r-3xl bg-[#C8F1DA] py-[4%] px-[5%] text-blue-dark text-xl"
             onSubmit={handleSubmit}
           >
             <div className="flex justify-between mb-[5%]">
@@ -222,7 +222,7 @@ const AddSchedule = () => {
                 </select>
               </div>
             </div>
-            <div className="flex h-1/4 justify-between items-center mt-[5%]">
+            <div className="flex h-1/4 justify-between items-center mt-[2%]">
               {googleUser ? (
                 <div className="flex items-center gap-2 w-[42%] font-semibold">
                   <label>

@@ -25,25 +25,21 @@ const SessionSummaryList = ({ summaries }: Props) => {
       {summaries.map((s) => (
         <div
           key={s.summaryId}
-          className="bg-white rounded-xl shadow p-4 border-l-4 border-purple-600"
+          className="bg-white rounded-xl shadow p-4 border-l-4 border-blue-light"
         >
-          <h3 className="font-semibold text-gray-800">
-            🎥 {s.subject}
-          </h3>
+          <h3 className="font-semibold text-blue-dark">🎥 {s.subject}</h3>
 
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-blue-dark/90">
             {s.role === "student"
               ? `Instruktor: ${s.instructorName}`
               : `Studenti: ${s.studentNames.join(", ")}`}
           </p>
 
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-blue-dark/90">
             ⏱ Trajanje: {s.durationMin} min
           </p>
 
-          <p className="text-xs text-gray-400">
-            📅 {formatDate(s.date)}
-          </p>
+          <p className="text-xs text-blue-dark/80">📅 {formatDate(s.date)}</p>
         </div>
       ))}
     </div>

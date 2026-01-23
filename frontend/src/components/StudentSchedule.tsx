@@ -73,7 +73,9 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
                   <div className="p-5 pt-7 text-blue-dark font-semibold text-xl">
                     <div className="flex justify-between ">
                       <span>• Održavanje</span>
-                      <span>{item.format === "in_person" ? "uživo" : "online"}</span>
+                      <span>
+                        {item.format === "in_person" ? "uživo" : "online"}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span>• Trajanje</span>
@@ -93,7 +95,9 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
                   </div>
                   <div className="flex flex-col m-3 p-2 w-10/12 items-end gap-y-2">
                     <div className="bg-[#D9D9D9] p-3 rounded-3xl text-lg text-blue-dark font-semibold text-center px-6 w-full">
-                      Popunjenost: {item.filled}/{item.maxParticipants}
+                      Popunjenost:{" "}
+                      {item.filled === undefined ? "0" : item.filled}/
+                      {item.maxParticipants}
                     </div>
                     {search && (
                       <button

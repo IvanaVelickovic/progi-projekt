@@ -133,8 +133,8 @@ const InstructorProfile = () => {
 
       <main className="flex h-5/6">
         <aside className="bg-green-dark/30 m-5 rounded-lg w-50 lg:w-75 justify-items-center">
-          <div className="flex justify-center items-center w-45 h-45 mt-6 rounded-full bg-green-dark">
-            {instructorSummary.photo}
+          <div className="flex justify-center items-center w-45 h-45 mt-6 rounded-full bg-green-dark/80">
+            <img src="/images/instructor_bigger.png" className="h-35"></img>
           </div>
           <h2 className="text-blue-dark text-3xl font-bold mt-8">
             {instructorSummary.firstName} {instructorSummary.lastName}

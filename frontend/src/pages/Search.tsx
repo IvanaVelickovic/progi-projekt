@@ -263,7 +263,7 @@ const Search = () => {
                       onChange={handleChange}
                     ></input>
                     <div className="flex items-center text-xl font-bold text-blue-dark ml-2 mb-1 mt-1.5">
-                      Vrijeme
+                      Vrijeme početka
                     </div>
                     <div className="flex justify-between px-2">
                       <div className="flex justify-start gap-x-1">
@@ -342,6 +342,7 @@ const Search = () => {
                       <button
                         className="bg-blue-light/95 text-white text-md rounded-lg w-fit px-5 py-0.5 ml-2 cursor-pointer my-0.5"
                         onClick={requestLocation}
+                        type="button"
                       >
                         Omogući lokaciju
                       </button>
@@ -403,12 +404,14 @@ const Search = () => {
           <div className="flex justify-center items-center text-blue-dark text-xl font-bold bg-green-light/30 w-10 h-10 border-2 border-blue-dark">
             {filterData.page + 1}
           </div>
-          <button
-            className="flex justify-center items-center text-blue-dark text-xl font-bold bg-green-light w-10 h-10 border-2 border-l-0 border-blue-dark cursor-pointer"
-            onClick={handleNextPage}
-          >
-            {">"}
-          </button>
+          {appointments.length === 6 && (
+            <button
+              className="flex justify-center items-center text-blue-dark text-xl font-bold bg-green-light w-10 h-10 border-2 border-l-0 border-blue-dark cursor-pointer"
+              onClick={handleNextPage}
+            >
+              {">"}
+            </button>
+          )}
         </div>
       </div>
     </>

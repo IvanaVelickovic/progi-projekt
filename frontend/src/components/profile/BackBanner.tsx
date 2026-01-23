@@ -14,7 +14,7 @@ const BackBanner = ({
   const handleGoBack = () => {
     if (!formEmpty) {
       const proceed = window.confirm(
-        "Ako se vratite natrag, vaši podaci neće biti spremljeni. Želite li nastaviti?"
+        "Ako se vratite natrag, vaši podaci neće biti spremljeni. Želite li nastaviti?",
       );
 
       if (!proceed) return;
@@ -24,7 +24,7 @@ const BackBanner = ({
   };
 
   return (
-    <div className="flex items-center p-8 bg-green-dark/50 shadow">
+    <div className="flex items-center p-8 bg-green-dark/50 shadow h-[14%] border">
       <h1
         onClick={handleGoBack}
         className="text-blue-dark text-[2.7rem] font-bold cursor-pointer hover:opacity-80 transition"

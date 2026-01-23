@@ -7,10 +7,8 @@ delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
 /* ===== TIP ===== */
@@ -20,7 +18,6 @@ interface BiographyData {
     lat: number | null;
     lng: number | null;
     label: string;
-
   };
 }
 
@@ -31,13 +28,8 @@ interface Props {
 
 /* ===== MAP CLICK ===== */
 
-const BiographyTabContent = ({
-  biographyData,
-  setBiographyData,
-}: Props) => {
-  const handleBioChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
+const BiographyTabContent = ({ biographyData, setBiographyData }: Props) => {
+  const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBiographyData((prev) => ({
       ...prev,
       bio: e.target.value,
@@ -56,7 +48,7 @@ const BiographyTabContent = ({
 
       await api.post(
         "http://localhost:8080/api/Instructor/update-biography",
-        payload
+        payload,
       );
 
       alert("Biografija i lokacija spremljeni!");
@@ -67,21 +59,16 @@ const BiographyTabContent = ({
   };
 
   return (
-    <form
-      className="flex flex-col h-full w-[90%]"
-      onSubmit={handleSubmit}
-    >
-      <div className="flex flex-col gap-4">
-        <label className="font-semibold mb-1">Biografija</label>
+    <form className="flex flex-col h-full w-[90%]" onSubmit={handleSubmit}>
+      <div className="flex flex-col gap-2">
+        <label className="font-semibold">Biografija</label>
         <textarea
           value={biographyData.bio}
           onChange={handleBioChange}
           className="border border-gray-400 rounded-md px-2 py-1 h-[100px]"
         />
 
-        <label className="font-semibold mb-0.5">
-          Lokacija:
-        </label>
+        <label className="font-semibold">Lokacija:</label>
 
         <LeafletMap
           height="h-[170px]"
@@ -114,7 +101,6 @@ const BiographyTabContent = ({
         Spremi promjene
       </button>
     </form>
-
   );
 };
 

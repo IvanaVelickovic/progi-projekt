@@ -26,9 +26,7 @@ const ExpertiseTabContentInstructor = ({
   setExpertiseData,
 }: ExpertiseTabContentInstructorProps) => {
   /* ===== CHANGE HANDLER ===== */
-  const handleExpertiseChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleExpertiseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
 
     setExpertiseData((prev) => ({
@@ -44,7 +42,7 @@ const ExpertiseTabContentInstructor = ({
     try {
       const response = await api.post(
         "http://localhost:8080/api/Instructor/update-expertise",
-        expertiseData
+        expertiseData,
       );
 
       console.log(expertiseData);
@@ -61,10 +59,7 @@ const ExpertiseTabContentInstructor = ({
   return (
     <>
       {/* --- EXPERTISE --- */}
-      <form
-        className="flex flex-col w-[90%] h-[90%]"
-        onSubmit={handleExpertiseSubmit}
-      >
+      <form className="flex w-[90%] h-[90%]" onSubmit={handleExpertiseSubmit}>
         <div className="pt-[4%] w-full h-full">
           {/* Područja stručnosti */}
           <label className="font-semibold block mb-3 ml-2">
@@ -108,9 +103,7 @@ const ExpertiseTabContentInstructor = ({
 
           {/* Cjenik */}
           <div className="mb-[4%] flex flex-row ml-2">
-            <label className="font-semibold block mb-1">
-              Cjenik po satu:
-            </label>
+            <label className="font-semibold block mb-1">Cjenik po satu:</label>
             <input
               type="number"
               name="hourlyRate"
@@ -122,9 +115,7 @@ const ExpertiseTabContentInstructor = ({
 
           {/* Video */}
           <div className="mb-[4%] flex flex-row p-[1%] ml-2">
-            <label className="font-semibold block mb-1">
-              Video uvod:
-            </label>
+            <label className="font-semibold block mb-1">Video uvod:</label>
             <input
               type="text"
               name="introVideoUrl"
@@ -136,9 +127,7 @@ const ExpertiseTabContentInstructor = ({
 
           {/* Reference */}
           <div className="mb-[4%] flex flex-row p-[1%] ml-2">
-            <label className="font-semibold l-3%">
-              Reference:
-            </label>
+            <label className="font-semibold l-3%">Reference:</label>
             <input
               type="text"
               name="references"
@@ -150,12 +139,12 @@ const ExpertiseTabContentInstructor = ({
         </div>
 
         <button
-        type="submit"
-        className="mt-auto bg-[#1e6b84] text-white px-5 py-2 rounded-md self-center"
-      >
-        Spremi promjene
-      </button>
-    </form>
+          type="submit"
+          className="bg-[#1e6b84] text-white px-12 py-2 rounded-md self-end text-left"
+        >
+          Spremi
+        </button>
+      </form>
     </>
   );
 };
