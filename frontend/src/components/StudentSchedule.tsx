@@ -73,7 +73,7 @@ const StudentSchedule = ({ search, appointments }: StudentScheduleProps) => {
                   <div className="p-5 pt-7 text-blue-dark font-semibold text-xl">
                     <div className="flex justify-between ">
                       <span>• Održavanje</span>
-                      <span>{item.format}</span>
+                      <span>{item.format === "in_person" ? "uživo" : "online"}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>• Trajanje</span>

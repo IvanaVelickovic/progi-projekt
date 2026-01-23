@@ -46,7 +46,7 @@ const BiographyTabContent = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    console.log("Submitting biography data:", biographyData);
     try {
       const payload = {
         biography: biographyData.bio,
