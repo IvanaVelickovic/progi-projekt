@@ -72,7 +72,7 @@ public class ReservationReminderJob {
                 p.getStudent().getUser().getFirstName(),
                 r.getSchedule().getInstructor().getUser().getFirstName(),
                 r.getSchedule().getInstructor().getUser().getLastName(),
-                r.getSchedule().getInstructorSubject().getSubjectName(),
+                SubjectName.Matematika, //r.getSchedule().getInstructorSubject().getSubjectName(),
                 r.getSchedule().getDatetime(),
                 type
         );

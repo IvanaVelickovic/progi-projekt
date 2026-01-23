@@ -1,7 +1,8 @@
 package com.progi.stemtutor.service;
 
 import com.progi.stemtutor.model.enums.SubjectName;
-import com.progi.stemtutor.service.GmailService;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -9,43 +10,61 @@ import java.time.LocalDateTime;
 
 @Service
 public class EmailService {
+    private final JavaMailSender mailSender;
 
-    private final GmailService gmailService;
-
-    public EmailService(GmailService gmailService) {
-        this.gmailService = gmailService;
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
     }
 
     @Async
-    public void sendReservationConfirmation(String to, String studentName, String instructorFirstName,
-                                            String instructorLastName, SubjectName subject, LocalDateTime dateTime) {
-        String body = "Poštovani/na " + studentName + ",\n\n" +
-                "Uspješno ste rezervirali termin instrukcija.\n\n" +
-                "Predmet: " + subject + "\n" +
-                "Instruktor: " + instructorFirstName + " " + instructorLastName + "\n" +
-                "Datum i vrijeme: " + dateTime + "\n\n" +
-                "Vidimo se!\nSTEM Tutor tim";
-        try {
-            gmailService.sendEmail(to, "Potvrda rezervacije termina", body);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendReservationConfirmation(
+            String to,
+            String studentName,
+            String instructorFirstName,
+            String instructorLastName,
+            SubjectName subject,
+            LocalDateTime dateTime
+    ) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("Potvrda rezervacije termina");
+
+        message.setText(
+                "Poštovani/na " + studentName + ",\n\n" +
+                        "Uspješno ste rezervirali termin instrukcija.\n\n" +
+                        "Predmet: " + subject + "\n" +
+                        "Instruktor: " + instructorFirstName + " " + instructorLastName + "\n" +
+                        "Datum i vrijeme: " + dateTime + "\n\n" +
+                        "Vidimo se!\n" +
+                        "STEM Tutor tim"
+        );
+
+        mailSender.send(message);
     }
 
-    @Async
-    public void sendReservationReminder(String to, String studentName, String instructorFirstName,
-                                        String instructorLastName, SubjectName subject, LocalDateTime dateTime,
-                                        String reminderType) {
-        String body = "Poštovani/na " + studentName + ",\n\n" +
-                "Ovo je " + reminderType + " podsjetnik na Vaš termin instrukcija.\n\n" +
-                "Predmet: " + subject + "\n" +
-                "Instruktor: " + instructorFirstName + " " + instructorLastName + "\n" +
-                "Datum i vrijeme: " + dateTime + "\n\n" +
-                "Vidimo se!\nSTEM Tutor tim";
-        try {
-            gmailService.sendEmail(to, "Podsjetnik na termin instrukcija", body);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendReservationReminder(
+            String to,
+            String studentName,
+            String instructorFirstName,
+            String instructorLastName,
+            SubjectName subject,
+            LocalDateTime dateTime,
+            String reminderType
+    ) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("Podsjetnik na termin instrukcija");
+
+        message.setText(
+                "Poštovani/na " + studentName + ",\n\n" +
+                        "Ovo je " + reminderType + " podsjetnik na Vaš termin instrukcija.\n\n" +
+                        "Predmet: " + subject + "\n" +
+                        "Instruktor: " + instructorFirstName + " " + instructorLastName + "\n" +
+                        "Datum i vrijeme: " + dateTime + "\n\n" +
+                        "Vidimo se!\n" +
+                        "STEM Tutor tim"
+        );
+
+        mailSender.send(message);
     }
 }
