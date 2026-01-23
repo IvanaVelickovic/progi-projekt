@@ -24,7 +24,6 @@ dist-ssr
 *.sw?
 
 
-.env
 appointments_s.json
 appointments.json
 questions.json
