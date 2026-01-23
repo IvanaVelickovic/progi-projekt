@@ -43,11 +43,9 @@ const Login = () => {
           name: decoded.name,
         });
 
-        if (formData.email === "admin@gmail.com") {
+        if (decoded.role === "admin") {
           navigate("/admin/dashboard");
-        }
-
-        if (decoded.role === "instructor" || decoded.role === "student") {
+        } else if (decoded.role === "instructor" || decoded.role === "student") {
           navigate(`/${decoded.role}/dashboard`);
         } else {
           navigate("/dashboard");
