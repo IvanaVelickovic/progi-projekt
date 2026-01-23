@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/google")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://progi-projekt-2.vercel.app/")
 public class GoogleAuthController {
 
     private final OAuth2AuthorizedClientService authorizedClientService;

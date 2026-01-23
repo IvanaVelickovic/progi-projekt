@@ -67,7 +67,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         // 3. GENERIRANJE TOKENA (Ovdje je bila greška - sada šaljemo extraClaims)
         String jwt = jwtService.generateToken(extraClaims, user);
 
-        String redirectUrl = "http://localhost:5173/oauth2/callback?token=" + URLEncoder.encode(jwt, StandardCharsets.UTF_8);
+        String redirectUrl = "https://progi-projekt-2.vercel.app/oauth2/callback?token=" + URLEncoder.encode(jwt, StandardCharsets.UTF_8);
         response.sendRedirect(redirectUrl);
     }
 }
