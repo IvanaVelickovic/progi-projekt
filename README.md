@@ -11,7 +11,7 @@ Mia Grahovac, [github](https://github.com/Mia-Grahovac)
 Ivan Miloš, [github](https://github.com/ivan-milos)  
 Marin Denić, [github](https://github.com/denabena)  
 Ive Šarić, [github](https://github.com/Ive-Saric)  
-## Kontribucije
+
 ## Licenca
 Ovaj repozitorij je licenciran pod [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
