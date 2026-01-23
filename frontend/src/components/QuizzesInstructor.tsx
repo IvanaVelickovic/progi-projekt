@@ -1,0 +1,149 @@
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+//import quizzesData from "../assets/quizzes.json";
+import AddToSchedule from "./AddToSchedule";
+import api from "../api";
+import { useAppointments } from "../context/AppointmentsContext";
+
+export interface QuizzesInstructor {
+  quiz_id: number;
+  quiz_name: string;
+  quiz_description: string;
+  numberOfQuestions: number;
+  quiz_created_at: string;
+}
+
+const QuizzesInstructor = () => {
+  const navigate = useNavigate();
+  const { appointments } = useAppointments();
+
+  const [quizzes, setQuizzes] = useState<QuizzesInstructor[]>([]);
+
+  const [addToSchedule, setAddToSchedule] = useState(false);
+  const [quiz_name, setquiz_name] = useState({
+    id: -1,
+    name: "",
+  });
+
+  const [selected, setSelected] = useState<number[]>([]);
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const dataRes = await api.get("/instructor/quizzes");
+        setQuizzes(dataRes.data);
+      } catch (error) {
+        console.error("Greška pri dohvaćanju korisničkih podataka:", error);
+      }
+    };
+    //setQuizzes(quizzesData);
+    fetchAppointments();
+  }, []);
+
+  const addQuizToSchedule = async (id: number, name: string) => {
+    if (appointments.length === 0) {
+      console.log("Appointments not loaded yet");
+      return;
+    }
+    const scheduleIds = appointments.map((a) => a.scheduleId);
+    try {
+      console.log("Appointments:", appointments);
+      console.log("Schedule IDs:", scheduleIds);
+      
+      const res = await api.get("/instructor/selectedSchedules", {
+        params: {
+          quiz_id: id,
+          instructor_schedule_ids: scheduleIds,
+        },
+      });
+      setSelected(res.data);
+      console.log("selectedSchedules response:", res.data);
+console.log("isArray:", Array.isArray(res.data));
+    } catch (err) {
+      console.error(err);
+    }
+
+    setquiz_name({ id: id, name: name });
+    setAddToSchedule(true);
+  };
+
+  const handleDelete = async (id: number) => {
+    const proceed = window.confirm(
+      "Brisanje termina je trajno. Želite li nastaviti?",
+    );
+    if (proceed) {
+      try {
+        await api.post("/instructor/deleteQuiz", {
+          quiz_id: id,
+        });
+        setQuizzes((prev) => prev.filter((item) => item.quiz_id !== id));
+      } catch (error) {
+        console.error("Greška s backendom");
+      }
+      //setQuizzes((prev) => prev.filter((item) => item.quiz_id !== id));
+    }
+  };
+
+  return (
+    <div className="flex h-full">
+      <div className="w-full p-5 flex flex-col">
+        <div className="flex justify-between">
+          <h1 className="text-blue-dark text-3xl font-bold">Moji kvizovi</h1>
+          <button
+            className="bg-[#00506F] text-white text-xl rounded-2xl px-10 py-2 cursor-pointer"
+            onClick={() => navigate("/instructor/addQuiz")}
+          >
+            + Kreiraj kviz
+          </button>
+        </div>
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4 mt-5 overflow-y-scroll px-5">
+          {quizzes.map((item) => (
+            <div
+              key={item.quiz_id}
+              className="flex flex-col justify-between border-2 bg-white border-blue-dark rounded-xl w-full min-h-[250px] shrink-0 p-5"
+            >
+              <h1 className="text-blue-dark font-bold text-2xl">
+                {item.quiz_name}
+              </h1>
+              <p className="text-blue-dark text-lg">{item.quiz_description}</p>
+              <div className="flex">
+                <div className="bg-[#567CA2] rounded-xl text-white px-3 mr-6">
+                  {item.numberOfQuestions} pitanja
+                </div>
+                <div className="text-blue-dark/70">{item.quiz_created_at}</div>
+              </div>
+              <div className="flex gap-x-3 pr-10">
+                <button
+                  className="border-2 border-[#9A1818] flex justify-center items-center rounded-xl py-1 w-1/2 cursor-pointer"
+                  onClick={() => handleDelete(item.quiz_id)}
+                >
+                  <img src="/images/trash_icon.png" className="w-8"></img>
+                  <p className="text-[#9A1818] ml-2">Izbriši</p>
+                </button>
+                <button
+                  className="bg-blue-light flex justify-center items-center rounded-xl px-14 py-1 gap-4 w-1/2 cursor-pointer"
+                  onClick={() =>
+                    addQuizToSchedule(item.quiz_id, item.quiz_name)
+                  }
+                >
+                  <p className="text-white">Dodijeli terminu</p>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      {addToSchedule && (
+        <AddToSchedule
+          quizId={quiz_name.id}
+          quizName={quiz_name.name}
+          setAddToSchedule={setAddToSchedule}
+          selected={selected}
+          setSelected={setSelected}
+        ></AddToSchedule>
+      )}
+    </div>
+  );
+};
+
+export default QuizzesInstructor;

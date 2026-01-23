@@ -43,9 +43,9 @@ const GoalsTabContent = ({ goalsData, setGoalsData }: GoalsTabContentProps) => {
       {/* --- GOALS --- */}
 
       <form className="flex flex-col" onSubmit={handleGoalsSubmit}>
-        <h2 className="text-lg font-semibold mb-4">Ciljevi učenja</h2>
+        <h2 className="text-lg font-semibold mb-2">Ciljevi učenja</h2>
 
-        <div className="mb-4">
+        <div className="mb-2">
           <label className="font-semibold block mb-1">Matematika:</label>
           <textarea
             name="goalsMath"
@@ -55,7 +55,7 @@ const GoalsTabContent = ({ goalsData, setGoalsData }: GoalsTabContentProps) => {
           />
         </div>
 
-        <div className="mb-4">
+        <div className="mb-2">
           <label className="font-semibold block mb-1">Fizika:</label>
           <textarea
             name="goalsPhi"
@@ -65,7 +65,7 @@ const GoalsTabContent = ({ goalsData, setGoalsData }: GoalsTabContentProps) => {
           />
         </div>
 
-        <div className="mb-4">
+        <div className="mb-2">
           <label className="font-semibold block mb-1">Informatika:</label>
           <textarea
             name="goalsInf"

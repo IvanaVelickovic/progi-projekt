@@ -25,7 +25,7 @@ const EducationTabContent = ({
   const handleEducationChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setEducationData((prev) => ({ ...prev, [name]: value }));
@@ -36,7 +36,7 @@ const EducationTabContent = ({
     try {
       const response = await api.post(
         "/api/user/update-education",
-        educationData
+        educationData,
       );
       console.log(educationData);
       if (response.status === 200) {
@@ -133,7 +133,7 @@ const EducationTabContent = ({
         </div>
         <button
           type="submit"
-          className="mt-[8%] bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition self-center"
+          className="mt-[0%] bg-[#1e6b84] text-white px-5 py-2 rounded-md hover:bg-[#145a6f] transition self-center"
         >
           Spremi promjene
         </button>
