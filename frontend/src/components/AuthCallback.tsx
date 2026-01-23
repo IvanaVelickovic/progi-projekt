@@ -38,7 +38,7 @@ const AuthCallback = () => {
         navigate("/setup");
       } else {
         console.log("Navigating to /dashboard");
-        navigate("/dashboard");
+        navigate(`/${decoded.role}/dashboard`);
       }
     }, 2000);
   }, []);

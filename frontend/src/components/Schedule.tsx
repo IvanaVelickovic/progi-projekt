@@ -21,13 +21,12 @@ export interface Appointment {
 const Schedule = () => {
   const [editSchedule, setEditSchedule] = useState(false);
   const navigate = useNavigate();
-  const googleUser = JSON.parse(
-    sessionStorage.getItem("googleUser") || "false",
-  );
 
   const { appointments, setAppointments } = useAppointments();
 
   const safeAppointments = Array.isArray(appointments) ? appointments : [];
+
+  const [googleUser, setGoogleUser] = useState(false);
 
   let [scheduleData, setScheduleData] = useState({
     scheduleId: -1,
@@ -63,7 +62,7 @@ const Schedule = () => {
         // If you don't have this on back yet, you can comment it out
         try {
           const userRes = await api.get("/api/google/status");
-          sessionStorage.setItem("googleUser", JSON.stringify(userRes.data));
+          setGoogleUser(userRes.data);
         } catch (e) {
           console.log("Google sync check skipped");
         }

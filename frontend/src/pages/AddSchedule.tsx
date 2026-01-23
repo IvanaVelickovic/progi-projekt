@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
 import googleLogo from "../assets/logos/google_logo.png";
 
 const AddSchedule = () => {
-  const googleUser = JSON.parse(
+  /*const googleUser = JSON.parse(
     sessionStorage.getItem("googleUser") || "false",
-  );
+  ); */
 
   const [formData, setFormData] = useState({
     format: "",
@@ -27,6 +27,20 @@ const AddSchedule = () => {
   const minutes = String(today.getMinutes()).padStart(2, "0");
   const localTime = `${hours}:${minutes}`;
   const minDateTime = `${localDate}T${localTime}`;
+
+  const [googleUser, setGoogleUser] = useState(false);
+
+  useEffect(() => {
+    const fetchGoogleUser = async () => {
+      try {
+        const res = await api.get("/api/google/status");
+        setGoogleUser(res.data);
+      } catch (error) {
+        console.error("ništa o google useru");
+      }
+    };
+    fetchGoogleUser();
+  }, []);
 
   const goBack = () => {
     const formEmpty = Object.values(formData).every((value) => value === "");
@@ -64,7 +78,7 @@ const AddSchedule = () => {
       attendanceMode: formData.format === "live" ? "in_person" : "online",
       maxParticipants: parseInt(formData.maxParticipants),
       status: "scheduled",
-      googleCalendar: true,
+      googleCalendar: formData.googleCalendar,
       subject: formData.subject,
     };
     try {
