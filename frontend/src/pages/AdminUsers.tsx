@@ -50,7 +50,7 @@ const AdminUsers: React.FC = () => {
 
   const formatDate = (datetime: string) => {
     const [date, time] = datetime?.split("T");
-    return [date, time.substring(0, 7)];
+    return [date, time ? time.substring(0, 7) : "0"];
   };
 
   const verifyUser = async (userId: number) => {

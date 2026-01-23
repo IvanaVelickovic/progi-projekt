@@ -1,0 +1,124 @@
+@startuml componentDiagram
+title Dijagram komponenata
+
+skinparam packageStyle rectangle
+left to right direction
+
+package "Frontend" {
+  package "Pages" {
+    component "MainPage UI"
+    component "Auth UI"
+    component "ProfileEdit UI"
+    component "Student UI"
+    component "Instructor UI"
+    component "Admin UI"
+    component "Booking UI"
+    component "Payment UI"
+    component "VideoSession UI"
+    component "Quiz UI"
+  }
+}
+
+package "Backend"{
+    package "REST API" {
+        package "Controllers" {
+            component "AuthController"
+            component "UserController"
+            component "InstructorController"
+            component "StudentController"
+            component "ScheduleController"
+            component "BookingController"
+            component "ReviewController"
+            component "QuizController"
+            component "NotificationController"
+            component "AdminController"
+        }
+    }
+    package "Services" {
+        component "AuthService"
+        component "UserService"
+        component "InstructorService"
+        component "StudentService"
+        component "ScheduleService"
+        component "BookingService"
+        component "ReviewService"
+        component "QuizService"
+        component "AdaptiveLearningService"
+        component "NotificationService"
+        component "AdminService"
+    }
+    package "Repositories" {
+        component "UserRepo"
+        component "InstructorRepo"
+        component "StudentRepo"
+        component "ScheduleRepo"
+        component "BookingRepo"
+        component "ReviewRepo"
+        component "QuizRepo"
+        component "TaskRepo"
+        component "NotificationRepo"
+    }
+}
+
+database "PostgreSQL" as DB
+
+package "External Services" {
+    component "OAuth 2.0 Provider"
+    component "Video API"    
+    component "Map API"
+    component "Calendar API"
+    component "Email API"
+}
+
+"Student UI" --> AuthController
+"Instructor UI" --> AuthController
+"Admin UI" --> AuthController
+"Student UI" --> BookingController
+"Instructor UI" --> ScheduleController
+"Student UI" --> InstructorController
+"Student UI" --> ReviewController
+"Student UI" --> QuizController
+"Instructor UI" --> QuizController
+"Student UI" --> NotificationController
+"Admin UI" --> AdminController
+"VideoSession UI" --> "Video API"
+
+AuthController --> AuthService
+UserController --> UserService
+InstructorController --> InstructorService
+StudentController --> StudentService
+ScheduleController --> ScheduleService
+BookingController --> BookingService
+ReviewController --> ReviewService
+QuizController --> QuizService
+NotificationController --> NotificationService
+AdminController --> AdminService
+
+AuthService --> UserRepo
+UserService --> UserRepo
+InstructorService --> InstructorRepo
+StudentService --> StudentRepo
+ScheduleService --> ScheduleRepo
+BookingService --> BookingRepo
+ReviewService --> ReviewRepo
+QuizService --> QuizRepo
+AdaptiveLearningService --> TaskRepo
+NotificationService --> NotificationRepo
+AdminService --> UserRepo
+
+UserRepo --> DB
+InstructorRepo --> DB
+StudentRepo --> DB
+ScheduleRepo --> DB
+BookingRepo --> DB
+ReviewRepo --> DB
+QuizRepo --> DB
+TaskRepo --> DB
+NotificationRepo --> DB
+
+AuthService --> "OAuth 2.0 Provider"
+ScheduleService --> "Calendar API"
+NotificationService --> "Email API"
+InstructorService --> "Map API"
+
+@enduml

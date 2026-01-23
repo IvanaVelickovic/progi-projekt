@@ -38,36 +38,44 @@ const QuizzesStudent = () => {
           <h1 className="text-blue-dark text-3xl font-bold">Moji kvizovi</h1>
         </div>
         <div className="grid grid-cols-2 gap-x-8 gap-y-4 mt-5 overflow-y-scroll px-5">
-          {quizzes.map((item) => (
-            <div
-              key={item.quiz_id}
-              className="flex flex-col justify-between border-2 bg-white border-blue-dark rounded-xl w-full min-h-60 shrink-0 p-5"
-            >
-              <h1 className="text-blue-dark font-bold text-2xl">
-                {item.quiz_name}
-              </h1>
-              <p className="text-blue-dark text-lg">{item.quiz_description}</p>
-              <div className="flex">
-                <div className="bg-[#567CA2] rounded-xl text-sm py-0.5 text-white px-3 mr-1.5">
-                  Instrukcije: {item.schedule_datetime}
+          {quizzes.length > 0 ? (
+            quizzes.map((item) => (
+              <div
+                key={item.quiz_id}
+                className="flex flex-col justify-between border-2 bg-white border-blue-dark rounded-xl w-full min-h-60 shrink-0 p-5"
+              >
+                <h1 className="text-blue-dark font-bold text-2xl">
+                  {item.quiz_name}
+                </h1>
+                <p className="text-blue-dark text-lg">
+                  {item.quiz_description}
+                </p>
+                <div className="flex">
+                  <div className="bg-[#567CA2] rounded-xl text-sm py-0.5 text-white px-3 mr-1.5">
+                    Instrukcije: {item.schedule_datetime}
+                  </div>
+                  <div
+                    className="bg-[#567CA2] rounded-xl text-sm text-white px-3 py-0.5 cursor-pointer hover:text-gray-200"
+                    onClick={() =>
+                      navigate(`/instructors/${item.instructor_id}`)
+                    }
+                  >
+                    Instruktor: {item.instructor_name}
+                  </div>
                 </div>
-                <div
-                  className="bg-[#567CA2] rounded-xl text-sm text-white px-3 py-0.5 cursor-pointer hover:text-gray-200"
-                  onClick={() => navigate(`/instructors/${item.instructor_id}`)}
-                >
-                  Instruktor: {item.instructor_name}
+                <div className="flex pr-10">
+                  <button
+                    className="bg-blue-light text-white flex justify-center items-center rounded-xl py-2 w-5/12 cursor-pointer"
+                    onClick={() => navigate(`/solve/quiz/${item.quiz_id}`)}
+                  >
+                    Riješi kviz
+                  </button>
                 </div>
               </div>
-              <div className="flex pr-10">
-                <button
-                  className="bg-blue-light text-white flex justify-center items-center rounded-xl py-2 w-5/12 cursor-pointer"
-                  onClick={() => navigate(`/solve/quiz/${item.quiz_id}`)}
-                >
-                  Riješi kviz
-                </button>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-blue-dark">Nema kvizova.</p>
+          )}
         </div>
       </div>
     </div>

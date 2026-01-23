@@ -1,0 +1,36 @@
+@startuml deploymentDiagram
+title Dijagram razmještaja
+
+left to right direction
+
+node "<<device>>\nClient Device" as Client {
+    artifact "<<artifact>>\nWeb browser"
+}
+
+node "<<service>>\nFrontend server" as Frontend {
+    artifact "<<artifact>>\nReact"
+}
+
+node "<<service>>\nApplication Server\n(Backend API)" as Backend {
+    artifact "<<artifact>>\nSpring Boot backend"
+}
+
+node "External Services" as External {
+    artifact "<<authentication>>\nOAuth 2.0"
+    artifact "<<artifact>>\nVideo API"
+    artifact "<<artifact>>\nMap API"
+    artifact "<<artifact>>\nCalendar API"
+    artifact "<<artifact>>\nEmail API"
+}
+
+node "<<service>>\nRender" as DB {
+    database "PostgreSQL"
+}
+
+Client --> Frontend : HTTP
+Frontend --> Backend : REST API
+Backend --> External : API Calls
+Backend --> DB : SQL
+
+
+@enduml

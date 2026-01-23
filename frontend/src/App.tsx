@@ -57,10 +57,6 @@ function App() {
             element={<InstructorDashboard />}
           ></Route>
           <Route
-            path="/student/dashboard"
-            element={<StudentDashboard />}
-          ></Route>
-          <Route
             path="/instructor/addSchedule"
             element={<AddSchedule />}
           ></Route>

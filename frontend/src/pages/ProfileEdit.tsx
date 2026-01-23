@@ -83,7 +83,7 @@ const ProfileEdit = () => {
   return (
     <div className="bg-[#f6fefb] h-screen">
       {/* BACK BANNER */}
-      <BackBanner formEmpty={formEmpty} backPath="/dashboard" />
+      <BackBanner formEmpty={formEmpty} backPath="/student/dashboard" />
 
       {/* GLAVNI SADRŽAJ */}
       <div className="flex justify-center items-center h-[86%]">
