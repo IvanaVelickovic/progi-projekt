@@ -56,9 +56,7 @@ const ProfileEditInstructor = () => {
   useEffect(() => {
     const fetchInstructorData = async () => {
       try {
-        const response = await api.get(
-          "http://localhost:8080/api/Instructor/profile",
-        );
+        const response = await api.get("/api/Instructor/profile");
         const data = response.data;
 
         /* --- PERSONAL --- */

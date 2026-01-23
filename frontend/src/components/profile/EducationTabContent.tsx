@@ -35,7 +35,7 @@ const EducationTabContent = ({
     e.preventDefault();
     try {
       const response = await api.post(
-        "http://localhost:8080/api/user/update-education",
+        "/api/user/update-education",
         educationData,
       );
       console.log(educationData);

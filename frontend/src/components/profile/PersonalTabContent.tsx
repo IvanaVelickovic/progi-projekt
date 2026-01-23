@@ -28,7 +28,7 @@ const PersonalTabContent = ({
     e.preventDefault();
 
     try {
-      await api.put("http://localhost:8080/api/user/update", userData);
+      await api.put("/api/user/update", userData);
       alert("Podaci uspješno ažurirani!");
     } catch (error) {
       console.error(error);

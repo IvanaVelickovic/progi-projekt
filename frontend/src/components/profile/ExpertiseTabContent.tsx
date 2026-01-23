@@ -41,7 +41,7 @@ const ExpertiseTabContentInstructor = ({
 
     try {
       const response = await api.post(
-        "http://localhost:8080/api/Instructor/update-expertise",
+        "/api/Instructor/update-expertise",
         expertiseData,
       );
 

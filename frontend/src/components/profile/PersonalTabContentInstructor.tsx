@@ -28,10 +28,7 @@ const PersonalTabContentInstructor = ({
     e.preventDefault();
 
     try {
-      await api.put(
-        "http://localhost:8080/api/Instructor/update",
-        InstructorData,
-      );
+      await api.put("/api/Instructor/update", InstructorData);
       alert("Podaci uspješno ažurirani!");
     } catch (error) {
       console.error(error);

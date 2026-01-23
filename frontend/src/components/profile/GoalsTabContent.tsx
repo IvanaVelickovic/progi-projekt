@@ -28,10 +28,7 @@ const GoalsTabContent = ({ goalsData, setGoalsData }: GoalsTabContentProps) => {
   const handleGoalsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await api.post(
-        "http://localhost:8080/api/user/update-goals",
-        goalsData,
-      );
+      const response = await api.post("/api/user/update-goals", goalsData);
       if (response.status === 200) {
         alert("Ciljevi uspješno spremljeni!");
       }

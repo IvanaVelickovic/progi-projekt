@@ -46,10 +46,7 @@ const BiographyTabContent = ({ biographyData, setBiographyData }: Props) => {
         longitude: biographyData.location.lng,
       };
 
-      await api.post(
-        "http://localhost:8080/api/Instructor/update-biography",
-        payload,
-      );
+      await api.post("/api/Instructor/update-biography", payload);
 
       alert("Biografija i lokacija spremljeni!");
     } catch (err) {
