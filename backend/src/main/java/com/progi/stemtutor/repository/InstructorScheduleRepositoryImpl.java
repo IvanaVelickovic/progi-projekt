@@ -44,8 +44,8 @@ public class InstructorScheduleRepositoryImpl
         Join<Reservation, ReservationParticipation> participation = reservation.join("participations", JoinType.LEFT);
         Join<ReservationParticipation, Review> review = participation.join("review", JoinType.LEFT);
 
-        Join<Instructor, AvailableAtLocation> availableAtLocation = instructor.join("availableAtLocations", dto.getLat() != null ? JoinType.INNER : JoinType.LEFT);
-        Join<AvailableAtLocation, Location> location = availableAtLocation.join("location", dto.getLat() != null ? JoinType.INNER : JoinType.LEFT);
+        //Join<Instructor, AvailableAtLocation> availableAtLocation = instructor.join("availableAtLocations", dto.getLat() != null ? JoinType.INNER : JoinType.LEFT);
+        //Join<AvailableAtLocation, Location> location = availableAtLocation.join("location", dto.getLat() != null ? JoinType.INNER : JoinType.LEFT);
 
         List<Predicate> predicates = new ArrayList<>();
 

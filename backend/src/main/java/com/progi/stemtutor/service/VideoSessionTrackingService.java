@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,13 +43,19 @@ public class VideoSessionTrackingService {
         }
 
         // 3️⃣ dodaj participant
-        VideoSessionParticipant p = new VideoSessionParticipant();
-        p.setSession(session);
-        p.setUser(user);
-        p.setRole(role);
-        p.setJoinedAt(Instant.now());
-
-        participantRepo.save(p);
+        Optional<VideoSessionParticipant> optp = participantRepo.findActive(session.getId(), user.getId());
+        if (optp.isEmpty()) {
+            VideoSessionParticipant p = new VideoSessionParticipant();
+            p.setSession(session);
+            p.setUser(user);
+            p.setRole(role);
+            p.setJoinedAt(Instant.now());
+            participantRepo.save(p);
+        } else {
+            VideoSessionParticipant p = optp.orElse(null);
+            p.setJoinedAt(Instant.now());
+            participantRepo.save(p);
+        }
 
         return session;
     }

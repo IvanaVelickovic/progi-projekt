@@ -5,6 +5,7 @@ import com.progi.stemtutor.model.InstructorSchedule;
 import com.progi.stemtutor.model.InstructorSubject;
 import com.progi.stemtutor.model.User;
 import com.progi.stemtutor.model.enums.SubjectName;
+import com.progi.stemtutor.repository.InstructorRepository;
 import com.progi.stemtutor.repository.InstructorScheduleRepository;
 import com.progi.stemtutor.repository.InstructorSubjectRepository;
 import com.progi.stemtutor.repository.UserRepository;
@@ -25,6 +26,7 @@ public class InstructorScheduleService {
     private final UserRepository userRepository;
     private final GoogleCalendarService googleCalendarService;
     private final InstructorSubjectRepository instructorSubjectRepository;
+    private final InstructorRepository instructorRepository;
 
     public List<InstructorScheduleResponse> getAllInstructorSchedules() {
         return instructorScheduleRepository.findAll().stream()
@@ -65,7 +67,13 @@ public class InstructorScheduleService {
         // 2. Pronađi ID veze između instruktora i tog predmeta
         InstructorSubject isub = instructorSubjectRepository
                 .findActiveByUserIdAndSubjectName(user.getId(), subjectEnum)
-                .orElseThrow(() -> new RuntimeException("Niste registrirani za predmet: " + dto.getSubject()));
+                .orElseGet(() -> {
+                    InstructorSubject newIsub = new InstructorSubject();
+                    newIsub.setInstructor(instructorRepository.findById(user.getId()).orElseThrow());
+                    newIsub.setSubjectName(subjectEnum);
+                    newIsub.setRemoved(false);
+                    return instructorSubjectRepository.save(newIsub);
+                });
 
         // 3. Kreiraj termin sa spremljenim instructorSubjectId (isub.getId())
         InstructorSchedule instructorSchedule = InstructorSchedule.builder()

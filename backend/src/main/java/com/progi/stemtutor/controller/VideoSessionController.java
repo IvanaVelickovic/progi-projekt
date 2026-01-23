@@ -28,7 +28,7 @@ public class VideoSessionController {
         User user = (User) authentication.getPrincipal();
 
         VideoSession session = videoSessionRepository
-                .findById(sessionId)
+                .findByReservationId(sessionId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Video session not found"
@@ -37,9 +37,11 @@ public class VideoSessionController {
         videoSessionTrackingService.onLeave(session, user);
 
         String role = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_INSTRUCTOR"))
+                .anyMatch(a -> (a.equals("ROLE_INSTRUCTOR") || a.equals("INSTRUCTOR")))
                 ? "instructor"
                 : "student";
+
+        System.out.println("ULOGAAAAA" + role);
 
         return ResponseEntity.ok(
                 Map.of("role", role)
