@@ -252,7 +252,10 @@ const AddSchedule = () => {
                   <img src={googleLogo} className="h-5"></img>
                 </div>
               ) : (
-                <div className="flex w-[42%] items-center"></div>
+                <div className="flex w-[42%] items-center">
+                  ! Ako ste ulogirani preko Google-a, kreiranje termina će
+                  automatski dodati termin u Vaš Google Calendar.
+                </div>
               )}
               <button
                 type="submit"
