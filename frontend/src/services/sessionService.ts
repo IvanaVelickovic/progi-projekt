@@ -7,6 +7,7 @@ import api from "../api";
 // ===== TIPOVI =====
 export interface VideoSession {
   reservationId: number;
+  participationId: number;
   InstructorName: string;
   subject: string;
   date: string;
@@ -17,6 +18,7 @@ export interface VideoSession {
 
 export interface InstructorVideoSession {
   reservationId: number;
+  participationIds: number[]; // Lista ID-eva sudionika
   studentNames: string[]; // Lista studenata koji su rezervirali termin
   subject: string;
   date: string;
@@ -60,10 +62,10 @@ export const getInstructorVideoSessions = async (): Promise<InstructorVideoSessi
 };
 
 // ===== DOHVAĆANJE POJEDINAČNE VIDEO SESIJE =====
-export const getVideoSessionById = async (reservationId: string) => {
-  
- 
-  const response = await api.get(`/api/student/video-sessions/${reservationId}`);
+export const getVideoSessionById = async (reservationId: string, participationId: string) => {
+
+
+  const response = await api.get(`/api/student/video-sessions/${reservationId}/${participationId}`);
   const data = response.data;
   
   // Formatiraj datum i vrijeme

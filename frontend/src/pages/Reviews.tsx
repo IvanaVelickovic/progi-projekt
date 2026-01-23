@@ -72,10 +72,6 @@ const Review = () => {
           <h2 className="text-2xl font-semibold mb-2 text-center">
             Kako vam se svidjela instrukcija?
           </h2>
-          <p className="text-center mb-6 opacity-80">
-            Instruktor: {instructorData.firstName} {instructorData.lastName}
-          </p>
-
           {/* Zvjezdice */}
           <div className="flex justify-center gap-4 mb-8">
             {[1, 2, 3, 4, 5].map((star) => (

@@ -128,7 +128,7 @@ const AddSchedule = () => {
                     onChange={handleChange}
                     required
                   />
-                  uživo
+                  online
                 </label>
                 <label>
                   <input
@@ -139,7 +139,7 @@ const AddSchedule = () => {
                     onChange={handleChange}
                     required
                   />
-                  online
+                  uživo
                 </label>
               </div>
               <div className="w-[42%]">

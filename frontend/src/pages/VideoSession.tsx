@@ -15,6 +15,7 @@ interface JaasData {
 
 const VideoSession = () => {
   const { reservationId } = useParams();
+  const { participationId } = useParams();
   const navigate = useNavigate();
   const [role, setRole] = useState("");
 
@@ -41,7 +42,9 @@ const VideoSession = () => {
     // const roleFromApi = res.data.role;
 
     if (roleFromApi === "student") {
-      //navigate(`/review?instructorId=${instructorId}&participationId=${participationId}`);
+      const instructorId = res.data.instructorId;
+      const participationId = res.data.participationId;
+      navigate(`/review?instructorId=${instructorId}&participationId=${participationId}`);
     } else {
       navigate("/instructor/dashboard");
     }

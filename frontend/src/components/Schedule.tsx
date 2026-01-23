@@ -105,7 +105,7 @@ const Schedule = () => {
                   <div className="p-5 pt-7 text-blue-dark font-semibold text-xl">
                     <div className="flex justify-between ">
                       <span>• Održavanje</span>
-                      <span>{item.attendanceMode}</span>
+                      <span>{item.attendanceMode === "in_person" ? "uživo" : "online"}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>• Trajanje</span>
