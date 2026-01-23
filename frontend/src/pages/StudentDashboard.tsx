@@ -49,34 +49,11 @@ const StudentDashboard = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        // Mock data - u produkciji bi se koristio pravi API
-        const mockAppointments = [
-          {
-            id: 1,
-            dateTime: "2026-01-20T16:00:00",
-            format: "uživo",
-            duration: 90,
-            price: 35,
-            filled: 2,
-            maxParticipants: 4,
-            subject: "Matematika - Integrali",
-            instructorName: "Marko Horvat",
-            instructorId: 101,
-          },
-          {
-            id: 2,
-            dateTime: "2026-01-22T14:00:00",
-            format: "online",
-            duration: 60,
-            price: 25,
-            filled: 3,
-            maxParticipants: 5,
-            subject: "Fizika - Mehanika",
-            instructorName: "Ana Kovač",
-            instructorId: 102,
-          },
-        ];
-        setAppointments(mockAppointments);
+        const params = new URLSearchParams();
+        const dataRes = await api.get("/api/student/schedules", {
+          params,
+        });
+        setAppointments(dataRes.data);
       } catch (error) {
         console.error("Greška pri dohvaćanju korisničkih podataka:", error);
       }
@@ -135,7 +112,7 @@ const StudentDashboard = () => {
 
       <div className="flex h-[86%]">
         <div className="flex justify-center w-1/5 bg-[#F8FFFC] ">
-          <div className="bg-green-light h-8/12 mt-22 w-11/12 rounded-2xl drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]">
+          <div className="bg-green-light h-[300px] mt-22 w-11/12 rounded-2xl drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]">
             <ul className="h-full p-1">
               <li
                 className="flex items-center justify-center h-1/4 cursor-pointer"
@@ -181,7 +158,7 @@ const StudentDashboard = () => {
               >
                 <div className={selected == 4 ? clickedStyle : defaultStyle}>
                   <img
-                    src="/images/termin_logo.png"
+                    src="/images/notifications_logo.png"
                     className="h-15 ml-4 mr-2"
                   ></img>
                   <p className="text-blue-dark font-bold text-xl">Obavijesti</p>

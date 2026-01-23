@@ -23,7 +23,7 @@ const EditSchedule = ({ scheduleData, setEditSchedule }: EditScheduleProps) => {
   const { setAppointments } = useAppointments();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
 
@@ -40,7 +40,7 @@ const EditSchedule = ({ scheduleData, setEditSchedule }: EditScheduleProps) => {
 
       const res = await api.put(
         `/api/instructor-schedules/${scheduleData.scheduleId}`,
-        payload
+        payload,
       );
 
       if (res.status === 200) {
@@ -52,8 +52,8 @@ const EditSchedule = ({ scheduleData, setEditSchedule }: EditScheduleProps) => {
                   maxParticipants: editData.maxParticipants,
                   googleCalendar: payload.googleCalendar,
                 }
-              : item
-          )
+              : item,
+          ),
         );
 
         window.alert("Termin uspješno promijenjen!");
@@ -67,16 +67,16 @@ const EditSchedule = ({ scheduleData, setEditSchedule }: EditScheduleProps) => {
 
   const handleDelete = async () => {
     const proceed = window.confirm(
-      "Brisanje termina je trajno. Želite li nastaviti?"
+      "Brisanje termina je trajno. Želite li nastaviti?",
     );
     if (proceed) {
       try {
         await api.delete(
-          `/api/instructor-schedules/${scheduleData.scheduleId}`
+          `/api/instructor-schedules/${scheduleData.scheduleId}`,
         );
 
         setAppointments((prev) =>
-          prev.filter((item) => item.scheduleId !== scheduleData.scheduleId)
+          prev.filter((item) => item.scheduleId !== scheduleData.scheduleId),
         );
 
         window.alert("Uspješno izbrisano!");
@@ -91,7 +91,7 @@ const EditSchedule = ({ scheduleData, setEditSchedule }: EditScheduleProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/25 "></div>
-      <div className="relative bg-[#ADEBC8] rounded-2xl w-1/2 h-7/12 z-10 border-2 border-blue-dark">
+      <div className="relative bg-[#ADEBC8] rounded-2xl w-1/2 h-8/12 z-10 border-2 border-blue-dark">
         <div className="flex justify-between items-center content-end bg-green-dark/50 h-1/6 shadow rounded-t-2xl">
           <h1 className="ml-10 text-blue-dark text-2xl font-bold">
             Uredi termin {scheduleData.index}

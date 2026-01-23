@@ -44,6 +44,7 @@ const Schedule = () => {
     googleUser: boolean,
     googleCalendar: boolean,
   ) => {
+    console.log(appointments);
     setScheduleData({
       scheduleId: scheduleId,
       index: index,
@@ -96,7 +97,7 @@ const Schedule = () => {
               <div
                 key={item.scheduleId}
                 id={item.datetime?.split("T")[0] || "No Date"}
-                className="flex justify-between bg-[#ADEBC8] border-2 border-blue-dark rounded-2xl w-11/12 h-[250px] mb-6 shrink-0 drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]"
+                className="flex justify-between bg-[#ADEBC8] border-2 border-blue-dark rounded-2xl w-full px-0.5 h-[250px] mb-6 shrink-0 drop-shadow-[0_4px_0_rgba(0,0,0,0.25)]"
               >
                 <div className="w-7/12 p-5">
                   <h1 className="text-blue-dark text-2xl font-bold">
@@ -105,7 +106,11 @@ const Schedule = () => {
                   <div className="p-5 pt-7 text-blue-dark font-semibold text-xl">
                     <div className="flex justify-between ">
                       <span>• Održavanje</span>
-                      <span>{item.attendanceMode}</span>
+                      <span>
+                        {item.attendanceMode === "in_person"
+                          ? "uživo"
+                          : "online"}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span>• Trajanje</span>
@@ -123,9 +128,11 @@ const Schedule = () => {
                     <br></br>
                     {item.datetime?.split("T")[1] || "No Time"}
                   </div>
-                  <div className="flex flex-col m-3 p-2 w-10/12 items-end">
+                  <div className="flex flex-col m-3 p-2 w-11/12 items-end">
                     <div className="bg-[#D9D9D9] p-3 rounded-3xl text-lg text-blue-dark font-semibold text-center px-6">
-                      Popunjenost: {item.filled}/{item.maxParticipants}
+                      Popunjenost:{" "}
+                      {item.filled === undefined ? "0" : item.filled}/
+                      {item.maxParticipants}
                     </div>
                     <button
                       className="bg-blue-light text-white text-lg p-2 rounded-3xl text-center w-8/12 cursor-pointer mt-1.5"
