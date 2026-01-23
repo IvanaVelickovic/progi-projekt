@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReservationParticipationRepository extends JpaRepository<ReservationParticipation, Long> {
@@ -42,5 +43,11 @@ public interface ReservationParticipationRepository extends JpaRepository<Reserv
     """)
     List<ReservationParticipation> findForStudentDashboard(
             @Param("studentId") Long studentId
+    );
+
+    Optional<ReservationParticipation>
+    findByReservationIdAndStudentId(
+            Long reservationId,
+            Long studentId
     );
 }

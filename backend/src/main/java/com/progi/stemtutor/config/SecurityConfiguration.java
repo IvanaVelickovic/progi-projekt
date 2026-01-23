@@ -1,6 +1,5 @@
 package com.progi.stemtutor.config;
 
-import com.progi.stemtutor.dto.DashboardItemResponse;
 import com.progi.stemtutor.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

@@ -1,5 +1,6 @@
 package com.progi.stemtutor.controller;
 
+import com.progi.stemtutor.dto.VideoSessionEndDto;
 import com.progi.stemtutor.model.User;
 import com.progi.stemtutor.model.VideoSession;
 import com.progi.stemtutor.repository.VideoSessionRepository;
@@ -20,31 +21,23 @@ public class VideoSessionController {
     private final VideoSessionTrackingService videoSessionTrackingService;
     private final VideoSessionRepository videoSessionRepository;
 
-    @PostMapping("/api/video-sessions/{sessionId}/end")
-    public ResponseEntity<?> endSession(
-            @PathVariable Long sessionId,
+    @PostMapping("/api/video-sessions/{reservationId}/end")
+    public ResponseEntity<VideoSessionEndDto> endSession(
+            @PathVariable Long reservationId,
             Authentication authentication
     ) {
         User user = (User) authentication.getPrincipal();
 
         VideoSession session = videoSessionRepository
-                .findByReservationId(sessionId)
+                .findByReservationId(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Video session not found"
                 ));
 
-        videoSessionTrackingService.onLeave(session, user);
+        VideoSessionEndDto response =
+                videoSessionTrackingService.onLeave(session, user);
 
-        String role = authentication.getAuthorities().stream()
-                .anyMatch(a -> (a.equals("ROLE_INSTRUCTOR") || a.equals("INSTRUCTOR")))
-                ? "instructor"
-                : "student";
-
-        System.out.println("ULOGAAAAA" + role);
-
-        return ResponseEntity.ok(
-                Map.of("role", role)
-        );
+        return ResponseEntity.ok(response);
     }
 }

@@ -1,9 +1,11 @@
 package com.progi.stemtutor.service;
 
+import com.progi.stemtutor.dto.VideoSessionEndDto;
 import com.progi.stemtutor.model.User;
 import com.progi.stemtutor.model.VideoSession;
 import com.progi.stemtutor.model.VideoSessionParticipant;
 import com.progi.stemtutor.model.enums.UserRole;
+import com.progi.stemtutor.repository.ReservationParticipationRepository;
 import com.progi.stemtutor.repository.VideoSessionParticipantRepository;
 import com.progi.stemtutor.repository.VideoSessionRepository;
 import jakarta.transaction.Transactional;
@@ -19,6 +21,7 @@ public class VideoSessionTrackingService {
 
     private final VideoSessionRepository sessionRepo;
     private final VideoSessionParticipantRepository participantRepo;
+    private final ReservationParticipationRepository rpRepo;
 
     @Transactional
     public VideoSession onJoin(
@@ -61,18 +64,29 @@ public class VideoSessionTrackingService {
     }
 
     @Transactional
-    public void onLeave(VideoSession session, User user) {
+    public VideoSessionEndDto onLeave(VideoSession session, User user) {
 
         VideoSessionParticipant p =
                 participantRepo.findActive(session.getId(), user.getId())
-                        .orElseThrow();
+                        .orElseThrow(() -> new RuntimeException("Participant not found"));
 
         p.setLeftAt(Instant.now());
         participantRepo.save(p);
+        Long participationId;
 
+        // ako je instruktor izašao – završava se cijela sesija
         if (p.getRole() == UserRole.instructor) {
             session.setEndedAt(Instant.now());
             sessionRepo.save(session);
+            participationId = null;
+        } else {
+            participationId = rpRepo.findByReservationIdAndStudentId(session.getReservationId(), user.getId()).get().getId();
         }
+
+        return new VideoSessionEndDto(
+                p.getRole().name().toLowerCase(),          // "student" | "instructor"
+                session.getInstructor().getId(),
+                participationId
+        );
     }
 }

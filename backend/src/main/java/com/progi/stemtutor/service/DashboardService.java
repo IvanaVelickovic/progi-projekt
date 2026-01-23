@@ -1,6 +1,7 @@
 package com.progi.stemtutor.service;
 
-import com.progi.stemtutor.dto.DashboardItemResponse;
+import com.progi.stemtutor.dto.DashboardItemResponseInstructor;
+import com.progi.stemtutor.dto.DashboardItemResponseStudent;
 import com.progi.stemtutor.model.enums.UserRole;
 import com.progi.stemtutor.repository.ReservationParticipationRepository;
 import com.progi.stemtutor.repository.ReservationRepository;
@@ -16,16 +17,7 @@ public class DashboardService {
     private final ReservationParticipationRepository participationRepo;
     private final ReservationRepository reservationRepo;
 
-    public List<DashboardItemResponse> getDashboard(Long userId, UserRole role) {
-
-        return switch (role) {
-            case student -> studentDashboard(userId);
-            case instructor -> instructorDashboard(userId);
-            default -> List.of();
-        };
-    }
-
-    private List<DashboardItemResponse> studentDashboard(Long studentId) {
+    public List<DashboardItemResponseStudent> studentDashboard(Long studentId) {
         return participationRepo.findForStudentDashboard(studentId)
                 .stream()
                 .map(rp -> {
@@ -33,21 +25,21 @@ public class DashboardService {
                     var s = r.getSchedule();
                     var instructorUser = s.getInstructor().getUser();
 
-                    return new DashboardItemResponse(
+                    return new DashboardItemResponseStudent(
                             r.getId(),
+                            rp.getId(),
                             s.getInstructorSubject().getSubjectName().name(),
                             s.getDatetime().toLocalDate(),
                             s.getDatetime().toLocalTime(),
                             s.getDurationMin(),
                             r.getReservationStatus().name(),
-                            instructorUser.getFirstName() + " " + instructorUser.getLastName(),
-                            null
+                            instructorUser.getFirstName() + " " + instructorUser.getLastName()
                     );
                 })
                 .toList();
     }
 
-    private List<DashboardItemResponse> instructorDashboard(Long instructorId) {
+    public List<DashboardItemResponseInstructor> instructorDashboard(Long instructorId) {
         return reservationRepo.findForInstructorDashboard(instructorId)
                 .stream()
                 .map(r -> {
@@ -58,14 +50,17 @@ public class DashboardService {
                                     + " " +
                                     p.getStudent().getUser().getLastName())
                             .toList();
+                    List<Long> participationIds = r.getParticipations().stream()
+                            .map(p -> p.getId())
+                            .toList();
 
-                    return new DashboardItemResponse(
+                    return new DashboardItemResponseInstructor(
                             r.getId(),
+                            participationIds,
                             s.getInstructorSubject().getSubjectName().name(),
                             s.getDatetime().toLocalDate(),
                             s.getDatetime().toLocalTime(),
                             s.getDurationMin(),
-                            r.getReservationStatus().name(),
                             null,
                             students
                     );

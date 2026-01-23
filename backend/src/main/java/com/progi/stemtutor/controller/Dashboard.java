@@ -1,6 +1,7 @@
 package com.progi.stemtutor.controller;
 
 import com.progi.stemtutor.model.User;
+import com.progi.stemtutor.model.enums.UserRole;
 import com.progi.stemtutor.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +19,13 @@ public class Dashboard {
 
     @GetMapping("/student/video-sessions")
     public ResponseEntity<?> studentDashboard(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(dashboardService.getDashboard(user.getId(), user.getRole()));
+        if(user.getRole() != UserRole.student) throw new RuntimeException();
+        return ResponseEntity.ok(dashboardService.studentDashboard(user.getId()));
     }
 
     @GetMapping("/instructor/video-sessions")
     public ResponseEntity<?> instructorDashboard(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(dashboardService.getDashboard(user.getId(), user.getRole()));
+        if(user.getRole() != UserRole.instructor) throw new RuntimeException();
+        return ResponseEntity.ok(dashboardService.instructorDashboard(user.getId()));
     }
 }
