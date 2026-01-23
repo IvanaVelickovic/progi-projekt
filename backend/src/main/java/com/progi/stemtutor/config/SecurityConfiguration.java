@@ -18,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class SecurityConfiguration {
 
     private final UserRepository userRepository;
-
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> userRepository.findByEmail(email)

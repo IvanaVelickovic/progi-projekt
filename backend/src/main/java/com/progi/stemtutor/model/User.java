@@ -101,4 +101,16 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true ;
     }
+
+    public boolean isVerified() {
+        return isVerified != null && isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.isVerified = verified;
+    }
+
+    public Long getUserId() {
+        return id;
+    }
 }
