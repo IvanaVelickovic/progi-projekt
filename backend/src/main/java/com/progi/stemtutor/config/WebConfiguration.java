@@ -65,7 +65,8 @@ public class WebConfiguration {
                 "https://stemtutor-frontend.vercel.app",
                 "https://stemtutor-backend.onrender.com",
                 "http://localhost:8080", //TODO: update backend url
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "https://progi-projekt-2.vercel.app"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
